@@ -1,0 +1,8 @@
+Project Idea #1: 
+	Turn-based mad lib style adventure browser game that generates enemies and story items from an AI API
+
+Project Idea #2:
+    A schedule planner to help those who tend to procrastinate. Uses Google Tasks/Calendar API.
+
+Project Idea #3:
+    An idea generator that allows users to find new activities in their area to attend. Ex: Using Facebook groups to show activities for users to attend.
