@@ -4,7 +4,8 @@
 - Ben Roth
 - Kaleb Lindon
 - Kyle Blair
-_See our contributors file for more details_
+
+_See the contributors file for more details_
 
 ## Project Overview:
 This repository contains the code and documentation for our senior project at Western Oregon University for the 2024-2025 school year.
