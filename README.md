@@ -10,10 +10,9 @@ _See the contributors file for more details_
 ## Project Overview:
 This repository contains the code and documentation for our senior project at Western Oregon University for the 2024-2025 school year. Currently, the project concept is undecided, so below there are several project ideas that we are currently considering.
 
-## Project Ideas: 
-- **Project Idea #1:** Turn-based mad lib style adventure browser game that generates enemies and story items using an AI API.
-- **Project Idea #2:** A schedule planner to help those who tend to procrastinate. Uses Google Tasks/Calendar API.
-- **Project Idea #3:** An idea generator that allows users to find new activities in their area to attend. Ex: Using Facebook groups to show activities for users to attend.
+## Concept: 
+- Turn-based mad lib style adventure browser game that generates enemies and story items using an AI API.
+- **Mind Map Link:** https://miro.com/app/board/uXjVLuRwYso=/?share_link_id=202072063563
 
 ## Technologies Used:
 - **Visual Studio 2022**
