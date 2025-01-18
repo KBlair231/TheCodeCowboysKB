@@ -10,16 +10,6 @@ Coming soon!
 - **Mind Map Link:** https://miro.com/app/board/uXjVLuRwYso=/?share_link_id=202072063563
 - **Initial Architecture Diagram:** [Insert Link Here]
 
-## Meet the Team:
-We are The Code Cowboys, a rag-tag group of software engineers from Western Oregon University.
-
-Our crew consists of just three members: 
-- Ben Roth
-- Kaleb Lindon
-- Kyle Blair
-
-Learn more about each of us [here](CONTRIBUTORS.md)
-
 ## Technologies Used:
 - **Visual Studio 2022**
 - **ASP.NET MVC Framework**
@@ -35,3 +25,13 @@ Learn more about each of us [here](CONTRIBUTORS.md)
 
 ## Database Setup:
 1. Instructions coming soon!
+
+## Meet the Team:
+We are The Code Cowboys, a rag-tag group of software engineers from Western Oregon University.
+
+Our crew consists of just three members: 
+- Ben Roth
+- Kaleb Lindon
+- Kyle Blair
+
+Learn more about each of us [here](CONTRIBUTORS.md)
