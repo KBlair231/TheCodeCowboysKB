@@ -13,8 +13,11 @@ Coming soon!
 ## Technologies Used:
 - **Visual Studio 2022**
 - **ASP.NET MVC Framework**
---**OpenAI API**
+- **Dalle-3 via OpenAI API**
 - **Azure Data Studio**
+- **Google sign-in Authentication using OAuth 2.0**
+
+Here's a visual: [Initial Architecture Diagram](https://miro.com/app/board/uXjVLrvqidE=/?share_link_id=902737233623)
 
 ## How to Run the Project:
 1. Clone this repository to your local machine:
