@@ -18,7 +18,7 @@ our game.
 
 ## Project Planning:
 - **Mind Map Link:** https://miro.com/app/board/uXjVLuRwYso=/?share_link_id=202072063563
-- **Initial Architecture Diagram:** [Insert Link Here]
+- **Initial Architecture Diagram:** https://miro.com/app/board/uXjVLrvqidE=/?share_link_id=902737233623
 
 ## Technologies Used:
 - **Visual Studio 2022**
