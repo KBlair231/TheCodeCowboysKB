@@ -39,6 +39,9 @@ Here's a visual: [Initial Architecture Diagram](https://miro.com/app/board/uXjVL
 ## Database Setup
 1. Instructions coming soon!
 
+## How to Contribute
+See our [Git Workflow Guide](GitGuide.md)
+
 ## Meet the Team
 We are The Code Cowboys, a rag-tag group of software engineers from Western Oregon University.
 
