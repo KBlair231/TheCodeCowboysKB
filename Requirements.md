@@ -18,14 +18,13 @@
     the type of game it is planned to be, how we plan to generate the enemy's images, what options you'll be given to progress through the game, and the main purpose of the game.
 
 4. What do you not understand?
-    * Technical domain knowledge
-    * Business domain knowledge                                         **DO AS GROUP**
+    * Technical domain knowledge - Graphics & Modal Windows, OAUTH 2.0, Handling Expired Tokens, Hosting Site, and Google Sign-in
+    * Business domain knowledge - N/A                                 
 
 5. Is there something missing?
 
     The only thing that may be missing is a little more detail into how the combat will work for the player.
 
-6. Get answers to these questions.
 
 ## Analysis
 
@@ -51,22 +50,38 @@ Go through all the information gathered during the previous round of elicitation
 
     Nothing seems to be missing from our current goal.
 
-4. Return to Elicitation activities if unanswered questions remain.
-
 
 ## Design and Modeling
 Our first goal is to create a **data model** that will support the initial requirements.
 
 1. Identify all entities;  for each entity, label its attributes; include concrete types
 
-    Entities: 
-        Player- Stats, Health, Image, XP Bar, Player Level, Class/Type
-        Items- Stats, Names, Icon
-        Enemies- Stats, Health, Image, Enemy Level, Type
-        Events- Campsite, Elite Enemy, Normal Enemy, Random Event 
-        Floor Levels- Floor Type, Enemy Types present for Floor
+    * Entities:
+       + Player:
+           - Stats
+           - Health
+           - Image
+           - XP Bar
+           - Player Level
+           - Class/Type
+       + Items-
+           - Stats
+           - Names
+           - Icon
+       + Enemies:
+           - Stats
+           - Health
+           - Image
+           - Enemy Level
+           - Type
+       + Map:
+           - Campsite
+           - Elite Enemy
+           - Normal Enemy
+           - Random Event 
 
-2. Identify relationships between entities.  Write them out in English descriptions.
+
+3. Identify relationships between entities.  Write them out in English descriptions.
 
      The player has a portrait, health bar, and items they equip that benefits the player's stats and these are looted from the defeated enemies on the floor levels the player progresses through. 
      Upon beating an enemy the player may have an event to choose.
@@ -79,18 +94,17 @@ Our first goal is to create a **data model** that will support the initial requi
 
      The floor levels have enemies in them that the player progresses through.
 
-3. Draw these entities and relationships in an _informal_ Entity-Relation Diagram.                          **DO AS GROUP**
-
-4. If you have questions about something, return to elicitation and analysis before returning here.
+4. Draw these entities and relationships in an _informal_ Entity-Relation Diagram.
+    - https://miro.com/app/board/uXjVLo-psaQ=/
 
 
 ## Analysis of the Design
 The next step is to determine how well this design meets the requirements _and_ fits into the existing system.
 
 1. Does it support all requirements/features/behaviors?
-    * For each requirement, go through the steps to fulfill it.  Can it be done?  Correctly?  Easily?       **DO AS GROUP**
-
+    * For each requirement, go through the steps to fulfill it.  Can it be done?  Correctly?  Easily?       
+    It supports all requirements to the best of our knowledge.
 
 2. Does it meet all non-functional requirements?
-    * May need to look up specifications of systems, components, etc. to evaluate this.                     **DO AS GROUP**
-
+    * May need to look up specifications of systems, components, etc. to evaluate this.                     
+    It meets all non-functional requirements to the best of our knowledge.
