@@ -44,9 +44,10 @@ See our [Git Workflow Guide](Documentation/GitGuide.md)
 ## Meet the Team
 We are The Code Cowboys, a rag-tag group of software engineers from Western Oregon University.
 
-Our crew consists of just three members: 
+Our crew consists of just four members: 
 - Ben Roth
 - Kaleb Lindon
 - Kyle Blair
+- Jose Fernandez
 
 Learn more about each of us [here](CONTRIBUTORS.md)
