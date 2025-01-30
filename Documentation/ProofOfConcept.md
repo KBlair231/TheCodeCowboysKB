@@ -19,7 +19,7 @@ After naming the item accordingly, the player receives:
 <table>
   <tr>
     <td>
-         <img src="BusinessDocs/Miscellaneous/TheBrittleHelmetOfSwiftness.png">
+         <img src="../BusinessDocs/Miscellaneous/TheBrittleHelmetOfSwiftness.png">
          <p><b> The Brittle Helmet of Swiftness </b></p>
     </td>
   </tr>
@@ -38,7 +38,7 @@ The player has a sense of humor and now, after filling in the blanks, must fight
 <table>
   <tr>
     <td>
-         <img src="BusinessDocs/Miscellaneous/LazyDrunkOrc.png">
+         <img src="../BusinessDocs/Miscellaneous/LazyDrunkOrc.png">
          <p><b> A Lazy Drunk Orc </b></p>
     </td>
   </tr>

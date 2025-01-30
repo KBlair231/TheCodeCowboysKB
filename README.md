@@ -3,7 +3,7 @@
 ## Vision Statement
 In this turn-based mad-lib style adventure browser game, the story is simple, you are an adventurer tasked with traversing 10 dangerous levels. Along the way, you will discover items and monsters. Now, what you may find cannot be described in greater detail because it doesn't exist yet! Instead, you will create the world around you as you play using fill-in-the-blank mechanics similar to Madlibs. 
 
-For example, you may find a ______ (-2 defense) Helmet of ______ (+2 speed). You could then name it accordingly to: **The Brittle Helmet of Swiftness**. Once you're done, the item will spring to life with the help of AI Image generation. If you're interested in what this looks like, here is a [Proof of Concept](ProofOfConcept.md)! You must use the items you find to defeat the many monsters that stand in your way on your path to victory. Ditch the roleplaying, and embark on a journey filled with... well, whatever you can think of!
+For example, you may find a ______ (-2 defense) Helmet of ______ (+2 speed). You could then name it accordingly to: **The Brittle Helmet of Swiftness**. Once you're done, the item will spring to life with the help of AI Image generation. If you're interested in what this looks like, here is a [Proof of Concept](Documentation/ProofOfConcept.md)! You must use the items you find to defeat the many monsters that stand in your way on your path to victory. Ditch the roleplaying, and embark on a journey filled with... well, whatever you can think of!
 
 Our core mission is to provide players with a burst of entertainment during their downtime. Designed to be effortlessly accessible, our game invites players to jump in and enjoy instantly. The game's charm lies in its unpredictability, delivering hilarious and engaging outcomes based on player input. This project stems from our collective passion for game design and our desire to enhance our programming and design skills. We believe our game offers a unique experience that sets it apart from anything currently available.
 
@@ -16,8 +16,8 @@ Our core mission is to provide players with a burst of entertainment during thei
 - **UI WireFrames:** https://miro.com/app/board/uXjVLqHPPpU=/?share_link_id=345192680522
 
 ### Schedule
-- Here is our current [release plan](Timeline.md) for this project.
-- For contributors' sake, this is our [team schedule](CCMeetingSchedule.md). We are most active around these times
+- Here is our current [release plan](Documentation/Timeline.md) for this project.
+- For contributors' sake, this is our [team schedule](Documentation/CCMeetingSchedule.md). We are most active around these times
 
 ## Technologies Used
 - **Visual Studio 2022**
@@ -39,7 +39,7 @@ Here's a visual: [Initial Architecture Diagram](https://miro.com/app/board/uXjVL
 1. Instructions coming soon!
 
 ## How to Contribute
-See our [Git Workflow Guide](GitGuide.md)
+See our [Git Workflow Guide](Documentation/GitGuide.md)
 
 ## Meet the Team
 We are The Code Cowboys, a rag-tag group of software engineers from Western Oregon University.
