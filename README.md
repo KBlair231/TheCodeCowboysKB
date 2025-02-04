@@ -1,4 +1,4 @@
-# The Code Cowboys - Senior Project
+# Prompt Quest
 
 ## Vision Statement
 In this turn-based mad-lib style adventure browser game, the story is simple, you are an adventurer tasked with traversing 10 dangerous levels. Along the way, you will discover items and monsters. Now, what you may find cannot be described in greater detail because it doesn't exist yet! Instead, you will create the world around you as you play using fill-in-the-blank mechanics similar to Madlibs. 
