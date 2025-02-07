@@ -89,16 +89,17 @@ Here is an example of how we write database scripts, table names, PK, and FK nam
 
 ```sql
 -- Example table creation script
-CREATE TABLE player
+CREATE TABLE player -- Lowercase table names
 (
-    PlayerID INT PRIMARY KEY,
+    PlayerID INT PRIMARY KEY, -- Primary keys should include the table name followed by ID, this avoids ambiguity
     PlayerName NVARCHAR(100) NOT NULL, -- When a word is also a reserved keyword, like "Name", put the name of the table before it.
+    NumPotions INT NOT NULL, -- Each word in column names are capitalized
     Attack INT NOT NULL,
     Defense INT NOT NULL
 );
 
 -- Example foreign key
-ALTER TABLE Item
+ALTER TABLE item
 ADD CONSTRAINT FK_player_item FOREIGN KEY (PlayerID) REFERENCES player(PlayerID);
 ```
 
