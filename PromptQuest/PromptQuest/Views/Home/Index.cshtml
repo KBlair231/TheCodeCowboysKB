@@ -2,6 +2,22 @@
     ViewData["Title"] = "Home Page";
 }
 
-<div class="text-center">
-    <h1 class="display-4">Prompt Quest</h1>
+<div class="container-fluid BackgroundColorDark">
+	<!-- Logo -->
+	<div class="row justify-content-center mt-5">
+		<!-- TODO: Make game logo responsive -->
+		<img src="~/images/PromptQuestLogo.png" alt="The Prompt Quest logo" style="width:540px; height:auto;">
+	</div>
+	<!-- Title -->
+	<div class="row text-center mb-3">
+		<!-- TODO: Make Title class responsive -->
+			<div class="Title">Prompt Quest</div>
+	</div>
+	<!-- New Adventure button -->
+	<div class="row justify-content-center">
+		<!-- TODO: Make MenuButton class responsive -->
+		<button class="MenuButton" style="	width: 351px; height: 79px; font-size: 26pt; margin: 21px" asp-controller="" asp-action=""> <!-- For Kyle: hook up create character form here -->
+			New Adventure
+		</button>
+	</div>
 </div>
