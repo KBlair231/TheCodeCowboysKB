@@ -24,12 +24,17 @@ namespace PromptQuest.Controllers
         {
             if (ModelState.IsValid)
             {
-                return View(player);  // Change this to redirect to the Game View
+                return View("Game",player);  // Change this to redirect to the Game View
             }
             else
             {
                 return View();  
             }
+        }
+
+        [HttpPost]
+        public IActionResult Game(PlayerModel player){
+            return View(player);
         }
     }
 }
