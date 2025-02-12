@@ -31,7 +31,6 @@ namespace PromptQuest.Controllers
                 return View();  
             }
         }
-
         [HttpPost]
         public IActionResult Game(PlayerModel player){
             return View(player);

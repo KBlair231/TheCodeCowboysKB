@@ -6,7 +6,7 @@ namespace PromptQuest.Models
     public class PlayerModel
     {
         [Required] // Data annotation to specify that the Name property is Required
-        [RegularExpression(@"^[a-zA-Z]+$", ErrorMessage = "Name must be a single word with no spaces or special characters.")]
+        [RegularExpression(@"^[a-zA-Z\s]+$", ErrorMessage = "Name must not contain numbers or special characters.")]
         public string Name { get; set; }
     }
 }
