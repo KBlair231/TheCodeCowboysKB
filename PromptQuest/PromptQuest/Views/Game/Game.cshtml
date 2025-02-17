@@ -1,22 +1,25 @@
 @model PlayerModel
 @{
-    ViewData["Title"] = "Game";
+	ViewData["Title"] = "Game";
 }
-<div class="row container-fluid BackgroundColorDark text-center" style="padding:25px;">
-    <div class="col-lg-6 offset-3">
-       <div class="d-flex; text-center" style="width: 100%; height:200px; color: white;;">  </div>
-    </div>
-<div class="row container-fluid BackgroundColorDark text-center" style="padding:25px;">
-    <div class="col-lg-6 offset-3">
-       <div class="d-flex; text-start" style="border: 2px solid white; width: 100%; height:200px; color: white;;">Welcome @Model.Name  </div>
-    </div>
+<div class="container-fluid BackgroundColorDark text-center justify-content-center">
+	<div class="row" style="margin-top:20vh">
+		<div class="col-3">
+		</div>
+	</div>
 
-</div>
-<div class="row container-fluid BackgroundColorDark text-center" style="padding:25px;">
-    <div class="col-lg-3">
-        <div class="d-flex; text-center" style="border: 2px solid white; width: 392px; height:32px; color: white;;"> @Model.Name </div>
-        <img class="d-flex" src="~/images/PlaceholderPlayerPortrait.png" alt="Default Player Portrait" style="border: 2px solid white; width: 392px; height:392px;">
-        
-    </div>
+	<div class="row justify-content-center">
+		<div class="col-6">
+			<div class="text-start DialogBox" style="padding:10px; height:20vh; border: 2px solid white; color: white;">Welcome @Model.Name  </div>
+		</div>
+	</div>
 
+
+	<div class="row" style="margin-top:10vh; padding-left: 30px; padding-right:30px">
+		<div class="col-3">
+			<div class="text-start IconTextbox" style="height: 3vh; width: auto; color: white; "> @Model.Name </div>
+			<img class="d-flex Icon" style="height: 36vh; width: auto; border: 2px solid white;" src="~/images/PlaceholderPlayerPortrait.png" alt="Default Player Portrait">
+
+		</div>
+	</div>
 </div>
