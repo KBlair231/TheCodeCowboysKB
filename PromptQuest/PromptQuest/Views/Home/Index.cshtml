@@ -1,23 +1,21 @@
 ﻿@{
-    ViewData["Title"] = "Home Page";
+	ViewData["Title"] = "Home Page";
 }
 
 <div class="container-fluid BackgroundColorDark">
 	<!-- Logo -->
-	<div class="row justify-content-center mt-5">
+	<div class="row justify-content-center" style="margin-top:7vh">
 		<!-- TODO: Make game logo responsive -->
-		<img src="~/images/PromptQuestLogo.png" alt="The Prompt Quest logo" style="width:540px; height:auto;">
+		<img src="~/images/PromptQuestLogo.png" alt="The Prompt Quest logo" class="AutoScale" style="height:50vh;">
 	</div>
 	<!-- Title -->
-	<div class="row text-center mb-3">
-		<!-- TODO: Make Title class responsive -->
-			<div class="Title">Prompt Quest</div>
+	<div class="row justify-content-center">
+			<div class="PQFontTitle AutoScale" style="font-size:6vh">Prompt Quest</div>
 	</div>
 	<!-- New Adventure button -->
 	<div class="row justify-content-center">
-		<!-- TODO: Make MenuButton class responsive -->
 		<form class="text-center">
-			<button class="MenuButton" style="width: 351px; height: 79px; font-size: 26pt; margin: 21px" asp-controller="Game" asp-action="CreateCharacter">
+			<button class="MenuButton PQFont AutoScale" style=" height:7vh; font-size: 3vh; margin: 21px" asp-controller="Game" asp-action="CreateCharacter">
 				New Adventure
 			</button>
 		</form>

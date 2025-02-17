@@ -1,16 +1,8 @@
-html {
-  font-size: 14px;
-}
-
-@media (min-width: 768px) {
-  html {
-    font-size: 16px;
-  }
-}
-
 .btn:focus, .btn:active:focus, .btn-link.nav-link:focus, .form-control:focus, .form-check-input:focus {
   box-shadow: 0 0 0 0.1rem white, 0 0 0 0.25rem #258cfb;
 }
+
+/*------------------------- Layout -------------------------*/
 
 html, body {
 	display: grid;
@@ -19,18 +11,38 @@ html, body {
 	padding: 0;
 }
 
+.AutoScale { /*Add this class and set the height property to a percentage of the view height (e.g. 50vh)*/
+	width: auto;
+}
+
+/*------------------ Background Colors ---------------------*/
+
 .BackgroundColorDark {
 	background-color: #171822;
 }
 
-.Title {
+/*----------------------- Fonts ----------------------------*/
+
+.PQFont {
 	color: white;
-	font: normal 70px "Helvetica Neue";
+	font-style: normal;
 }
+
+.PQFontTitle {
+	color: white;
+	font-style: normal;
+	font-family: Algerian;
+}
+
+/*--------------------- Buttons ---------------------------*/
 
 .MenuButton {
 	background-color: #171822;
 	border: solid 2px white;
-	color: white;
 	border-radius: 15px;
+}
+
+/*---------------------- Border ----------------------------*/
+.PQBorder {
+	border: solid 2px white;
 }
