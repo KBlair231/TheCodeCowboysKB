@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 using PromptQuest.Models;
+using System;
 using System.Diagnostics;
 using System.Text.RegularExpressions;
 
@@ -31,10 +32,18 @@ namespace PromptQuest.Controllers
                 return View();
             }
         }
-		[HttpGet]
-		public IActionResult Game(PlayerModel player)
-		{
-			return View(player);
-		}
-	}
+
+        [HttpGet]
+        public IActionResult Game(PlayerModel player)
+        {
+            return View(player);
+        }
+
+        [HttpGet]
+        public IActionResult GetEnemy()
+        {
+            var enemy = new EnemyModel { Name = "Ancient Orc", ImageUrl = "/images/PlaceholderAncientOrc.png" };
+            return Json(enemy);
+        }
+    }
 }

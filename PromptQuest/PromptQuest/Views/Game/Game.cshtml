@@ -14,12 +14,17 @@
 		</div>
 	</div>
 
-
-	<div class="row" style="margin-top:10vh; padding-left: 30px; padding-right:30px">
-		<div class="col-3">
-			<div class="text-start IconTextbox" style="height: 3vh; width: auto; color: white; "> @Model.Name </div>
-			<img class="d-flex Icon" style="height: 36vh; width: auto; border: 2px solid white;" src="~/images/PlaceholderPlayerPortrait.png" alt="Default Player Portrait">
-
+	<div class="row justify-content-between" style="margin-top:10vh; padding-left: 30px; padding-right:30px">
+		<div class="col" style="max-width: fit-content">
+			<div class="text-start" style="font-size: 3vh; padding-left: 10px; padding-right: 10px; height: 4vh; width: auto; color: white; "> @Model.Name </div>
+			<img class="float-start" style="height: 36vh; width: auto; border: 2px solid white;" src="~/images/PlaceholderPlayerPortrait.png" alt="Default Player Portrait">
+		</div>
+		<div class="col" style="max-width: fit-content">
+			<div class="text-start" id="enemy-name" style="font-size: 3vh; padding-left: 10px; padding-right: 10px; height: 4vh; width: auto; color: white; "> </div>
+			<img class="float-end" id="enemy-image" style="height: 36vh; width: auto; border: 2px solid white;">
 		</div>
 	</div>
+
 </div>
+
+<script src="~/js/Game.js"></script>
