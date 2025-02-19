@@ -8,5 +8,7 @@ namespace PromptQuest.Models
 		public string ImageUrl { get; set; }
 		public int MaxHealth { get; set; }
 		public int CurrentHealth { get; set; }
+
+		public int Attack { get; set; }
 	}
 }

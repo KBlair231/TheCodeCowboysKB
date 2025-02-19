@@ -27,6 +27,7 @@ namespace PromptQuest.Controllers
             player.MaxHealth = 10;
 			      player.CurrentHealth = 10;
             player.HealthPotions = 2;
+            player.Attack = 1;
 
             if (ModelState.IsValid)
             {
@@ -49,7 +50,7 @@ namespace PromptQuest.Controllers
         [HttpGet]
         public IActionResult GetEnemy()
         {
-            var enemy = new EnemyModel { Name = "Ancient Orc", ImageUrl = "/images/PlaceholderAncientOrc.png", MaxHealth = 10, CurrentHealth = 10 };
+            var enemy = new EnemyModel { Name = "Ancient Orc", ImageUrl = "/images/PlaceholderAncientOrc.png", MaxHealth = 10, CurrentHealth = 10, Attack = 1 };
             return Json(enemy);
         }
     }

@@ -12,5 +12,7 @@ namespace PromptQuest.Models
         public int MaxHealth { get; set; }
         public int CurrentHealth { get; set; }
 
+        public int Attack {  get; set; }
+
     }
 }

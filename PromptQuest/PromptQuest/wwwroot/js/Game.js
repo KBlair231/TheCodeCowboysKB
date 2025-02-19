@@ -13,9 +13,11 @@
 			playerHealth: parseInt(document.querySelector("[data-player-current-health]").getAttribute("data-player-current-health")),
 			playerMaxHealth: parseInt(document.querySelector("[data-player-current-health]").getAttribute("data-player-max-health")),
 			playerHealthPotions: parseInt(document.querySelector("[data-player-health-potions]").getAttribute("data-player-health-potions")),
+			playerAttack: parseInt(document.querySelector("[data-player-attack]").getAttribute("data-player-attack")),
 			enemyName: enemy.name,
 			enemyHealth: enemy.currentHealth,
-			enemyMaxHealth: enemy.maxHealth
+			enemyMaxHealth: enemy.maxHealth,
+			enemyAttack: enemy.attack
 		};
 
 		// Tell player combat started
@@ -35,11 +37,11 @@
 	// Function to handle the player's attack
 	function playerAttack() {
 		// Reduce enemy health
-		combatState.enemyHealth -= 1;
+		combatState.enemyHealth -= combatState.playerAttack;
 		// Reflect damage on the screen
 		updateHealthDisplay();
 		// Tell the user what happened
-		addLogEntry("You attacked the " + combatState.enemyName + " for 1 damage");
+		addLogEntry("You attacked the " + combatState.enemyName + " for " + combatState.playerAttack +" damage");
 
 		// Check if combat is over
 		if (combatState.enemyHealth <= 0) { // Combat is over
@@ -99,11 +101,11 @@
 	function enemyAttack() {
 		setTimeout(() => {// Add a nice delay to the enemy's turn
 			// Reduce player health
-			combatState.playerHealth -= 1;
+			combatState.playerHealth -= combatState.enemyAttack;
 			// Reflect damage on the screen
 			updateHealthDisplay();
 			// Tell the user what happened
-			addLogEntry("The " + combatState.enemyName + " attacked you for 1 damage");
+			addLogEntry("The " + combatState.enemyName + " attacked you for "+combatState.enemyAttack+" damage");
 
 			// Check if combat is over
 			if (combatState.playerHealth <= 0) { // Combat is over
@@ -140,6 +142,7 @@
 			document.getElementById("enemy-image").src = enemy.imageUrl;
 			document.getElementById("enemy-image").alt = enemy.name;
 			document.getElementById("enemy-hp").textContent = enemy.currentHealth + "/" + enemy.maxHealth + " HP";
+			document.getElementById("enemy-attack").textContent = enemy.attack;
 
 			return enemy;
 		} catch (error) {
