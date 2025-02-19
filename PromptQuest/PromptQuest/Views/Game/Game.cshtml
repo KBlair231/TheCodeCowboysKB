@@ -15,12 +15,20 @@
 	</div>
 
 	<div class="row justify-content-between" style="margin-top:10vh; padding-left: 30px; padding-right:30px">
-		<div class="col" style="max-width: fit-content">
+		<!--Player Column-->
+		<div class="col" id="player-display" style="max-width: fit-content">
 			<div class="text-start" style="font-size: 3vh; padding-left: 10px; padding-right: 10px; height: 4vh; width: auto; color: white; "> @Model.Name </div>
 			<img class="float-start" style="height: 36vh; width: auto; border: 2px solid white;" src="~/images/PlaceholderPlayerPortrait.png" alt="Default Player Portrait">
-			<div class="text-start" style="font-size: 3vh; padding-left: 10px; padding-right: 10px; height: 4vh; width: auto; color: white; ">@Model.CurrentHealth/@Model.MaxHealth HP</div>
+			<div class="text-start" style="font-size: 3vh; padding-left: 10px; padding-right: 10px; height: 4vh; width: auto; color: white;" data-player-current-health="@Model.CurrentHealth" data-player-max-health="@Model.MaxHealth">
+				@Model.CurrentHealth/@Model.MaxHealth HP
+			</div>
 		</div>
-		<div class="col" style="max-width: fit-content">
+		<!--Buttons Column-->
+		<div class="col" id="combat-buttons-display" style="max-width: fit-content">
+			<button class="MenuButton PQBorder PQFont px-5" id="attack-btn" style="height:6vh; font-size: 3vh;"> Attack </button>
+		</div>
+		<!--Enemy Column-->
+		<div class="col" id="enemy-display" style="max-width: fit-content">
 			<div class="text-start" id="enemy-name" style="font-size: 3vh; padding-left: 10px; padding-right: 10px; height: 4vh; width: auto; color: white; "> </div>
 			<img class="float-end" id="enemy-image" style="height: 36vh; width: auto; border: 2px solid white;">
 			<div class="text-start" id="enemy-hp" style="font-size: 3vh; padding-left: 10px; padding-right: 10px; height: 4vh; width: auto; color: white; "></div>

@@ -42,6 +42,12 @@ html, body {
 	border-radius: 15px;
 }
 
+.PQButtonDisabled {
+	background-color: grey;
+	cursor: not-allowed;
+	opacity: 0.1;
+}
+
 /*---------------------- Border ----------------------------*/
 .PQBorder {
 	border: solid 2px white;
