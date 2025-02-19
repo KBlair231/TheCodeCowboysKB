@@ -8,6 +8,7 @@ namespace PromptQuest.Models
         [Required] // Data annotation to specify that the Name property is Required
         [RegularExpression(@"^[a-zA-Z\s]+$", ErrorMessage = "Name must not contain numbers or special characters.")]
         public string Name { get; set; }
+        public int HealthPotions { get; set; }
         public int MaxHealth { get; set; }
         public int CurrentHealth { get; set; }
 

@@ -12,6 +12,7 @@
 		combatState = {
 			playerHealth: parseInt(document.querySelector("[data-player-current-health]").getAttribute("data-player-current-health")),
 			playerMaxHealth: parseInt(document.querySelector("[data-player-current-health]").getAttribute("data-player-max-health")),
+			playerHealthPotions: parseInt(document.querySelector("[data-player-health-potions]").getAttribute("data-player-health-potions")),
 			enemyName: enemy.name,
 			enemyHealth: enemy.currentHealth,
 			enemyMaxHealth: enemy.maxHealth
@@ -28,6 +29,7 @@
 	function playerTurn() {
 		// Enable all combat buttons
 		enableAttackButton();
+		enableHealthPotionButton();
 	}
 
 	// Function to handle the player's attack
@@ -45,6 +47,7 @@
 			addLogEntry("The enemy has been defeated!");
 			// Disable combat buttons
 			disableAttackButton();
+			disableHealthPotionButton();
 			// Make the enemy disappear
 			hideEnemyDisplay();
 			return;
@@ -53,10 +56,42 @@
 		enemyTurn(); // Start enemy's turn
 	}
 
+	// Function to let the player use a health potion
+	function playerUseHealthPotion() {
+		// Check if player has no health potions
+		if (combatState.playerHealthPotions <= 0) {
+			addLogEntry("You have no Health Potions!");
+			return;
+		}
+		else if (combatState.playerHealth == combatState.playerMaxHealth) { // Check if player is already at max hp; don't use potion and return
+			addLogEntry("You are already at max health!");
+			return;
+		}
+		else { // Increase player hp by 5
+			// Reduce number of health potions
+			combatState.playerHealthPotions -= 1;
+			// Heal player
+			combatState.playerHealth += 5;
+			// Check if heal equals or exceeds max health
+			if (combatState.playerHealth >= combatState.playerMaxHealth) {
+				combatState.playerHealth = combatState.playerMaxHealth;
+				addLogEntry("You healed to max!");
+			}
+			else {
+				addLogEntry("You healed to " + combatState.playerHealth + " HP!");
+			}
+			// Reflect health on the screen
+			updateHealthDisplay();
+			// Reflect number of potions on the screen
+			updateHealthPotionDisplay();
+		}
+	}
+
 	// Function to handle the enemy's turn
 	function enemyTurn() {
 		// Disable all combat buttons
 		disableAttackButton();
+		disableHealthPotionButton();
 		// Enemy attacks by default
 		enemyAttack();
 	}
@@ -87,6 +122,10 @@
 	function updateHealthDisplay() {
 		document.querySelector("[data-player-current-health]").textContent = combatState.playerHealth + "/" + combatState.playerMaxHealth + " HP";
 		document.getElementById("enemy-hp").textContent = combatState.enemyHealth + "/" + combatState.enemyMaxHealth + " HP";
+	}
+
+	function updateHealthPotionDisplay() {
+		document.querySelector("[data-player-health-potions]").textContent = combatState.playerHealthPotions;
 	}
 
 	// Function to fetch enemy data from the server
@@ -140,6 +179,22 @@
 		attackButton.addEventListener("click", playerAttack);
 		attackButton.disabled = false;
 		attackButton.classList.remove("PQButtonDisabled");
+	}
+
+	// Function to disable the health potion button and apply the disabled style
+	function disableHealthPotionButton() {
+		const healButton = document.getElementById("health-potion-btn");
+		healButton.removeEventListener("click", playerUseHealthPotion);
+		healButton.disabled = true;
+		healButton.classList.add("PQButtonDisabled");
+	}
+
+	// Function to enable the health potion button and remove the disabled style
+	function enableHealthPotionButton() {
+		const healButton = document.getElementById("health-potion-btn");
+		healButton.addEventListener("click", playerUseHealthPotion);
+		healButton.disabled = false;
+		healButton.classList.remove("PQButtonDisabled");
 	}
 
 	// Function to hide the enemy display and attack button

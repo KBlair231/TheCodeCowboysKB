@@ -26,6 +26,7 @@ namespace PromptQuest.Controllers
         {
             player.MaxHealth = 10;
 			      player.CurrentHealth = 10;
+            player.HealthPotions = 2;
 
             if (ModelState.IsValid)
             {
