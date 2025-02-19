@@ -29,7 +29,8 @@ namespace PromptQuest.Controllers
 
             if (ModelState.IsValid)
             {
-                return RedirectToAction("Game",player);  // Change this to redirect to the Game View
+                CurrentPlayer.SetPlayer(player);
+                return RedirectToAction("Game");  // Change this to redirect to the Game View
             }
             else
             {
@@ -38,10 +39,10 @@ namespace PromptQuest.Controllers
         }
 
         [HttpGet]
-        public IActionResult Game(PlayerModel player)
+        public IActionResult Game()
         {
 			      
-			      return View(player);
+			      return View(CurrentPlayer.GetPlayer());
         }
 
         [HttpGet]
