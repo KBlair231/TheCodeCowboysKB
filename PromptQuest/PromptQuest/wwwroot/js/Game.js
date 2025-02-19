@@ -12,12 +12,14 @@
 		combatState = {
 			playerHealth: parseInt(document.querySelector("[data-player-current-health]").getAttribute("data-player-current-health")),
 			playerMaxHealth: parseInt(document.querySelector("[data-player-current-health]").getAttribute("data-player-max-health")),
+			playerDefense: parseInt(document.querySelector("[data-player-defense]").getAttribute("data-player-defense")),
 			playerHealthPotions: parseInt(document.querySelector("[data-player-health-potions]").getAttribute("data-player-health-potions")),
 			playerAttack: parseInt(document.querySelector("[data-player-attack]").getAttribute("data-player-attack")),
 			enemyName: enemy.name,
 			enemyHealth: enemy.currentHealth,
+			enemyAttack: enemy.attack,
 			enemyMaxHealth: enemy.maxHealth,
-			enemyAttack: enemy.attack
+			enemyDefense: enemy.defense
 		};
 
 		// Tell player combat started
@@ -37,11 +39,15 @@
 	// Function to handle the player's attack
 	function playerAttack() {
 		// Reduce enemy health
-		combatState.enemyHealth -= combatState.playerAttack;
+		let damage = combatState.playerAttack - combatState.enemyDefense;
+		if (damage < 1) {
+			damage = 1;
+		}
+		combatState.enemyHealth -= damage;
 		// Reflect damage on the screen
 		updateHealthDisplay();
 		// Tell the user what happened
-		addLogEntry("You attacked the " + combatState.enemyName + " for " + combatState.playerAttack +" damage");
+		addLogEntry("You attacked the " + combatState.enemyName + " for " + damage + " damage");
 
 		// Check if combat is over
 		if (combatState.enemyHealth <= 0) { // Combat is over
@@ -101,11 +107,15 @@
 	function enemyAttack() {
 		setTimeout(() => {// Add a nice delay to the enemy's turn
 			// Reduce player health
-			combatState.playerHealth -= combatState.enemyAttack;
+			let damage = combatState.enemyAttack - combatState.playerDefense;
+			if (damage < 1) {
+				damage = 1;
+			}
+			combatState.playerHealth -= damage;
 			// Reflect damage on the screen
 			updateHealthDisplay();
 			// Tell the user what happened
-			addLogEntry("The " + combatState.enemyName + " attacked you for "+combatState.enemyAttack+" damage");
+			addLogEntry("The " + combatState.enemyName + " attacked you for " + damage + " damage");
 
 			// Check if combat is over
 			if (combatState.playerHealth <= 0) { // Combat is over
@@ -143,7 +153,7 @@
 			document.getElementById("enemy-image").alt = enemy.name;
 			document.getElementById("enemy-hp").textContent = enemy.currentHealth + "/" + enemy.maxHealth + " HP";
 			document.getElementById("enemy-attack").textContent = enemy.attack;
-
+			document.getElementById("enemy-defense").textContent = enemy.defense;
 			return enemy;
 		} catch (error) {
 			console.error("Error loading enemy:", error);

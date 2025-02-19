@@ -11,6 +11,7 @@ namespace PromptQuest.Models
         public int HealthPotions { get; set; }
         public int MaxHealth { get; set; }
         public int CurrentHealth { get; set; }
+        public int Defense { get; set; } = 1;
 
         public int Attack {  get; set; }
 
