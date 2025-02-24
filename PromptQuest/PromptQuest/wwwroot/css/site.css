@@ -1,0 +1,54 @@
+.btn:focus, .btn:active:focus, .btn-link.nav-link:focus, .form-control:focus, .form-check-input:focus {
+  box-shadow: 0 0 0 0.1rem white, 0 0 0 0.25rem #258cfb;
+}
+
+/*------------------------- Layout -------------------------*/
+
+html, body {
+	display: grid;
+	min-height: 100vh;
+	margin: 0;
+	padding: 0;
+}
+
+.AutoScale { /*Add this class and set the height property to a percentage of the view height (e.g. 50vh)*/
+	width: auto;
+}
+
+/*------------------ Background Colors ---------------------*/
+
+.BackgroundColorDark {
+	background-color: #171822;
+}
+
+/*----------------------- Fonts ----------------------------*/
+
+.PQFont {
+	color: white;
+	font-style: normal;
+}
+
+.PQFontTitle {
+	color: white;
+	font-style: normal;
+	font-family: Algerian;
+}
+
+/*--------------------- Buttons ---------------------------*/
+
+.MenuButton {
+	background-color: #171822;
+	border: solid 2px white;
+	border-radius: 15px;
+}
+
+.PQButtonDisabled {
+	background-color: grey;
+	cursor: not-allowed;
+	opacity: 0.1;
+}
+
+/*---------------------- Border ----------------------------*/
+.PQBorder {
+	border: solid 2px white;
+}

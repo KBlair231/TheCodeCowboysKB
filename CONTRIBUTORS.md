@@ -1,6 +1,6 @@
 # Contributors
 
-We would like to extend our gratitude to the following individuals who have contributed to this project:
+We want to extend our gratitude to the following individuals who have contributed to this project:
 
 ## Ben Roth
 - Role: Code Gatekeeper/ Maintainer
@@ -16,6 +16,11 @@ We would like to extend our gratitude to the following individuals who have cont
 - Role: TBA
 - Github: https://github.com/FrostyJoker02
 - [Kaleb's Resume](BusinessDocs/KalebLindonResume.pdf)
+
+## Jose Fernandez
+- Role: TBA
+- Github: https://github.com/Fryguyfern
+- [Jose's Resume](BusinessDocs/JoseFernandezResume.pdf)
 
 ## Acknowledgements
 We also want to acknowledge...
