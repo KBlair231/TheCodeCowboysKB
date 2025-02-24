@@ -1,57 +1,62 @@
 using Microsoft.AspNetCore.Mvc;
 using PromptQuest.Models;
-using System;
-using System.Diagnostics;
-using System.Text.RegularExpressions;
+using PromptQuest.Services;
 
-namespace PromptQuest.Controllers
-{
+namespace PromptQuest.Controllers {
 
-	public class GameController : Controller
-	{
+	public class GameController:Controller {
 		private readonly ILogger<GameController> _logger;
-		public GameController(ILogger<GameController> logger)
-		{
+		private readonly IGameService _gameService;
+		public GameController(ILogger<GameController> logger, IGameService gameService) {
 			_logger = logger;
+			_gameService = gameService;
 		}
 
 		[HttpGet]
-		public IActionResult CreateCharacter()
-		{
+		public IActionResult CreateCharacter() {
 			return View();
 		}
 
 		[HttpPost]
-		public IActionResult CreateCharacter(PlayerModel player)
-		{
+		public IActionResult CreateCharacter(Player player) {
+			// Default stats for now.
 			player.MaxHealth = 10;
 			player.CurrentHealth = 10;
 			player.HealthPotions = 2;
 			player.Attack = 1;
-
-			if (ModelState.IsValid)
-			{
-				CurrentPlayer.SetPlayer(player);
-				return RedirectToAction("Game");  // Change this to redirect to the Game View
+			if(ModelState.IsValid) { // Character created succesfully
+				_gameService.ResetGameState(); // Wipe any session data becuase they are starting a new character
+				_gameService.UpdatePlayer(player); // Add player to the game state.
+				_gameService.StartCombat(); // Start combat right away, for now.
+				return RedirectToAction("Game");
 			}
-			else
-			{
+			else {
 				return View();
 			}
 		}
 
 		[HttpGet]
-		public IActionResult Game()
-		{
-
-			return View(CurrentPlayer.GetPlayer());
+		public IActionResult Game() {
+			return View();
 		}
 
 		[HttpGet]
-		public IActionResult GetEnemy()
-		{
-			var enemy = new EnemyModel { Name = "Ancient Orc", ImageUrl = "/images/PlaceholderAncientOrc.png", MaxHealth = 10, CurrentHealth = 10, Attack = 3 };
-			return Json(enemy);
+		public JsonResult GetGameState() {
+			GameState gameState = _gameService.GetGameState();
+			// Return the entire game state.
+			return Json(gameState);
+		}
+
+		[HttpPost]
+		public IActionResult PlayerAction(string action) {
+			PQActionResult ActionResult = _gameService.ExecutePlayerAction(action);
+			return Json(ActionResult);
+		}
+
+		[HttpPost]
+		public IActionResult EnemyAction() {
+			PQActionResult ActionResult = _gameService.ExecuteEnemyAction();
+			return Json(ActionResult);
 		}
 	}
 }

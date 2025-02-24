@@ -2,7 +2,7 @@
 
 namespace PromptQuest.Models
 {
-	public class EnemyModel
+	public class Enemy
 	{
 		public string Name { get; set; }
 		public string ImageUrl { get; set; }

@@ -16,7 +16,7 @@ namespace PlayerModelTest.Tests
 		public void PlayerModel_NameValidation(string name, bool expectedIsValid)
 		{
 			// Arrange
-			var player = new PlayerModel
+			var player = new Player
 			{
 				Name = name
 			};
