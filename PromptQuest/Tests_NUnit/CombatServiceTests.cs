@@ -15,8 +15,8 @@ namespace PromptQuest.Tests.Services {
 			_combatService = new CombatService();
 			// Test game state just in case, so that player or enemy can't throw null reference exceptions.
 			_gameState = new GameState {
-				Player = new Player { Name = "TestPlayer"},
-				Enemy = new Enemy { Name = "TestEnemy"}
+				Player = new Player { Name = "TestPlayer" },
+				Enemy = new Enemy { Name = "TestEnemy" }
 			};
 		}
 
@@ -37,12 +37,12 @@ namespace PromptQuest.Tests.Services {
 
 			// Assert
 			// Check that we at least returned something
-			Assert.That(result,Is.Not.Null);
+			Assert.That(result, Is.Not.Null);
 			// test gameState not result because that is what actually gets saved to the session, the result is just presentation logic.
 			// Enemy should take 1 damage -> 10 - 3 = 7
-			Assert.That(_gameState.Enemy.CurrentHealth,Is.EqualTo(7));
+			Assert.That(_gameState.Enemy.CurrentHealth, Is.EqualTo(7));
 			// Check that it is Enemy's turn now.
-			Assert.That(_gameState.IsPlayersTurn,Is.False);
+			Assert.That(_gameState.IsPlayersTurn, Is.False);
 		}
 
 		[Test]
@@ -60,12 +60,12 @@ namespace PromptQuest.Tests.Services {
 
 			// Assert
 			// Check that we at least returned something
-			Assert.That(result,Is.Not.Null);
+			Assert.That(result, Is.Not.Null);
 			// test gameState not result because that is what actually gets saved to the session, the result is just presentation logic.
 			// Enemy should take 1 damage because 5 Attack - 3 Defense = 2 damage.
-			Assert.That(_gameState.Enemy.CurrentHealth,Is.EqualTo(8));
+			Assert.That(_gameState.Enemy.CurrentHealth, Is.EqualTo(8));
 			// Check that it is Enemy's turn now.
-			Assert.That(_gameState.IsPlayersTurn,Is.False);
+			Assert.That(_gameState.IsPlayersTurn, Is.False);
 		}
 
 		[Test]
@@ -83,12 +83,12 @@ namespace PromptQuest.Tests.Services {
 
 			// Assert
 			// Check that we at least returned something
-			Assert.That(result,Is.Not.Null);
+			Assert.That(result, Is.Not.Null);
 			// test gameState not result because that is what actually gets saved to the session, the result is just presentation logic.
 			// Enemy should take 1 damage even though 1 Attack - 5 Defense = -4 damage because the minimum damage is 1.
-			Assert.That(_gameState.Enemy.CurrentHealth,Is.EqualTo(9));
+			Assert.That(_gameState.Enemy.CurrentHealth, Is.EqualTo(9));
 			// Check that it is Enemy's turn now.
-			Assert.That(_gameState.IsPlayersTurn,Is.False);
+			Assert.That(_gameState.IsPlayersTurn, Is.False);
 		}
 
 		#endregion Player Attack Tests - End
@@ -108,14 +108,14 @@ namespace PromptQuest.Tests.Services {
 
 			// Assert
 			// Check that we at least returned something
-			Assert.That(result,Is.Not.Null);
+			Assert.That(result, Is.Not.Null);
 			// test gameState not result because that is what actually gets saved to the session, the result is just presentation logic.
 			// Health should go up 5 from 3 to a total of 8
-			Assert.That(_gameState.Player.CurrentHealth,Is.EqualTo(8));
+			Assert.That(_gameState.Player.CurrentHealth, Is.EqualTo(8));
 			// Number of potions should go down by one because it was used
-			Assert.That(_gameState.Player.HealthPotions,Is.EqualTo(1));
+			Assert.That(_gameState.Player.HealthPotions, Is.EqualTo(1));
 			// Should still be player's turn.
-			Assert.That(_gameState.IsPlayersTurn,Is.True);
+			Assert.That(_gameState.IsPlayersTurn, Is.True);
 		}
 
 		[Test]
@@ -131,14 +131,14 @@ namespace PromptQuest.Tests.Services {
 
 			// Assert
 			// Check that we at least returned something
-			Assert.That(result,Is.Not.Null);
+			Assert.That(result, Is.Not.Null);
 			// test gameState not result because that is what actually gets saved to the session, the result is just presentation logic.
 			// Health should go up from 7 to 10 because health cannot be above max.
-			Assert.That(_gameState.Player.CurrentHealth,Is.EqualTo(10));
+			Assert.That(_gameState.Player.CurrentHealth, Is.EqualTo(10));
 			// Number of potions should go down by one because it was used
-			Assert.That(_gameState.Player.HealthPotions,Is.EqualTo(1));
+			Assert.That(_gameState.Player.HealthPotions, Is.EqualTo(1));
 			// Should still be player's turn.
-			Assert.That(_gameState.IsPlayersTurn,Is.True);
+			Assert.That(_gameState.IsPlayersTurn, Is.True);
 		}
 
 		[Test]
@@ -154,14 +154,14 @@ namespace PromptQuest.Tests.Services {
 
 			// Assert
 			// Check that we at least returned something
-			Assert.That(result,Is.Not.Null);
+			Assert.That(result, Is.Not.Null);
 			// test gameState not result because that is what actually gets saved to the session, the result is just presentation logic.
 			// Player was already at max, so health should not change.
-			Assert.That(_gameState.Player.CurrentHealth,Is.EqualTo(10));
+			Assert.That(_gameState.Player.CurrentHealth, Is.EqualTo(10));
 			// Player is already at max, so number of potions shouldn't change.
-			Assert.That(_gameState.Player.HealthPotions,Is.EqualTo(2));
+			Assert.That(_gameState.Player.HealthPotions, Is.EqualTo(2));
 			// Should still be player's turn.
-			Assert.That(_gameState.IsPlayersTurn,Is.True);
+			Assert.That(_gameState.IsPlayersTurn, Is.True);
 		}
 
 		[Test]
@@ -177,14 +177,14 @@ namespace PromptQuest.Tests.Services {
 
 			// Assert
 			// Check that we at least returned something
-			Assert.That(result,Is.Not.Null);
+			Assert.That(result, Is.Not.Null);
 			// test gameState not result because that is what actually gets saved to the session, the result is just presentation logic.
 			// Player has no potions, so health should not change.
-			Assert.That(_gameState.Player.CurrentHealth,Is.EqualTo(5));
+			Assert.That(_gameState.Player.CurrentHealth, Is.EqualTo(5));
 			// Player has no potions, so number of potions shouldn't change.
-			Assert.That(_gameState.Player.HealthPotions,Is.EqualTo(0));
+			Assert.That(_gameState.Player.HealthPotions, Is.EqualTo(0));
 			// Should still be player's turn.
-			Assert.That(_gameState.IsPlayersTurn,Is.True);
+			Assert.That(_gameState.IsPlayersTurn, Is.True);
 		}
 
 		#endregion Player Health Potions Tests - End
@@ -205,12 +205,12 @@ namespace PromptQuest.Tests.Services {
 
 			// Assert
 			// Check that we at least returned something
-			Assert.That(result,Is.Not.Null);
+			Assert.That(result, Is.Not.Null);
 			// test gameState not result because that is what actually gets saved to the session, the result is just presentation logic.
 			// Player should take 3 damage -> 10 - 3 = 7
-			Assert.That(_gameState.Player.CurrentHealth,Is.EqualTo(7));
+			Assert.That(_gameState.Player.CurrentHealth, Is.EqualTo(7));
 			// Check that it is Player's turn now.
-			Assert.That(_gameState.IsPlayersTurn,Is.True);
+			Assert.That(_gameState.IsPlayersTurn, Is.True);
 		}
 
 		[Test]
@@ -228,12 +228,12 @@ namespace PromptQuest.Tests.Services {
 
 			// Assert
 			// Check that we at least returned something
-			Assert.That(result,Is.Not.Null);
+			Assert.That(result, Is.Not.Null);
 			// test gameState not result because that is what actually gets saved to the session, the result is just presentation logic.
 			// Player should take 2 damage because 5 Attack - 3 Defense = 2 damage.
-			Assert.That(_gameState.Player.CurrentHealth,Is.EqualTo(8));
+			Assert.That(_gameState.Player.CurrentHealth, Is.EqualTo(8));
 			// Check that it is Player's turn now.
-			Assert.That(_gameState.IsPlayersTurn,Is.True);
+			Assert.That(_gameState.IsPlayersTurn, Is.True);
 		}
 
 		[Test]
@@ -251,12 +251,28 @@ namespace PromptQuest.Tests.Services {
 
 			// Assert
 			// Check that we at least returned something
-			Assert.That(result,Is.Not.Null);
+			Assert.That(result, Is.Not.Null);
 			// test gameState not result because that is what actually gets saved to the session, the result is just presentation logic.
 			// Player should take 1 damage even though 1 Attack - 5 Defense = -4 damage because the minimum damage is 1.
-			Assert.That(_gameState.Player.CurrentHealth,Is.EqualTo(9));
+			Assert.That(_gameState.Player.CurrentHealth, Is.EqualTo(9));
 			// Check that it is Player's turn now.
-			Assert.That(_gameState.IsPlayersTurn,Is.True);
+			Assert.That(_gameState.IsPlayersTurn, Is.True);
+		}
+
+		[Test]
+		public void GetEnemy_ShouldReturnDifferentEnemiesAfterMultipleCalls() {
+			// Arrange
+			HashSet<string> enemyNames = new HashSet<string>();
+
+			// Act
+			for (int i = 0; i < 10; i++) {
+				Enemy enemy = _combatService.GetEnemy();
+				enemyNames.Add(enemy.Name);
+			}
+
+			// Assert
+			// Check that for 10 enemies there are at least two different enemies within the bunch
+			Assert.Greater(enemyNames.Count, 1, "GetEnemy should return different enemies after multiple calls.");
 		}
 
 		#endregion Enemy Attack Tests - End
