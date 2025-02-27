@@ -130,10 +130,10 @@ namespace PromptQuest.Services {
 			int enemyType = random.Next(1, 4); // Generates a number between 1 and 3
 			switch (enemyType) {
 				case 1:
-					enemy.Name = "Ancient Orc";
-					enemy.ImageUrl = "/images/PlaceholderAncientOrc.png";
-					enemy.MaxHealth = 10;
-					enemy.CurrentHealth = 10;
+			enemy.Name = "Ancient Orc";
+			enemy.ImageUrl = "/images/PlaceholderAncientOrc.png";
+			enemy.MaxHealth = 10;
+			enemy.CurrentHealth = 10;
 					enemy.Attack = 2;
 					enemy.Defense = 1;
 					break;
@@ -142,7 +142,7 @@ namespace PromptQuest.Services {
 					enemy.ImageUrl = "/images/PlaceholderDecrepitCentaur.png";
 					enemy.MaxHealth = 10;
 					enemy.CurrentHealth = 10;
-					enemy.Attack = 3;
+			enemy.Attack = 3;
 					enemy.Defense = 0;
 					break;
 				case 3:
