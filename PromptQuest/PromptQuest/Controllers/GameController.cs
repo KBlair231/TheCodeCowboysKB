@@ -4,7 +4,7 @@ using PromptQuest.Services;
 
 namespace PromptQuest.Controllers {
 
-	public class GameController:Controller {
+	public class GameController : Controller {
 		private readonly ILogger<GameController> _logger;
 		private readonly IGameService _gameService;
 		public GameController(ILogger<GameController> logger, IGameService gameService) {
@@ -20,10 +20,10 @@ namespace PromptQuest.Controllers {
 		[HttpPost]
 		public IActionResult CreateCharacter(Player player) {
 			// Default stats for now.
-			player.MaxHealth = 10;
-			player.CurrentHealth = 10;
+			player.MaxHealth = 15;
+			player.CurrentHealth = 15;
 			player.HealthPotions = 2;
-			player.Attack = 1;
+			player.Attack = 3;
 			if(ModelState.IsValid) { // Character created succesfully
 				_gameService.ResetGameState(); // Wipe any session data becuase they are starting a new character
 				_gameService.UpdatePlayer(player); // Add player to the game state.
@@ -57,6 +57,11 @@ namespace PromptQuest.Controllers {
 		public IActionResult EnemyAction() {
 			PQActionResult ActionResult = _gameService.ExecuteEnemyAction();
 			return Json(ActionResult);
+		}
+
+		[HttpPost]
+		public void StartCombat() {
+			_gameService.StartCombat();
 		}
 	}
 }

@@ -12,6 +12,8 @@
 	// Update display with loaded data.  
 	updateDisplay();
 	if (gameState.inCombat == true) {// Player is in combat .
+		// Show the combat UI
+		showCombatUI();
 		//addLogEntry("You were attacked by an " + gameState.enemy.name + "!");  
 		if (gameState.isPlayersTurn == true) {
 			enableCombatButtons();// Start player's turn.
@@ -66,22 +68,34 @@
 				let actionResult = response;
 				console.log('Enemy action executed successfully:', actionResult);
 				updateLocalGameState(actionResult); // Update local gameState variable with whatever the action changed.  
-				updateDisplay() // Update screen to show whatever the action changed.  
+				updateDisplay(); // Update screen to show whatever the action changed.  --
 			},
 			error: function (xhr, status, error) {
 				console.error('Error executing enemy action:', error);
 			}
 		});
+
 		// Check if player is in combat.
 		if (gameState.inCombat == false) {
 			hideCombatUI(); // They are not, hide combat UI
 			return;
-		} 
+		}
 		if (gameState.isPlayersTurn == false) {
-			executeEnemyAction();// They are but it is still the enemy's turn.
+			executeEnemyAction(); // Enemy continues its turn.
 			return;
 		}
-		enableCombatButtons(); // They are and now it is their turn.
+		enableCombatButtons(); // Player's turn.
+	}
+
+	async function spawnNewEnemy() {
+		// Tell the server to start combat and wait for it to be done
+		await fetch("/Game/StartCombat", { method: "POST" });
+		// Game state changed, grab it
+		let response = await fetch("/Game/GetGameState");
+		gameState = await response.json();
+		// Update display
+		updateDisplay();
+		showCombatUI();
 	}
 
 	// Helper function to update the gameState variable with the results from a PQActionResult.  
@@ -177,17 +191,45 @@
 	async function handleHealClick() {
 		await executePlayerAction('heal');
 	}
+	function enableNextFightTrigger() {
+		document.addEventListener("keydown", handleSpacePress);
+	}
 
+	function handleSpacePress(event) {
+		if (event.code === "Space") {
+			document.removeEventListener("keydown", handleSpacePress);
+			spawnNewEnemy();
+		}
+	}
 	// Function to hide the Combat UI.  
 	function hideCombatUI() {
 		// Just in case.
 		disableCombatButtons();
 		// Hide the enemy display.  
 		const enemyDisplay = document.getElementById("enemy-display");
-		enemyDisplay.style.display = "none";
+		enemyDisplay.style.visibility = "hidden";
 		// Hide the combat buttons display.  
 		const combatButtonsDisplay = document.getElementById("combat-buttons-display");
-		combatButtonsDisplay.style.display = "none";
+		combatButtonsDisplay.style.visibility = "hidden";
+		// Check if player is still alive
+		if (gameState.player.currentHealth > 0) {
+			// Allow player to start the next fight
+			addLogEntry("Player health is: " + gameState.player.currentHealth); // debug
+			addLogEntry("Enemy defeated! Press [SPACE] to fight the next enemy.");
+			enableNextFightTrigger(); // Wait for space key press
+		}
+	}
+
+	// Function to show the Combat UI.  
+	function showCombatUI() {
+		// Enable the combat buttons
+		enableCombatButtons();
+		// Show the enemy display.
+		const enemyDisplay = document.getElementById("enemy-display");
+		enemyDisplay.style.visibility = "visible";
+		// Show the combat buttons display.
+		const combatButtonsDisplay = document.getElementById("combat-buttons-display");
+		combatButtonsDisplay.style.visibility = "visible";
 	}
 
 	//----------- Helper Functions - End -----------------------------------------------------------------------------------------------------------

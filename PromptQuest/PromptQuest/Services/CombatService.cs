@@ -17,6 +17,7 @@ namespace PromptQuest.Services {
 			gameState.InCombat = true;
 			gameState.IsPlayersTurn = true; // Player always goes first, for now.
 			gameState.Enemy = GetEnemy();
+			gameState.Player.HealthPotions = 2; // Set player's health potions to 2 when combat starts (Temporary)
 			string message = $"The {gameState.Enemy.Name} attacked!"; // Let the user know that combat started.
 			gameState.MessageLog.Add(message); // This gets loaded into the view without a PQActionResult because GetGameState() is called after this method.
 		}
