@@ -9,6 +9,7 @@ namespace PromptQuest.Services {
 		void ResetGameState();
 		void UpdatePlayer(Player player);
 		void StartCombat();
+		void RespawnPlayer();
 		PQActionResult ExecutePlayerAction(string action);
 		PQActionResult ExecuteEnemyAction();
 	}
@@ -77,6 +78,16 @@ namespace PromptQuest.Services {
 			// Get current gamestate from the session
 			GameState gameState = GetSession();
 			// Initiate combat
+			_combatService.StartCombat(gameState);
+			// Update current gamesate in the session
+			UpdateSession(gameState);
+		}
+
+		public void RespawnPlayer() {
+			// Get current gamestate from the session
+			GameState gameState = GetSession();
+			// Reset player health and potions back to max
+			_combatService.RespawnPlayer(gameState);
 			_combatService.StartCombat(gameState);
 			// Update current gamesate in the session
 			UpdateSession(gameState);

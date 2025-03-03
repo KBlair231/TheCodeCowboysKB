@@ -21,7 +21,13 @@ namespace PromptQuest.Services {
 			string message = $"The {gameState.Enemy.Name} attacked!"; // Let the user know that combat started.
 			gameState.MessageLog.Add(message); // This gets loaded into the view without a PQActionResult because GetGameState() is called after this method.
 		}
-
+		/// <summary>Respawns the player by resetting their health and potions, and updates the game state.</summary>
+		public void RespawnPlayer(GameState gameState)
+		{
+			gameState.Player.CurrentHealth = gameState.Player.MaxHealth; // Reset health to max
+			gameState.InCombat = false; // Player is no longer in combat
+			gameState.IsPlayersTurn = false; // It is not the player's turn
+		}
 		#region Player Action Methods
 
 		/// <summary> Calculates the damage that the player does to the enemy, updates the game state, then returns an ActionResult.</summary>
@@ -158,6 +164,6 @@ namespace PromptQuest.Services {
 			return enemy;
 		}
 
-		#endregion Helper Methods - End
+			#endregion Helper Methods - End
 	}
 }
