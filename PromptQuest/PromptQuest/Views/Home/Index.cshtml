@@ -4,7 +4,7 @@
 
 <div class="container-fluid BackgroundColorDark">
 	<!-- Logo -->
-	<div class="row justify-content-center" style="margin-top:7vh">
+	<div class="row justify-content-center">
 		<!-- TODO: Make game logo responsive -->
 		<img src="~/images/PromptQuestLogo.png" alt="The Prompt Quest logo" class="AutoScale" style="height:50vh;">
 	</div>
@@ -13,13 +13,19 @@
 			<div class="PQFontTitle AutoScale" style="font-size:6vh">Prompt Quest</div>
 	</div>
 	<!-- New Adventure button -->
-	<div class="row justify-content-center">
-		<form class="text-center">
-			<button class="MenuButton PQFont AutoScale" style=" height:7vh; font-size: 3vh; margin: 21px" asp-controller="Game" asp-action="CreateCharacter">
-				New Adventure
-			</button>
-		</form>
+	<div class="row justify-content-center ">
+		<div class="col-auto justify-content-center">
+			<form class="text-center">
+				<button class="MenuButton PQFont AutoScale" style=" height:7vh; font-size: 3vh; width:100%; margin-bottom: 3vh;" asp-controller="Game" asp-action="CreateCharacter">
+					New Adventure
+				</button>
+				<button class="MenuButton PQFont AutoScale" style="height:7vh; font-size: 3vh; width:100%" asp-controller="Game" asp-action="About">
+					About Us
+				</button>
+			</form>
+		</div>
 	</div>
+	
 </div>
 
 <script src="~/js/site.js" asp-append-version="true"></script>

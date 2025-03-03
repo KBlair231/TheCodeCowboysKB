@@ -11,7 +11,9 @@ namespace PromptQuest.Controllers {
 			_logger = logger;
 			_gameService = gameService;
 		}
-
+		public IActionResult About() {
+			return View();
+		}
 		[HttpGet]
 		public IActionResult CreateCharacter() {
 			return View();
