@@ -65,5 +65,12 @@ namespace PromptQuest.Controllers {
 		public void StartCombat() {
 			_gameService.StartCombat();
 		}
+
+		[HttpPost]
+		public IActionResult Respawn()
+		{
+			_gameService.RespawnPlayer();
+			return Ok();
+		}
 	}
 }

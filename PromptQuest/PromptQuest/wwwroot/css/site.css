@@ -45,6 +45,10 @@ html, body {
 	border-radius: 15px;
 }
 
+.modal-header .btn-close {
+	filter: invert(1); /* Invert the color to make it white */
+}
+
 .PQButtonDisabled {
 	background-color: grey;
 	cursor: not-allowed;
@@ -54,4 +58,5 @@ html, body {
 /*---------------------- Border ----------------------------*/
 .PQBorder {
 	border: solid 2px white;
+	border-radius: 5px;
 }
