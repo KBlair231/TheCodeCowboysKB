@@ -4,8 +4,10 @@ namespace PromptQuest.Models
 {
 	public class Enemy
 	{
-		public string Name { get; set; }
-		public string ImageUrl { get; set; }
+		/// <summary> Primary Key </summary>
+		public int EnemyId {get; set;}
+		public string Name { get; set; } = "";
+		public string ImageUrl { get; set; } = "";
 		public int MaxHealth { get; set; }
 		public int CurrentHealth { get; set; }
 		public int Attack { get; set; }

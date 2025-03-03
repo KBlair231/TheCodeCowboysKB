@@ -1,12 +1,16 @@
 ﻿namespace PromptQuest.Models {
 	/// <summary> A model of the state of the game.  Contains all of the relevant information about the game.  </summary>
 	public class GameState {
+		/// <summary> Primary Key. The Google ID of the user that owns this game. </summary>
+		public string UserGoogleId { get; set; } = "";
+		/// <summary> Foreign Key </summary>
+		public int? PlayerId { get; set; }
 		///<summary> The current user's player character. </summary>
 		public Player Player { get; set; }
+		/// <summary> Foreign Key </summary>
+		public int? EnemyId { get; set; }
 		///<summary> The current enemy that the player is fighting. </summary>
 		public Enemy Enemy { get; set; }
-		///<summary> A list of all the messages in the dialog box. </summary>
-		public List<string> MessageLog { get; set; } = new List<string>();
 		///<summary> Whether or not the player is in combat. </summary>
 		public bool InCombat { get; set; } = false;
 		///<summary> Whether or not it is the player's turn. </summary>

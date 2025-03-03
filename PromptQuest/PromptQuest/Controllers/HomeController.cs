@@ -14,8 +14,6 @@ namespace PromptQuest.Controllers {
 		}
 
 		public IActionResult Index() {
-			// Fetch the game state for the current session.
-			GameState gameState = _gameService.GetGameState();
 			// They're a new player, show the main menu
 			return View();
 		}

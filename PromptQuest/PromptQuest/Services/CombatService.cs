@@ -10,17 +10,18 @@ namespace PromptQuest.Services {
 		Enemy GetEnemy();
 	}
 
-	public class CombatService : ICombatService {
+	public class CombatService:ICombatService {
 
 		/// <summary>Initiates combat between the player and an enemy and updates the game state. </summary>
 		public void StartCombat(GameState gameState) {
 			gameState.InCombat = true;
 			gameState.IsPlayersTurn = true; // Player always goes first, for now.
+			Enemy enemy = GetEnemy();
 			gameState.Enemy = GetEnemy();
 			gameState.Player.HealthPotions = 2; // Set player's health potions to 2 when combat starts (Temporary)
 			string message = $"The {gameState.Enemy.Name} attacked!"; // Let the user know that combat started.
-			gameState.MessageLog.Add(message); // This gets loaded into the view without a PQActionResult because GetGameState() is called after this method.
 		}
+
 		/// <summary>Respawns the player by resetting their health and potions, and updates the game state.</summary>
 		public void RespawnPlayer(GameState gameState)
 		{
@@ -35,21 +36,20 @@ namespace PromptQuest.Services {
 			// Calculate damage as attack - defense.
 			int damage = gameState.Player.Attack - gameState.Enemy.Defense;
 			// If attack is less than one make it one.
-			if (damage < 1)
+			if(damage < 1)
 				damage = 1;
 			// Update enemy health.
 			gameState.Enemy.CurrentHealth -= damage;
 			// Return the result to the user.
 			string message = $"You attacked the {gameState.Enemy.Name} for {damage} damage";
 			// Check if enemy died.
-			if (gameState.Enemy.CurrentHealth < 1) {
+			if(gameState.Enemy.CurrentHealth <= 0) {
 				gameState.InCombat = false; // Enemy is dead, combat has ended.
 				gameState.IsPlayersTurn = false; // Zero this field out because combat is over.
 				message += $", you have defeated the {gameState.Enemy.Name}."; // Let them know in the same message.
 			}
 			// Enemy didn't die, so now it is their turn.
 			gameState.IsPlayersTurn = false;
-			gameState.MessageLog.Add(message);
 			// Return an action result with the message describing what happened.
 			PQActionResult actionResult = gameState.ToActionResult();
 			actionResult.Message = message;
@@ -61,19 +61,15 @@ namespace PromptQuest.Services {
 			PQActionResult actionResult;
 			string message;
 			// If player has no potions, don't let them heal.
-			if (gameState.Player.HealthPotions <= 0) {
-				// Return an action result with a message describing what happened.
+			if(gameState.Player.HealthPotions <= 0) {
 				message = "You have no Health Potions!";
-				gameState.MessageLog.Add(message);
 				actionResult = gameState.ToActionResult();
 				actionResult.Message = message;
 				return actionResult;
 			}
 			// If player is already at max health, don't let them heal.
-			if (gameState.Player.CurrentHealth == gameState.Player.MaxHealth) {
-				// Return an action result with a message describing what happened.
+			if(gameState.Player.CurrentHealth == gameState.Player.MaxHealth) {
 				message = "You are already at max health!";
-				gameState.MessageLog.Add(message);
 				actionResult = gameState.ToActionResult();
 				actionResult.Message = message;
 				return actionResult;
@@ -83,14 +79,13 @@ namespace PromptQuest.Services {
 			gameState.Player.CurrentHealth += 5;
 			message = $"You healed to {gameState.Player.CurrentHealth} HP!";
 			// If the potion put the player's health above maximum, set it to maximum.
-			if (gameState.Player.CurrentHealth > gameState.Player.MaxHealth) {
+			if(gameState.Player.CurrentHealth >= gameState.Player.MaxHealth) {
 				gameState.Player.CurrentHealth = gameState.Player.MaxHealth;
 				message = $"You healed to max HP!"; // Overwrite current message.
 			}
 			// Healing cannot possibly end combat, so no reason to check if combat has ended.
 			// Healing does not end the player's turn.
 			// Return an action result with the message describing what happened.
-			gameState.MessageLog.Add(message);
 			actionResult = gameState.ToActionResult();
 			actionResult.Message = message;
 			return actionResult;
@@ -105,21 +100,20 @@ namespace PromptQuest.Services {
 			// Calculate damage as attack - defense.
 			int damage = gameState.Enemy.Attack - gameState.Player.Defense;
 			// If attack is less than one make it one.
-			if (damage < 1)
+			if(damage < 1)
 				damage = 1;
 			// Update player health.
 			gameState.Player.CurrentHealth -= damage;
 			// Return an action result with a message describing what happened.
 			string message = $"The {gameState.Enemy.Name} attacked you for {damage} damage";
 			// Check if player died.
-			if (gameState.Player.CurrentHealth < 1) {
+			if(gameState.Player.CurrentHealth < 1) {
 				gameState.InCombat = false; // Player is dead, combat has ended.
 				gameState.IsPlayersTurn = false; // Zero this field out because combat is over.
 				message += ", you have been defeated."; // Let them know in the same message.
 			}
 			// Player didn't die, so now it is their turn.
 			gameState.IsPlayersTurn = true;
-			gameState.MessageLog.Add(message);
 			// Return an action result with the message describing what happened.
 			PQActionResult actionResult = gameState.ToActionResult();
 			actionResult.Message = message;
@@ -134,13 +128,13 @@ namespace PromptQuest.Services {
 		public Enemy GetEnemy() {
 			Enemy enemy = new Enemy();
 			Random random = new Random();
-			int enemyType = random.Next(1, 4); // Generates a number between 1 and 3
-			switch (enemyType) {
+			int enemyType = random.Next(1,4); // Generates a number between 1 and 3
+			switch(enemyType) {
 				case 1:
-			enemy.Name = "Ancient Orc";
-			enemy.ImageUrl = "/images/PlaceholderAncientOrc.png";
-			enemy.MaxHealth = 10;
-			enemy.CurrentHealth = 10;
+					enemy.Name = "Ancient Orc";
+					enemy.ImageUrl = "/images/PlaceholderAncientOrc.png";
+					enemy.MaxHealth = 10;
+					enemy.CurrentHealth = 10;
 					enemy.Attack = 2;
 					enemy.Defense = 1;
 					break;
@@ -149,7 +143,7 @@ namespace PromptQuest.Services {
 					enemy.ImageUrl = "/images/PlaceholderDecrepitCentaur.png";
 					enemy.MaxHealth = 10;
 					enemy.CurrentHealth = 10;
-			enemy.Attack = 3;
+					enemy.Attack = 3;
 					enemy.Defense = 0;
 					break;
 				case 3:

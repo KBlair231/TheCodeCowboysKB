@@ -27,7 +27,8 @@ document.addEventListener("DOMContentLoaded", async function () {
 		hideCombatUI();
 	}
 });
-// Function that makes an ajax call telling the game engine to process the engine, then updates the local gameState variable with the response.  
+
+// Function that makes an ajax call telling the game engine to process the player's action, then updates the local gameState variable with the response.  
 async function executePlayerAction(action) {
 	await $.ajax({
 		url: '/Game/PlayerAction',
@@ -38,6 +39,7 @@ async function executePlayerAction(action) {
 			console.log('Player action (' + action + ') executed successfully:', actionResult);
 			updateLocalGameState(actionResult); // Update local gameState variable with whatever the action changed.  
 			updateDisplay() // Update screen to show whatever the action changed.  
+			addLogEntry(actionResult.message);
 		},
 		error: function (xhr, status, error) {
 			console.error('Error executing player action (' + action + '):', error);
@@ -59,7 +61,7 @@ async function executePlayerAction(action) {
 	// No need to enable combat buttons here because they are already enabled to allow the player to make this action.
 }
 
-// Function that makes an ajax call telling the game engine to process the engine, then updates the local gameState variable with the response.  
+// Function that makes an ajax call telling the game engine to process the enemy's action, then updates the local gameState variable with the response.  
 async function executeEnemyAction() {
 	await $.ajax({
 		url: '/Game/EnemyAction',
@@ -68,7 +70,8 @@ async function executeEnemyAction() {
 			let actionResult = response;
 			console.log('Enemy action executed successfully:', actionResult);
 			updateLocalGameState(actionResult); // Update local gameState variable with whatever the action changed.  
-			updateDisplay(); // Update screen to show whatever the action changed.  --
+			updateDisplay(); // Update screen to show whatever the action changed.
+			addLogEntry(actionResult.message);
 		},
 		error: function (xhr, status, error) {
 			console.error('Error executing enemy action:', error);
@@ -110,15 +113,12 @@ function updateLocalGameState(actionResult) {
 	gameState.player.healthPotions = actionResult.playerHealthPotions;
 	// Update enemy health.
 	gameState.enemy.currentHealth = actionResult.enemyHealth;
-	// Update message log
-	gameState.messageLog.push(actionResult.message);
 	// Log the updated gameState for debugging.
 	console.log('Updated local gameState:', gameState);
 }
 
 //----------- Functions - Display Updates -----------------------------------------------------------------------------------------------------------  
 
-// Function to update the player's display  
 // Function to update the player's display  
 function updateDisplay() {
 	// Update Player display.
@@ -128,7 +128,6 @@ function updateDisplay() {
 	document.querySelectorAll(".player-attack").forEach(el => { el.textContent = gameState.player.attack; });
 	document.querySelectorAll(".player-defense").forEach(el => { el.textContent = gameState.player.defense; });
 	document.querySelectorAll(".player-hp").forEach(el => { el.textContent = gameState.player.currentHealth + "/" + gameState.player.maxHealth + " HP"; });
-	document.getElementById("player-hp").textContent = gameState.player.currentHealth + "/" + gameState.player.maxHealth + " HP";
 	document.getElementById("player-health-potions").textContent = gameState.player.healthPotions;
 	// Update Enemy display.
 	document.getElementById("enemy-name").textContent = gameState.enemy.name;
@@ -137,11 +136,6 @@ function updateDisplay() {
 	document.getElementById("enemy-attack").textContent = gameState.enemy.attack;
 	document.getElementById("enemy-defense").textContent = gameState.enemy.defense;
 	document.getElementById("enemy-hp").textContent = gameState.enemy.currentHealth + "/" + gameState.enemy.maxHealth + " HP";
-	// Fill the dialog box with any messages
-	let numMessages = gameState.messageLog.length
-	for (let i = numMessages - 5; i < numMessages; i++) {// Show last 5 messages, not the first 5.
-		addLogEntry(gameState.messageLog[i]);
-	}
 }
 
 // Function to add log entries to the dialog box.  
@@ -216,8 +210,7 @@ function hideCombatUI() {
 	// Check if player is still alive
 	if (gameState.player.currentHealth > 0) {
 		// Allow player to start the next fight
-		addLogEntry("Player health is: " + gameState.player.currentHealth); // debug
-		addLogEntry("Enemy defeated! Press [SPACE] to fight the next enemy.");
+		addLogEntry("Press [SPACE] to fight the next enemy.");
 		enableNextFightTrigger(); // Wait for space key press
 	}
 	else {

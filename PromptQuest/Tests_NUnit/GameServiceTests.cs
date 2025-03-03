@@ -42,7 +42,7 @@ namespace PromptQuest.Tests.Services {
 			_httpContext.Features.Set<ISessionFeature>(new SessionFeature { Session = _session });
 			var httpContextAccessor = new HttpContextAccessor { HttpContext = _httpContext };
 
-			_gameService = new GameService(httpContextAccessor);
+			//_gameService = new GameService();
 		}
 
 		[SetUp]
@@ -80,7 +80,7 @@ namespace PromptQuest.Tests.Services {
 			var player = new Player { Name = expectedPlayerName };
 
 			// Act
-			_gameService.UpdatePlayer(player);
+			_gameService.CreateCharacter(player);
 			var result = _gameService.GetGameState();
 
 			// Assert

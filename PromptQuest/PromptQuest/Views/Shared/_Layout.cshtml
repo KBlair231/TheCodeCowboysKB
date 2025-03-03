@@ -17,7 +17,7 @@
 		<div style="height: 5vh; margin-top: 1vh; margin-left: 1vh;">
 			@if (User.Identity?.IsAuthenticated == true) 
 			{
-				<img class="rounded-circle h-100" src="@userProfileImage" alt="User Profile Image" />
+				<img class="rounded-circle h-100" src="@User.FindFirst("GoogleProfileImageUrl")?.Value" alt="User Profile Image" />
 				<a class="PQLink d-inline-block" href="/Account/SignOutFromGoogleLogin">Logout</a>
 			}
 			else

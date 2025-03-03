@@ -3,11 +3,18 @@ using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication.Google;
 using Microsoft.AspNetCore.Mvc;
+using PromptQuest.Services;
 
 namespace PromptQuest.Controllers
 {
 	public class AccountController : Controller
 	{
+		private readonly ILogger<AccountController> _logger;
+
+		public AccountController(ILogger<AccountController> logger) {
+			_logger = logger;
+		}
+
 		public IActionResult GoogleLogin()
 		{
 			var properties = new AuthenticationProperties { RedirectUri = Url.Action("GoogleResponse") };

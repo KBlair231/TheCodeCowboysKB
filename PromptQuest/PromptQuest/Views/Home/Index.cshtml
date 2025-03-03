@@ -10,7 +10,7 @@
 	</div>
 	<!-- Title -->
 	<div class="row justify-content-center">
-			<div class="PQFontTitle AutoScale" style="font-size:6vh">Prompt Quest</div>
+		<div class="PQFontTitle AutoScale" style="font-size:6vh">Prompt Quest</div>
 	</div>
 	<!-- New Adventure button -->
 	<div class="row justify-content-center ">
@@ -19,13 +19,18 @@
 				<button class="MenuButton PQFont AutoScale" style=" height:7vh; font-size: 3vh; width:100%; margin-bottom: 3vh;" asp-controller="Game" asp-action="CreateCharacter">
 					New Adventure
 				</button>
+			</form>
+			<form class="text-center">
+				<button class="MenuButton PQFont AutoScale" id="continue-btn" style=" height:7vh; font-size: 3vh; margin-bottom: 3vh; width:100%" asp-controller="Game" asp-action="Continue">
+					Continue
+				</button>
+			</form>
+			<form class="text-center">
 				<button class="MenuButton PQFont AutoScale" style="height:7vh; font-size: 3vh; width:100%" asp-controller="Game" asp-action="About">
 					About Us
 				</button>
 			</form>
 		</div>
 	</div>
-	
-</div>
 
-<script src="~/js/site.js" asp-append-version="true"></script>
+	<script src="~/js/Index.js" asp-append-version="true"></script>

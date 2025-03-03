@@ -27,14 +27,19 @@ namespace PromptQuest.Controllers {
 			player.HealthPotions = 2;
 			player.Attack = 3;
 			if(ModelState.IsValid) { // Character created succesfully
-				_gameService.ResetGameState(); // Wipe any session data becuase they are starting a new character
-				_gameService.UpdatePlayer(player); // Add player to the game state.
+				_gameService.StartNewGame(); // Start a new game. If the user already has one it will be overwritten.
+				_gameService.CreateCharacter(player); // Add character to the game state.
 				_gameService.StartCombat(); // Start combat right away, for now.
 				return RedirectToAction("Game");
 			}
 			else {
 				return View();
 			}
+		}
+
+		[HttpGet]
+		public IActionResult Continue() {
+			return RedirectToAction("Game");
 		}
 
 		[HttpGet]
@@ -47,6 +52,15 @@ namespace PromptQuest.Controllers {
 			GameState gameState = _gameService.GetGameState();
 			// Return the entire game state.
 			return Json(gameState);
+		}
+
+		[HttpGet]
+		public JsonResult GetGameSaveStatus() {
+			// This method feels misplaced here. Just used to check if the continue button needs to be enabled or not.
+			if(_gameService.DoesUserHaveSavedGame()) {
+				return Json(true);
+			}
+			return Json(false);
 		}
 
 		[HttpPost]
