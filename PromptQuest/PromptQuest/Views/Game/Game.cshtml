@@ -3,8 +3,15 @@
 }
 
 <div class="container-fluid BackgroundColorDark text-center">
+	<!-- Menu Button -->
+	<div class="row justify-content-end">
+		<div class="col" id="menu-button-display" style="max-width: fit-content; padding-right: 30px;">
+			<button class="MenuButton PQBorder PQFont px-5 mb-3 d-block" style="height:4vh; font-size: 2vh;" data-bs-toggle="modal" data-bs-target="#gameModal"> Menu </button>
+		</div>
+	</div>
 	<!--Dialog box row-->
-	<div class="row justify-content-center" style="margin-top:13vh;">
+	<div class="row justify-content-center" style="margin-top:8vh;">
+		<!--Previously 13vh, changed for testing-->
 		<div class="col-6">
 			<div class="text-start DialogBox" style="padding:10px; height:20vh; border: 2px solid white; color: white;"></div>
 		</div>
@@ -14,11 +21,11 @@
 		<!--Player column-->
 		<div class="col" id="player-display" style="max-width: fit-content">
 			<!--Player name-->
-			<div class="text-start" id="player-name" style="font-size: 3vh; padding-left: 10px; padding-right: 10px; height: 4vh; width: auto; color: white; "></div>
+			<div class="player-name text-start" id="player-name" style="font-size: 3vh; padding-left: 10px; padding-right: 10px; height: 4vh; width: auto; color: white; "></div>
 			<!--So that the player portrait and potions are inline-->
 			<div class="d-flex float-start" style="height: fit-content; width: fit-content;">
 				<!--Player image-->
-				<img class="float-start" id="player-image" src="~/images/LoadingImage.png" style="height: 36vh; width: auto; border: 2px solid white;">
+				<img class="player-image float-start" id="player-image" src="~/images/LoadingImage.png" style="height: 36vh; width: auto; border: 2px solid white;">
 				<!--Potion icon-->
 				<img class="align-self-end" style="height: 8vh; width: auto;" src="~/images/PotionIcon.png" alt="Potion Icon">
 				<!--Number of health potions-->
@@ -28,13 +35,13 @@
 				<!--Player Attack icon-->
 				<img class="align-self-end" style="height: 5vh; width: auto;" src="~/images/SwordIcon.png" alt="Attack Icon">
 				<!--Player attack stat-->
-				<span class="text-start p-0" id="player-attack" style="font-size: 3vh; height: 4vh; width: auto; color: white; ">0</span>
+				<span class="player-attack text-start p-0" id="player-attack" style="font-size: 3vh; height: 4vh; width: auto; color: white; ">0</span>
 				<!--Player Defense icon-->
 				<img class="align-self-end" style="height: 5vh; width: auto;" src="~/images/ShieldIcon.png" alt="Shield Icon">
 				<!--Player Defense stat-->
-				<span class="text-start p-0" id="player-defense" style="font-size: 3vh; height: 4vh; width: auto; color: white; ">0</span>
+				<span class="player-defense text-start p-0" id="player-defense" style="font-size: 3vh; height: 4vh; width: auto; color: white; ">0</span>
 				<!--Player health-->
-				<span class="text-start px-2" id="player-hp" style="font-size: 3vh; height: 4vh; width: auto; color: white;"></span>
+				<span class="player-hp text-start px-2" id="player-hp" style="font-size: 3vh; height: 4vh; width: auto; color: white;"></span>
 			</div>
 		</div>
 		<!--Combat buttons Column-->
@@ -44,7 +51,7 @@
 			<!--Defense Button-->
 			<button class="MenuButton PQBorder PQFont px-5 d-block" id="health-potion-btn" style="height:6vh; width: 100%; font-size: 3vh;"> Use Potion </button>
 		</div>
-		<!--Enemy Column--><!--Margin-left so that it doesn't offset the comabt buttons-->
+		<!--Enemy Column--><!--Margin-left so that it doesn't offset the combat buttons-->
 		<div class="col" id="enemy-display" style="max-width: fit-content; margin-left: 8vh">
 			<!--Enemy name-->
 			<div class="text-start" id="enemy-name" style="font-size: 3vh; padding-left: 10px; padding-right: 10px; height: 4vh; width: auto; color: white; "> </div>
@@ -64,7 +71,65 @@
 			</div>
 		</div>
 	</div>
+</div>
 
+<!-- Menu Modal -->
+<div class="modal fade" id="gameModal" tabindex="-1" aria-labelledby="gameModalLabel" aria-hidden="true">
+	<div class="modal-dialog modal-fullscreen">
+		<div class="modal-content BackgroundColorDark">
+			<div class="modal-header">
+				<div class="modal-title" id="modal-label" style="font-size: 4vh; padding-left: 20px; padding-right: 10px; height: 4vh; width: auto; color: white; ">Menu</div>
+				<button type="button" class="MenuButton PQBorder PQFont px-5 mb-3 d-block" style="height:4vh; font-size: 2vh;" data-bs-dismiss="modal" aria-label="Close">Close</button>
+			</div>
+			<div class="modal-body">
+				<div class="row justify-content-between" style="padding-left: 30px; padding-right:30px">
+					<!--Player column-->
+					<div class="col" id="player-display" style="max-width: fit-content; padding: 0px;">
+						<!--Player name-->
+						<div class="player-name text-start" id="player-name" style="font-size: 3vh; padding-left: 10px; padding-right: 10px; height: 4vh; width: auto; color: white; "></div>
+						<div class="row" style="margin-bottom: 3px;">
+							<!--So that the player portrait is inline-->
+							<div class="d-flex float-start" style="height: fit-content; width: fit-content;">
+								<!--Player image-->
+								<img class="player-image float-start" id="player-image" src="~/images/LoadingImage.png" style="height: 36vh; width: auto; border: 2px solid white;">
+							</div>
+						</div>
+						<div class="text-start" style="font-size: 3vh; height: 4vh; width: auto; color: white;">
+							<!--Stats label-->
+							<div class="row" style="margin-bottom: 3px;">
+								<div class="text-start" id="stats-label" style="font-size: 3vh; padding-left: 20px; padding-right: 10px; height: 4vh; width: auto; color: white; ">Stats</div>
+							</div>
+							<!--Player Stat Box-->
+							<div class="float-start" style="border: 2px solid white; width:469.8px; padding: 30px; display: inline-block;">
+								<!--Player Health row-->
+								<div class="row" style="margin-top: 0px">
+									<span class="text-start p-0" id="health-label" style="font-size: 3vh; height: 4vh; width: auto; color: white; ">Health: </span>
+									<!--Player health-->
+									<span class="player-hp text-start px-2" id="player-hp" style="font-size: 3vh; height: 4vh; width: auto; color: white;"></span>
+								</div>
+								<!--Player Attack row-->
+								<div class="row" style="margin-top: 30px">
+									<!--Player Attack icon-->
+									<img class="align-self-end" style="height: 5vh; width: auto;" src="~/images/SwordIcon.png" alt="Attack Icon">
+									<div class="text-start p-0" id="attack-label" style="font-size: 3vh; height: 4vh; width: auto; color: white; ">Attack:</div>
+									<!--Player attack stat-->
+									<div class="player-attack" id="player-attack" style="font-size: 3vh; padding-left: 10px; height: 4vh; width: auto; color: white; ">0</div>
+								</div>
+								<!--Player Defense row-->
+								<div class="row" style="margin-top: 30px">
+									<!--Player Defense icon-->
+									<img class="align-self-end" style="height: 5vh; width: auto;" src="~/images/ShieldIcon.png" alt="Shield Icon">
+									<span class="text-start p-0" id="defense-label" style="font-size: 3vh; height: 4vh; width: auto; color: white; ">Defense:</span>
+									<!--Player Defense stat-->
+									<span class="player-defense text-start" id="player-defense" style="font-size: 3vh; padding-left: 10px; height: 4vh; width: auto; color: white; ">0</span>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
 </div>
 
 <script>

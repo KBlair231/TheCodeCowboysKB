@@ -121,11 +121,12 @@
 	// Function to update the player's display  
 	function updateDisplay() {
 		// Update Player display.
-		document.getElementById("player-name").textContent = gameState.player.name;
-		document.getElementById("player-image").src = "/images/PlaceholderPlayerPortrait.png"; // Placeholder image for now.  
-		document.getElementById("player-image").alt = gameState.player.name;
-		document.getElementById("player-attack").textContent = gameState.player.attack;
-		document.getElementById("player-defense").textContent = gameState.player.defense;
+		document.querySelectorAll(".player-name").forEach(el => { el.textContent = gameState.player.name; });
+		document.querySelectorAll(".player-image").forEach(el => { el.src = "/images/PlaceholderPlayerPortrait.png"; }); // Placeholder image for now.
+		document.querySelectorAll(".player-image").forEach(el => { el.alt = gameState.player.name; });
+		document.querySelectorAll(".player-attack").forEach(el => { el.textContent = gameState.player.attack; });
+		document.querySelectorAll(".player-defense").forEach(el => { el.textContent = gameState.player.defense; });
+		document.querySelectorAll(".player-hp").forEach(el => { el.textContent = gameState.player.currentHealth + "/" + gameState.player.maxHealth + " HP"; });
 		document.getElementById("player-hp").textContent = gameState.player.currentHealth + "/" + gameState.player.maxHealth + " HP";
 		document.getElementById("player-health-potions").textContent = gameState.player.healthPotions;
 		// Update Enemy display.
