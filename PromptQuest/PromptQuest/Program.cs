@@ -61,7 +61,7 @@ builder.Services.AddAuthentication(options => {
 });
 
 builder.Services.AddDbContext<GameStateDbContext>(options => {
-	string connectionString = builder.Configuration["ConectionString-GameStateDb"]; // Get Connection-String from either usre secrets or AzureKeyVault
+	string connectionString = builder.Configuration["ConnectionString-GameStateDb"]; // Get Connection-String from either usre secrets or AzureKeyVault
 	options.UseSqlServer(connectionString);
 });
 
