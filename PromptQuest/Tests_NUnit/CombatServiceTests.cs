@@ -276,5 +276,28 @@ namespace PromptQuest.Tests.Services {
 		}
 
 		#endregion Enemy Attack Tests - End
+
+		#region  Respawn Player Tests
+		[Test]
+		public void RespawnPlayerShouldEndTurnAndCombatAndHeal() {
+			// Arrange
+			_combatService.StartCombat(_gameState);
+			_gameState.Player.CurrentHealth = 0;
+			_gameState.Player.MaxHealth = 10;
+			_gameState.Player.HealthPotions = 0;
+			_gameState.Enemy.Attack = 1;
+			_gameState.Player.Defense = 5;
+			_gameState.InCombat = true;
+			_gameState.IsPlayersTurn = true;
+
+			// Act
+			_combatService.RespawnPlayer(_gameState);
+
+			// Assert
+			Assert.IsFalse(_gameState.InCombat, "Combat should be false after respawning.");
+			Assert.IsFalse(_gameState.IsPlayersTurn, "Player's turn should be false after respawning.");
+			Assert.That(_gameState.Player.CurrentHealth, Is.EqualTo(_gameState.Player.MaxHealth), "Player should be at max health after respawning.");
+		}
+		#endregion Respawn Player Tests - End
 	}
 }

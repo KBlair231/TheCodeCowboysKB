@@ -11,7 +11,7 @@ namespace PromptQuest.Services {
 		Enemy GetEnemy();
 	}
 
-	public class CombatService:ICombatService {
+	public class CombatService : ICombatService {
 
 		/// <summary>Initiates combat between the player and an enemy and updates the game state. </summary>
 		public void StartCombat(GameState gameState) {
@@ -24,8 +24,7 @@ namespace PromptQuest.Services {
 		}
 
 		/// <summary>Respawns the player by resetting their health and potions, and updates the game state.</summary>
-		public void RespawnPlayer(GameState gameState)
-		{
+		public void RespawnPlayer(GameState gameState) {
 			gameState.Player.CurrentHealth = gameState.Player.MaxHealth; // Reset health to max
 			gameState.InCombat = false; // Player is no longer in combat
 			gameState.IsPlayersTurn = false; // It is not the player's turn
@@ -37,14 +36,14 @@ namespace PromptQuest.Services {
 			// Calculate damage as attack - defense.
 			int damage = gameState.Player.Attack - gameState.Enemy.Defense;
 			// If attack is less than one make it one.
-			if(damage < 1)
+			if (damage < 1)
 				damage = 1;
 			// Update enemy health.
 			gameState.Enemy.CurrentHealth -= damage;
 			// Return the result to the user.
 			string message = $"You attacked the {gameState.Enemy.Name} for {damage} damage";
 			// Check if enemy died.
-			if(gameState.Enemy.CurrentHealth <= 0) {
+			if (gameState.Enemy.CurrentHealth <= 0) {
 				gameState.InCombat = false; // Enemy is dead, combat has ended.
 				gameState.IsPlayersTurn = false; // Zero this field out because combat is over.
 				message += $", you have defeated the {gameState.Enemy.Name}."; // Let them know in the same message.
@@ -62,14 +61,14 @@ namespace PromptQuest.Services {
 			PQActionResult actionResult;
 			string message;
 			// If player has no potions, don't let them heal.
-			if(gameState.Player.HealthPotions <= 0) {
+			if (gameState.Player.HealthPotions <= 0) {
 				message = "You have no Health Potions!";
 				actionResult = gameState.ToActionResult();
 				actionResult.Message = message;
 				return actionResult;
 			}
 			// If player is already at max health, don't let them heal.
-			if(gameState.Player.CurrentHealth == gameState.Player.MaxHealth) {
+			if (gameState.Player.CurrentHealth == gameState.Player.MaxHealth) {
 				message = "You are already at max health!";
 				actionResult = gameState.ToActionResult();
 				actionResult.Message = message;
@@ -80,7 +79,7 @@ namespace PromptQuest.Services {
 			gameState.Player.CurrentHealth += 5;
 			message = $"You healed to {gameState.Player.CurrentHealth} HP!";
 			// If the potion put the player's health above maximum, set it to maximum.
-			if(gameState.Player.CurrentHealth >= gameState.Player.MaxHealth) {
+			if (gameState.Player.CurrentHealth >= gameState.Player.MaxHealth) {
 				gameState.Player.CurrentHealth = gameState.Player.MaxHealth;
 				message = $"You healed to max HP!"; // Overwrite current message.
 			}
@@ -101,14 +100,14 @@ namespace PromptQuest.Services {
 			// Calculate damage as attack - defense.
 			int damage = gameState.Enemy.Attack - gameState.Player.Defense;
 			// If attack is less than one make it one.
-			if(damage < 1)
+			if (damage < 1)
 				damage = 1;
 			// Update player health.
 			gameState.Player.CurrentHealth -= damage;
 			// Return an action result with a message describing what happened.
 			string message = $"The {gameState.Enemy.Name} attacked you for {damage} damage";
 			// Check if player died.
-			if(gameState.Player.CurrentHealth < 1) {
+			if (gameState.Player.CurrentHealth < 1) {
 				gameState.InCombat = false; // Player is dead, combat has ended.
 				gameState.IsPlayersTurn = false; // Zero this field out because combat is over.
 				message += ", you have been defeated."; // Let them know in the same message.
@@ -129,8 +128,8 @@ namespace PromptQuest.Services {
 		public Enemy GetEnemy() {
 			Enemy enemy = new Enemy();
 			Random random = new Random();
-			int enemyType = random.Next(1,4); // Generates a number between 1 and 3
-			switch(enemyType) {
+			int enemyType = random.Next(1, 4); // Generates a number between 1 and 3
+			switch (enemyType) {
 				case 1:
 					enemy.Name = "Ancient Orc";
 					enemy.ImageUrl = "/images/PlaceholderAncientOrc.png";
@@ -159,6 +158,6 @@ namespace PromptQuest.Services {
 			return enemy;
 		}
 
-			#endregion Helper Methods - End
+		#endregion Helper Methods - End
 	}
 }
