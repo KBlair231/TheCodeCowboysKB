@@ -7,6 +7,7 @@ namespace PromptQuest.Services {
 		PQActionResult PlayerAttack(GameState gameState);
 		PQActionResult PlayerUseHealthPotion(GameState gameState);
 		PQActionResult EnemyAttack(GameState gameState);
+		void RespawnPlayer(GameState gameState);
 		Enemy GetEnemy();
 	}
 

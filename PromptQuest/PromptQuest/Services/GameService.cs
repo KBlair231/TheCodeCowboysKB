@@ -21,12 +21,12 @@ namespace PromptQuest.Services {
 	public class GameService:IGameService {
 		private readonly ISessionService _sessionService;
 		private readonly IDatabaseService _databaseService;
-		private readonly CombatService _combatService;
+		private readonly ICombatService _combatService;
 
-		public GameService(IHttpContextAccessor httpContextAccessor,ISessionService sessionService,IDatabaseService databaseService) {
+		public GameService(IHttpContextAccessor httpContextAccessor,ISessionService sessionService,IDatabaseService databaseService, ICombatService combatService) {
 			_sessionService = sessionService;
 			_databaseService = databaseService;
-			_combatService = new CombatService();
+			_combatService = combatService;
 		}
 
 		#region Game State and Session Management Methods
