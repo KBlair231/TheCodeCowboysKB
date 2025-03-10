@@ -99,6 +99,8 @@ async function spawnNewEnemy() {
 	// Update display
 	updateDisplay();
 	showCombatUI();
+	// Gets rid of last combat's messages and "press ____ to spawn another enemy" message;
+	clearDialogBox()
 }
 
 // Helper function to update the gameState variable with the results from a PQActionResult.  
@@ -140,7 +142,7 @@ function updateDisplay() {
 
 // Function to add log entries to the dialog box.  
 function addLogEntry(message) {
-	const dialogBox = document.querySelector(".DialogBox");
+	const dialogBox = document.querySelector(".dialog-box");
 	const logLimit = 5;
 	if (dialogBox.childElementCount >= logLimit) {
 		dialogBox.innerHTML = "";
@@ -148,6 +150,11 @@ function addLogEntry(message) {
 	const logDiv = document.createElement("div");
 	logDiv.textContent = message;
 	dialogBox.appendChild(logDiv);
+}
+
+function clearDialogBox() {
+	const dialogBox = document.querySelector(".dialog-box");
+	dialogBox.innerHTML = "";
 }
 
 // Function to disable the combat buttons and remove their event handlers.  
@@ -205,9 +212,9 @@ function hideCombatUI() {
 	const enemyDisplay = document.getElementById("enemy-display");
 	enemyDisplay.style.visibility = "hidden";
 	// Hide the combat buttons display.  
-	const combatButtonsDisplay = document.getElementById("combat-buttons-display");
+	const combatButtonsDisplay = document.getElementById("action-button-display");
 	combatButtonsDisplay.style.visibility = "hidden";
-	// Check if player is still alive
+	// Check if player is still alive 
 	if (gameState.player.currentHealth > 0) {
 		// Allow player to start the next fight
 		addLogEntry("Press [SPACE] to fight the next enemy.");
@@ -254,7 +261,7 @@ function showCombatUI() {
 	const enemyDisplay = document.getElementById("enemy-display");
 	enemyDisplay.style.visibility = "visible";
 	// Show the combat buttons display.
-	const combatButtonsDisplay = document.getElementById("combat-buttons-display");
+	const combatButtonsDisplay = document.getElementById("action-button-display");
 	combatButtonsDisplay.style.visibility = "visible";
 }
 

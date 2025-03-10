@@ -1,40 +1,258 @@
 .btn:focus, .btn:active:focus, .btn-link.nav-link:focus, .form-control:focus, .form-check-input:focus {
-  box-shadow: 0 0 0 0.1rem white, 0 0 0 0.25rem #258cfb;
+	box-shadow: 0 0 0 0.1rem white, 0 0 0 0.25rem #258cfb;
+}
+
+:root {
+	--pq-border: solid .3vmin white;
+	--background-color-primary: #171822;
+	--pq-font-color: white;
+	--pq-font-large: 3vmin;
+	--pq-font-normal: 2vmin;
+	--pq-font-small: 1vmin;
 }
 
 /*------------------------- Layout -------------------------*/
 
 html, body {
 	display: grid;
-	min-height: 100vh;
+	height: 100vh;
+	width: 100vw;
+	background-color: var(--background-color-primary);
 	margin: 0;
 	padding: 0;
 }
 
-.AutoScale { /*Add this class and set the height property to a percentage of the view height (e.g. 50vh)*/
+/*---- Custom layout ------------------------------------------------------------------*/
+
+/* Container for positioning pq-game-elements using x y coordinates anchored to edges of the screen */
+.pq-container {
+	position: relative; /* Makes this the reference point for the absolute positioning of child elements */
+	height: 100%;
+	width: 100%;
+}
+
+/* Always put inside of a pq-container. Add this to any direct child of a pq-container */
+.pq-element {
+	position: absolute; /* Allows this element to be positioned using x y coordinates relative to the edges of it's parent container. */
+	user-select: none; /* Prevents text selection */
+	/* Testing code */
+	/*background-color: aquamarine;*/
+}
+
+/*---- Player Display ------------------------------------------------------------------*/
+
+/* Displays the player's information in the game UI. Must also be a pq-container. */
+.player-display.pq-container {
+	/* position in the bottome left of the screen regardless of screen size. */
+	bottom: 0;
+	left: 0;
+	/* half the size of the smallest screen dimension */
+	width: 50vmin;
+	height: 50vmin;
+}
+
+.player-name {
+	top: 2%;
+	left: 4%;
+	font-size: var(--pq-font-large);
+	color: white;
+}
+
+.player-image {
+	top: 10%;
+	left: 3%;
+	height: 75%;
+	width: auto;
+	border: var(--pq-border);
+}
+
+.player-potions-icon {
+	top: 70%;
+	left: 76%;
+	height: 15%;
 	width: auto;
 }
 
-/*------------------ Background Colors ---------------------*/
-
-.BackgroundColorDark {
-	background-color: #171822;
+.player-potions {
+	top: 74%;
+	left: 89%;
 }
 
-/*----------------------- Fonts ----------------------------*/
-.PQLink {
-	color: white !important;
-	text-decoration: none;
+.player-attack-icon {
+	bottom: 0;
+	left: 3%;
+	height: 15%;
+	width: auto;
 }
-.PQFont {
+
+.player-attack {
+	bottom: 1%;
+	left: 15%;
+	font-size: var(--pq-font-large);
+	width: auto;
+}
+
+.player-defense-icon {
+	bottom: 0;
+	left: 25%;
+	height: 15%;
+	width: auto;
+}
+
+.player-defense {
+	bottom: 1%;
+	left: 38%;
+	font-size: var(--pq-font-large);
+	width: auto;
+}
+
+.player-hp {
+	bottom: 3%;
+	right: 25%;
+	font-size: var(--pq-font-large);
+}
+
+.stat-text {
+	font-size: var(--pq-font-large);
+	color: var(--pq-font-color);
+}
+
+/*----------- Enemy Display ---------------------------------------------------------------------------------  */
+
+/* Displays the enemy's information in the game UI. Must also be a pq-container. */
+.enemy-display.pq-container {
+	/* position in the bottome right of the screen regardless of screen size. */
+	bottom: 0;
+	right: 0;
+	/* half the size of the smallest screen dimension */
+	width: 50vmin;
+	height: 50vmin;
+}
+
+.enemy-name {
+	top: 2%;
+	right: 4%;
+	font-size: var(--pq-font-large);
 	color: white;
-	font-style: normal;
 }
 
-.PQFontTitle {
-	color: white;
-	font-style: normal;
-	font-family: Algerian;
+.enemy-image {
+	top: 10%;
+	right: 3%;
+	height: 75%;
+	width: auto;
+	border: var(--pq-border);
+}
+
+.enemy-attack-icon {
+	bottom: 0;
+	right: 62%;
+	height: 15%;
+	width: auto;
+}
+
+.enemy-attack {
+	bottom: 1%;
+	right: 62%;
+	font-size: var(--pq-font-large);
+	width: auto;
+}
+
+.enemy-defense-icon {
+	bottom: 0;
+	right: 40%;
+	height: 15%;
+	width: auto;
+}
+
+.enemy-defense {
+	bottom: 1%;
+	right: 38%;
+	font-size: var(--pq-font-large);
+	width: auto;
+}
+
+.enemy-hp {
+	bottom: 3%;
+	right: 5%;
+	font-size: var(--pq-font-large);
+}
+
+/*---------- Login Display ------------------------------------------------------------------------------------*/
+
+/* A display that shows the user's authentication status */
+.login-display.pq-element {
+	/* position in the top left of the screen regardless of screen size. */
+	top: 0;
+	left: 0;
+	height: 8vmin;
+	width: 20vmin;
+	padding: 1vmin;
+}
+
+/* Login display styles */
+.login-display img {
+	border-radius: 50%;
+	height: 100%;
+}
+
+.login-display a {
+	display: inline-block;
+	font-size: var(--pq-font-normal);
+	margin-left: .5vmin;
+}
+
+/*--------- Other Displays -------------------------------------------------------------------------------------*/
+
+/* Displays buttons that the user can press to perform actions in the game UI */
+.action-button-display.pq-element {
+	/* position in the bottome center of the screen regardless of screen size. */
+	bottom: 0;
+	left: 50%;
+	transform: translateX(-50%); /* Shifts it by half its width to achieve true centering */
+	/* 1/5 the size of the smallest screen dimension */
+	width: 20vmin;
+	height: 50vmin; /*Testing*/
+}
+
+/* Adds styling to all the buttons in the action button display*/
+.action-button-display button {
+	width: 100%;
+	font-size: var(--pq-font-large);
+	margin-bottom: 2vmin;
+}
+
+/* Displays the the results of the user's action on the screen. */
+.dialog-box.pq-element {
+	/* Position the element at the center of the screen */
+	top: 25%;
+	left: 50%;
+	transform: translate(-50%, -50%); /* Shifts it by half its width and height to achieve true centering */
+	height: 20vmin;
+	width: 100vmin;
+	/* Styling */
+	font-size: var(--pq-font-normal);
+	color: var(--pq-font-color);
+	border: var(--pq-border);
+	padding: 1vmin;
+}
+
+/* A display for the menu button in the game UI. Must also be a pq-element.*/
+.menu-button.pq-element {
+	/* position in the top right of the screen regardless of screen size. */
+	top: 0;
+	right: 0;
+	height: 8vmin;
+	width: 17vmin;
+	padding: 2vmin;
+	justify-content: center;
+}
+
+/* Applies styling to the button inside of the menu button display.*/
+.menu-button button {
+	width: 100%;
+	height: 100%;
+	font-size: var(--pq-font-normal);
 }
 
 /*--------------------- Buttons ---------------------------*/
@@ -43,6 +261,13 @@ html, body {
 	background-color: #171822;
 	border: solid 2px white;
 	border-radius: 15px;
+}
+
+.pq-button {
+	background-color: var(--background-color-primary);
+	color: var(--pq-font-color);
+	border: var(--pq-border);
+	border-radius: 10px;
 }
 
 .modal-header .btn-close {
@@ -59,4 +284,30 @@ html, body {
 .PQBorder {
 	border: solid 2px white;
 	border-radius: 5px;
+}
+
+/*----------------------- General Styling ----------------------------*/
+.pq-link {
+	color: white !important;
+	text-decoration: none;
+}
+
+.AutoScale {
+	width: auto;
+}
+
+.PQFontTitle {
+	color: white;
+	font-style: normal;
+	font-family: Algerian;
+}
+
+.BackgroundColorDark {
+	background-color: var(--background-color-primary);
+}
+
+
+.PQFont {
+	color: white;
+	font-style: normal;
 }

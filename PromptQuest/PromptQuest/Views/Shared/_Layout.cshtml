@@ -1,11 +1,11 @@
 ﻿@{
-	var userProfileImage = User.FindFirst("GoogleProfileImageUrl")?.Value;
+	ViewData["Title"] = "Main Menu";
 }
 <!DOCTYPE html>
 <html lang="en">
 <head>
 	<meta charset="utf-8" />
-	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, maximum-scale=1.0" />
 	<title>PromptQuest - @ViewData["Title"]</title>
 	<link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
 	<link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
@@ -13,19 +13,6 @@
 	<script src="https://apis.google.com/js/platform.js" async defer></script>
 </head>
 <body class="BackgroundColorDark">
-	<header style="height:min-content">
-		<div style="height: 5vh; margin-top: 1vh; margin-left: 1vh;">
-			@if (User.Identity?.IsAuthenticated == true) 
-			{
-				<img class="rounded-circle h-100" src="@User.FindFirst("GoogleProfileImageUrl")?.Value" alt="User Profile Image" />
-				<a class="PQLink d-inline-block" href="/Account/SignOutFromGoogleLogin">Logout</a>
-			}
-			else
-			{
-				<a class="PQLink d-inline-block" href="/Account/GoogleLogin">Login with Google</a>
-			}
-		</div>
-	</header>
 	@RenderBody()
 	<script src="~/lib/jquery/dist/jquery.min.js"></script>
 	<script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>

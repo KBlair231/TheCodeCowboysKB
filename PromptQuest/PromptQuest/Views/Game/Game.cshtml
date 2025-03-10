@@ -1,75 +1,57 @@
 @{
 	ViewData["Title"] = "Game";
+	bool isUserLoggedIn = User.Identity?.IsAuthenticated == true;
+	// Get User's profile image
+	string userProfileImage = User.FindFirst("GoogleProfileImageUrl")?.Value;
+	// Something went wrong, show the default image.
+	if(userProfileImage == null) {
+		userProfileImage = "";
+	}
 }
 
-<div class="container-fluid BackgroundColorDark text-center">
+<div class="pq-container">
 	<!-- Menu Button -->
-	<div class="row justify-content-end">
-		<div class="col" id="menu-button-display" style="max-width: fit-content; padding-right: 30px;">
-			<button class="MenuButton PQBorder PQFont px-5 mb-3 d-block" style="height:4vh; font-size: 2vh;" data-bs-toggle="modal" data-bs-target="#gameModal"> Menu </button>
-		</div>
+	<div class="menu-button pq-element">
+		<button class="pq-button" data-bs-toggle="modal" data-bs-target="#gameModal">Menu</button>
 	</div>
-	<!--Dialog box row-->
-	<div class="row justify-content-center" style="margin-top:8vh;">
-		<!--Previously 13vh, changed for testing-->
-		<div class="col-6">
-			<div class="text-start DialogBox" style="padding:10px; height:20vh; border: 2px solid white; color: white;"></div>
-		</div>
+	<!-- Login Display -->
+	<div class="login-display pq-element">
+		@if(isUserLoggedIn) {
+			<img src="@userProfileImage" alt="User Profile Image" />
+			<a class="pq-link" href="/Account/SignOutFromGoogleLogin">Logout</a>
+		}
+		else {
+			<a class="pq-link" href="/Account/GoogleLogin">Login with Google</a>
+		}
 	</div>
-	<!--Player display, Enemy display, and Combat Buttons display row-->
-	<div class="row justify-content-between" style="margin-top:10vh; padding-left: 30px; padding-right:30px">
-		<!--Player column-->
-		<div class="col" id="player-display" style="max-width: fit-content">
-			<!--Player name-->
-			<div class="player-name text-start" id="player-name" style="font-size: 3vh; padding-left: 10px; padding-right: 10px; height: 4vh; width: auto; color: white; "></div>
-			<!--So that the player portrait and potions are inline-->
-			<div class="d-flex float-start" style="height: fit-content; width: fit-content;">
-				<!--Player image-->
-				<img class="player-image float-start" id="player-image" src="~/images/LoadingImage.png" style="height: 36vh; width: auto; border: 2px solid white;">
-				<!--Potion icon-->
-				<img class="align-self-end" style="height: 8vh; width: auto;" src="~/images/PotionIcon.png" alt="Potion Icon">
-				<!--Number of health potions-->
-				<div class="align-self-end PQFont AutoScale" id="player-health-potions" style="font-size: 3vh; height: 6vh;"></div>
-			</div>
-			<div class="text-start" style="font-size: 3vh; padding-left: 10px; padding-right: 10px; height: 4vh; width: auto; color: white;">
-				<!--Player Attack icon-->
-				<img class="align-self-end" style="height: 5vh; width: auto;" src="~/images/SwordIcon.png" alt="Attack Icon">
-				<!--Player attack stat-->
-				<span class="player-attack text-start p-0" id="player-attack" style="font-size: 3vh; height: 4vh; width: auto; color: white; ">0</span>
-				<!--Player Defense icon-->
-				<img class="align-self-end" style="height: 5vh; width: auto;" src="~/images/ShieldIcon.png" alt="Shield Icon">
-				<!--Player Defense stat-->
-				<span class="player-defense text-start p-0" id="player-defense" style="font-size: 3vh; height: 4vh; width: auto; color: white; ">0</span>
-				<!--Player health-->
-				<span class="player-hp text-start px-2" id="player-hp" style="font-size: 3vh; height: 4vh; width: auto; color: white;"></span>
-			</div>
-		</div>
-		<!--Combat buttons Column-->
-		<div class="col-auto" id="combat-buttons-display" style="">
-			<!--Attack Button-->
-			<button class="MenuButton PQBorder PQFont px-5 mb-3 d-block" id="attack-btn" style="height:6vh; width: 100%; font-size: 3vh;"> Attack </button>
-			<!--Defense Button-->
-			<button class="MenuButton PQBorder PQFont px-5 d-block" id="health-potion-btn" style="height:6vh; width: 100%; font-size: 3vh;"> Use Potion </button>
-		</div>
-		<!--Enemy Column--><!--Margin-left so that it doesn't offset the combat buttons-->
-		<div class="col" id="enemy-display" style="max-width: fit-content; margin-left: 8vh">
-			<!--Enemy name-->
-			<div class="text-start" id="enemy-name" style="font-size: 3vh; padding-left: 10px; padding-right: 10px; height: 4vh; width: auto; color: white; "> </div>
-			<!--Enemy image-->
-			<img class="float-end" id="enemy-image" src="~/images/LoadingImage.png" style="height: 36vh; width: auto; border: 2px solid white;">
-			<div class="text-start" style="font-size: 3vh; padding-left: 10px; padding-right: 10px; height: 4vh; width: auto; color: white;">
-				<!-- Enemy attack icon-->
-				<img class="align-self-end" style="height: 5vh; width: auto;" src="~/images/SwordIcon.png" alt="Attack Icon">
-				<!--Enemy attack stat-->
-				<span class="text-start p-0" id="enemy-attack" style="font-size: 3vh; height: 4vh; width: auto; color: white; ">0</span>
-				<!--Enemy defense icon-->
-				<img class="align-self-end" style="height: 5vh; width: auto;" src="~/images/ShieldIcon.png" alt="Shield Icon">
-				<!--Enemy defense stat-->
-				<span class="text-start p-0" id="enemy-defense" style="font-size: 3vh; height: 4vh; width: auto; color: white; ">0</span>
-				<!--Enemy health-->
-				<span class="text-start px-2" id="enemy-hp" style="font-size: 3vh; padding-right: 10px; height: 4vh; width: auto; color: white; "></span>
-			</div>
-		</div>
+	<!-- Dialog Box -->
+	<div class="dialog-box pq-element"></div>
+	<!-- Player Display -->
+	<div class="player-display pq-element pq-container" id="player-display">@*This also a pq-container so that the below elements can be positioned freely.*@
+		<div class="player-name pq-element"></div>
+		<img class="player-image pq-element" src="~/images/LoadingImage.png" />
+		<img class="player-potions-icon pq-element" src="~/images/PotionIcon.png" alt="Potion Icon">
+		<div class="player-potions stat-text pq-element" id="player-health-potions"></div>
+		<img class="player-attack-icon pq-element" src="~/images/SwordIcon.png" alt="Attack Icon">
+		<span class="player-attack stat-text pq-element" id="player-attack">0</span>
+		<img class="player-defense-icon pq-element" src="~/images/ShieldIcon.png" alt="Shield Icon">
+		<span class="player-defense stat-text pq-element" id="player-defense">0</span>
+		<span class="player-hp stat-text pq-element" id="player-hp"></span>
+	</div>
+	<!-- Action Buttons Display -->
+	<div class="action-button-display pq-element" id="action-button-display">
+		<button class="pq-button" id="attack-btn">Attack</button>
+		<button class="pq-button" id="health-potion-btn">Use Potion</button>
+	</div>
+	<!-- Enemy Display -->
+	<div class="enemy-display pq-element pq-container" id="enemy-display">@*This also a pq-container so that the below elements can be positioned freely.*@
+		<div class="enemy-name pq-element" id="enemy-name"></div>
+		<img class="enemy-image pq-element" id="enemy-image" src="~/images/LoadingImage.png" />
+		<img class="enemy-attack-icon pq-element" src="~/images/SwordIcon.png" alt="Attack Icon">
+		<span class="enemy-attack stat-text pq-element" id="enemy-attack">0</span>
+		<img class="enemy-defense-icon pq-element" src="~/images/ShieldIcon.png" alt="Shield Icon">
+		<span class="enemy-defense stat-text pq-element" id="enemy-defense">0</span>
+		<span class="enemy-hp stat-text pq-element" id="enemy-hp"></span>
 	</div>
 </div>
 
