@@ -17,7 +17,7 @@ namespace PromptQuest.Models {
 		public DbSet<Enemy> Enemies { get; set; }
 
 		protected override void OnConfiguring(DbContextOptionsBuilder options) {
-				string connectionString = _configuration["ConectionString-GameStateDb"]; // Get Connection-String from either usre secrets or AzureKeyVault
+				string connectionString = _configuration["ConnectionString-GameStateDb"]; // Get Connection-String from either usre secrets or AzureKeyVault
 				options.UseSqlServer(connectionString);
 		}
 
