@@ -1,5 +1,6 @@
 ﻿// "Global" Variable to keep track of the game state locally so that functions don't have to be passed parameters all the time.
 let gameState;
+let tutorialflag;
 document.addEventListener("DOMContentLoaded", async function () {
 
 	// Page loaded, get current game state and store it locally.  
@@ -25,6 +26,11 @@ document.addEventListener("DOMContentLoaded", async function () {
 	else {// Player is not in combat.  
 		// Hide combat UI.  
 		hideCombatUI();
+	}
+	let flagresponse = await fetch("/Game/IsTutorial"); // get the tutorial flag
+	tutorialflag=await flagresponse.json()//if in the tutorial: start the tutorial
+	if (tutorialflag) {
+		startTutorial()
 	}
 });
 

@@ -16,6 +16,8 @@ namespace PromptQuest.Services {
 		PQActionResult ExecutePlayerAction(string action);
 		PQActionResult ExecuteEnemyAction();
 		void StartNewGame();
+		public bool IsTutorial();
+		public void SetTutorialFlag(bool Flag);
 	}
 
 	public class GameService:IGameService {
@@ -60,7 +62,13 @@ namespace PromptQuest.Services {
 			}
 			return gameState;
 		}
-
+		public bool IsTutorial(){
+			return _sessionService.GetTutorialFlag();
+		}
+		public void SetTutorialFlag(bool Flag)
+		{
+			_sessionService.SetTutorialFlag(Flag);
+		}
 		/// <summary> Updates the current game state in the session for all users and in the database for logged in users.</summary>
 		private void UpdateGameState(GameState gameState) {
 			if(_databaseService.IsAuthenticatedUser()) {

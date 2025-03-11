@@ -26,6 +26,7 @@ namespace PromptQuest.Controllers {
 			player.CurrentHealth = 15;
 			player.HealthPotions = 2;
 			player.Attack = 3;
+			_gameService.SetTutorialFlag(true);
 			if(ModelState.IsValid) { // Character created succesfully
 				_gameService.StartNewGame(); // Start a new game. If the user already has one it will be overwritten.
 				_gameService.CreateCharacter(player); // Add character to the game state.
@@ -53,6 +54,13 @@ namespace PromptQuest.Controllers {
 			// Return the entire game state.
 			return Json(gameState);
 		}
+		[HttpGet]
+		public JsonResult IsTutorial()
+		{
+			bool flag = _gameService.IsTutorial();
+			// Return the entire game state.
+			return Json(flag);
+		}
 
 		[HttpGet]
 		public JsonResult GetGameSaveStatus() {
@@ -78,6 +86,12 @@ namespace PromptQuest.Controllers {
 		[HttpPost]
 		public void StartCombat() {
 			_gameService.StartCombat();
+		}
+		[HttpPost]
+		public IActionResult EndTutorial()
+		{
+			_gameService.SetTutorialFlag(false);
+			return Ok();
 		}
 
 		[HttpPost]
