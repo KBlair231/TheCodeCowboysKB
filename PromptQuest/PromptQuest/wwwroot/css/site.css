@@ -35,10 +35,10 @@ body {
 	width: 100%;
 }
 
-.pq-container > * {
-	position: absolute; /* Allows this element to be positioned using x y coordinates relative to the edges of it's parent container. */
-	user-select: none; /* Prevents text selection */
-}
+	.pq-container > * {
+		position: absolute; /* Allows this element to be positioned using x y coordinates relative to the edges of it's parent container. */
+		user-select: none; /* Prevents text selection */
+	}
 
 /* We have to have this here instead of in the view because it breaks the bracket coloring in the text editor for some reason. */
 .pq-center-element-x {
@@ -60,7 +60,7 @@ body {
 	background-color: var(--background-color-primary);
 	display: none; /* Hidden by default */
 	z-index: 1050; /* Ensure it's above other elements */
-	padding:2vmin;
+	padding: 2vmin;
 }
 
 .pq-tab-window {
@@ -91,8 +91,8 @@ body {
 	align-items: center; /* Centers vertically */
 }
 
-/* Inventory slots */
-.pq-inventory-slot > img {
+	/* Inventory slots */
+	.pq-inventory-slot > img {
 		max-width: 100%; /* Prevents the image from overflowing */
 		max-height: 100%; /* Keeps the image within the slot */
 		object-fit: contain; /* Ensures the image maintains aspect ratio */
@@ -213,12 +213,12 @@ body {
 }
 
 .pq-tab {
-	position:absolute;
+	position: absolute;
 	background-color: var(--background-color-highlight);
 	font-size: var(--pq-font-normal);
 	color: var(--pq-font-color);
 	border: var(--pq-border);
-	border-bottom:none;
+	border-bottom: none;
 }
 
 .modal-header .btn-close {
@@ -242,6 +242,17 @@ body {
 	color: white !important;
 	text-decoration: none;
 }
+
+.pq-form-control {
+	color: var(--pq-font-color) !important;
+	background-color: var(--background-color-primary) !important;
+}
+
+	/* For overwriting the highlight that happens after autofilling the control */
+	.pq-form-control:-webkit-autofill {
+		-webkit-text-fill-color: var(--pq-font-color) !important;
+		-webkit-box-shadow: 0 0 0 30px var(--background-color-primary) inset !important;
+	}
 
 .AutoScale {
 	width: auto;
