@@ -26,16 +26,26 @@
 <div class="container-fluid BackgroundColorDark" style="padding:25px;">
 	<div class="row justify-content-center h-100">
 		<div class="col-6 text-center" style="border: 2px solid white; border-radius: 150px; padding:45px;">
-			<img src="~/images/PlaceholderPlayerPortrait.png" alt="Default Player Portrait" style="border: 2px solid white; margin-bottom: 35px; width: 392px; height:392px;">
+			<img src="~/images/Warrior.png" alt="Default Player Portrait" id="playerImage" style="border: 2px solid white; margin-bottom: 35px; width: 392px; height:392px;">
 			<div class="row justify-content-center">
 				<form asp-controller="Game" asp-action="CreateCharacter" method="post">
 					<div class="form-group row">
 						<div class="col d-flex justify-content-center">
-							<input type="text" minlength="1" maxlength="25" class="form-control" id="name" name="name" style="color: white; margin-bottom:22px; background-color:transparent; border: 2px solid white; width:392px; height:52px;" placeholder="Enter Character's Name"/>
+							<input type="text" minlength="1" maxlength="25" class="form-control" id="name" name="name" style="color: white; background-color:transparent; border: 2px solid white; width:392px; height:52px;" placeholder="Enter Character's Name"/>
 						</div>
 					</div>
 					<div class="row" style="margin-bottom:22px;">
 						<span asp-validation-for="Name" class="text-danger"></span>
+					</div>
+					<div class="form-group row">
+						<div class="col d-flex justify-content-center">
+							<select asp-for="Class" class="form-control" id="classSelect" onchange="updatePlayerImage()" style="margin-bottom:22px; border: 2px solid white; width:392px; height:52px;">
+								<option value="Warrior">Warrior</option>
+								<option value="Mage">Mage</option>
+								<option value="Archer">Archer</option>
+							</select>
+							<span asp-validation-for="Class" class="text-danger"></span>
+						</div>
 					</div>
 					<div class="form-group row">
 						<div class="col">
@@ -47,3 +57,23 @@
 		</div>
 	</div>
 </div>
+
+@section Scripts {
+	<script>
+		function updatePlayerImage() {
+			var classSelect = document.getElementById("classSelect");
+			var playerImage = document.getElementById("playerImage");
+			switch (classSelect.value) {
+				case "Warrior":
+					playerImage.src = "/images/Warrior.png";
+					break;
+				case "Mage":
+					playerImage.src = "/images/Mage.png";
+					break;
+				case "Archer":
+					playerImage.src = "/images/Archer.png";
+					break;
+			}
+		}
+	</script>
+}

@@ -91,6 +91,10 @@ namespace PromptQuest.Migrations
                     b.Property<int>("Attack")
                         .HasColumnType("int");
 
+                    b.Property<string>("Class")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<int>("CurrentHealth")
                         .HasColumnType("int");
 

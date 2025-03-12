@@ -13,6 +13,7 @@ namespace PromptQuest.Models {
 		public int CurrentHealth { get; set; }
 		public int Defense { get; set; } = 1;
 		public int Attack { get; set; }
-
+		[Required]
+		public string Class { get; set; }
 	}
 }

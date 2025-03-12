@@ -4,7 +4,7 @@ using Microsoft.Extensions.Options;
 using PromptQuest.Models;
 
 namespace PromptQuest.Models {
-	public class GameStateDbContext:DbContext {
+	public class GameStateDbContext : DbContext {
 
 		private readonly IConfiguration _configuration;
 
@@ -17,8 +17,8 @@ namespace PromptQuest.Models {
 		public DbSet<Enemy> Enemies { get; set; }
 
 		protected override void OnConfiguring(DbContextOptionsBuilder options) {
-				string connectionString = _configuration["ConnectionString-GameStateDb"]; // Get Connection-String from either usre secrets or AzureKeyVault
-				options.UseSqlServer(connectionString);
+			string connectionString = _configuration["ConnectionString-GameStateDb"]; // Get Connection-String from either usre secrets or AzureKeyVault
+			options.UseSqlServer(connectionString);
 		}
 
 		protected override void OnModelCreating(ModelBuilder modelBuilder) {

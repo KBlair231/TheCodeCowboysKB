@@ -26,6 +26,7 @@ namespace PromptQuest.Controllers {
 			player.CurrentHealth = 15;
 			player.HealthPotions = 2;
 			player.Attack = 3;
+			player.Class = player.Class;
 			_gameService.SetTutorialFlag(true);
 			if(ModelState.IsValid) { // Character created succesfully
 				_gameService.StartNewGame(); // Start a new game. If the user already has one it will be overwritten.
