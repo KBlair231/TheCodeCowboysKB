@@ -5,6 +5,7 @@
 :root {
 	--pq-border: solid .3vmin white;
 	--background-color-primary: #171822;
+	--background-color-highlight: #282a3b;
 	--pq-font-color: white;
 	--pq-font-large: 3vmin;
 	--pq-font-normal: 2vmin;
@@ -19,97 +20,109 @@ html, body {
 	width: 100vw;
 	background-color: var(--background-color-primary);
 	margin: 0;
-	padding: 0;
+}
+
+body {
+	padding: 2vmin; /* Adds some padding around the whole screen */
 }
 
 /*---- Custom layout ------------------------------------------------------------------*/
 
-/* Container for positioning pq-game-elements using x y coordinates anchored to edges of the screen */
+/* Container for positioning pq-game-elements using x y coordinates anchored to edges of the container */
 .pq-container {
 	position: relative; /* Makes this the reference point for the absolute positioning of child elements */
 	height: 100%;
 	width: 100%;
 }
 
-/* Always put inside of a pq-container. Add this to any direct child of a pq-container */
-.pq-element {
+.pq-container > * {
 	position: absolute; /* Allows this element to be positioned using x y coordinates relative to the edges of it's parent container. */
 	user-select: none; /* Prevents text selection */
-	/* Testing code */
-	/*background-color: aquamarine;*/
 }
 
-/*---- Player Display ------------------------------------------------------------------*/
+/* We have to have this here instead of in the view because it breaks the bracket coloring in the text editor for some reason. */
+.pq-center-element-x {
+	transform: translateX(-50%); /* Shifts it by half its width to achieve true centering */
+}
 
-/* Displays the player's information in the game UI. Must also be a pq-container. */
-.player-display.pq-container {
-	/* position in the bottome left of the screen regardless of screen size. */
-	bottom: 0;
+/* We have to have this here instead of in the view because it breaks the bracket coloring in the text editor for some reason. */
+.pq-center-element-y {
+	transform: translateY(-50%); /* Shifts it by half its width to achieve true centering */
+}
+
+/* Custom Modal window */
+.pq-modal-fullscreen {
+	position: fixed;
+	top: 0; /* Default position */
 	left: 0;
-	/* half the size of the smallest screen dimension */
-	width: 50vmin;
-	height: 50vmin;
+	height: 100%;
+	width: 100%; /* Defaults to Fullscreen */
+	background-color: var(--background-color-primary);
+	display: none; /* Hidden by default */
+	z-index: 1050; /* Ensure it's above other elements */
+	padding:2vmin;
 }
+
+.pq-tab-window {
+	position: absolute;
+	background-color: var(--background-color-primary);
+	padding: 2vmin;
+}
+
+/* A flex display that will automatically stack inventory slots based on screen size */
+.pq-inventory-display {
+	display: flex; /* Use flexbox for layout */
+	flex-wrap: wrap; /* Allow items to wrap to the next line */
+	justify-content: center; /* Center items horizontally */
+	overflow-y: visible; /* Enable vertical scrolling if content overflows */
+	overflow-x: hidden; /* Hide horizontal scrolling (optional) */
+	gap: 10px; /* Space between squares */
+}
+
+/* Inventory slots */
+.pq-inventory-slot {
+	width: 12vmin; /* Fixed width */
+	height: 12vmin; /* Fixed height */
+	border: var(--pq-border);
+	border-radius: 10px;
+	/* Flexbox for centering */
+	display: flex;
+	justify-content: center; /* Centers horizontally */
+	align-items: center; /* Centers vertically */
+}
+
+/* Inventory slots */
+.pq-inventory-slot > img {
+		max-width: 100%; /* Prevents the image from overflowing */
+		max-height: 100%; /* Keeps the image within the slot */
+		object-fit: contain; /* Ensures the image maintains aspect ratio */
+		border-radius: 10px;
+	}
+
+/*---- Reusable Player Displays ------------------------------------------------------------------*/
 
 .player-name {
-	top: 2%;
-	left: 4%;
 	font-size: var(--pq-font-large);
-	color: white;
+	color: var(--pq-font-color);
 }
 
 .player-image {
-	top: 10%;
-	left: 3%;
-	height: 75%;
-	width: auto;
 	border: var(--pq-border);
 }
 
-.player-potions-icon {
-	top: 70%;
-	left: 76%;
-	height: 15%;
-	width: auto;
-}
-
-.player-potions {
-	top: 74%;
-	left: 89%;
-}
-
-.player-attack-icon {
-	bottom: 0;
-	left: 3%;
-	height: 15%;
-	width: auto;
-}
-
 .player-attack {
-	bottom: 1%;
-	left: 15%;
 	font-size: var(--pq-font-large);
-	width: auto;
-}
-
-.player-defense-icon {
-	bottom: 0;
-	left: 25%;
-	height: 15%;
-	width: auto;
+	color: var(--pq-font-color);
 }
 
 .player-defense {
-	bottom: 1%;
-	left: 38%;
 	font-size: var(--pq-font-large);
-	width: auto;
+	color: var(--pq-font-color);
 }
 
 .player-hp {
-	bottom: 3%;
-	right: 25%;
 	font-size: var(--pq-font-large);
+	color: var(--pq-font-color);
 }
 
 .stat-text {
@@ -117,80 +130,34 @@ html, body {
 	color: var(--pq-font-color);
 }
 
-/*----------- Enemy Display ---------------------------------------------------------------------------------  */
-
-/* Displays the enemy's information in the game UI. Must also be a pq-container. */
-.enemy-display.pq-container {
-	/* position in the bottome right of the screen regardless of screen size. */
-	bottom: 0;
-	right: 0;
-	/* half the size of the smallest screen dimension */
-	width: 50vmin;
-	height: 50vmin;
-}
+/*----------- Reusable Enemy Displays ---------------------------------------------------------------------------------  */
 
 .enemy-name {
-	top: 2%;
-	right: 4%;
 	font-size: var(--pq-font-large);
-	color: white;
+	color: var(--pq-font-color);
 }
 
 .enemy-image {
-	top: 10%;
-	right: 3%;
-	height: 75%;
-	width: auto;
 	border: var(--pq-border);
 }
 
-.enemy-attack-icon {
-	bottom: 0;
-	right: 62%;
-	height: 15%;
-	width: auto;
-}
-
 .enemy-attack {
-	bottom: 1%;
-	right: 62%;
 	font-size: var(--pq-font-large);
-	width: auto;
-}
-
-.enemy-defense-icon {
-	bottom: 0;
-	right: 40%;
-	height: 15%;
-	width: auto;
+	color: var(--pq-font-color);
 }
 
 .enemy-defense {
-	bottom: 1%;
-	right: 38%;
 	font-size: var(--pq-font-large);
-	width: auto;
+	color: var(--pq-font-color);
 }
 
 .enemy-hp {
-	bottom: 3%;
-	right: 5%;
 	font-size: var(--pq-font-large);
+	color: var(--pq-font-color);
 }
 
-/*---------- Login Display ------------------------------------------------------------------------------------*/
+/*---------- Reusable Login Display ------------------------------------------------------------------------------------*/
 
-/* A display that shows the user's authentication status */
-.login-display.pq-element {
-	/* position in the top left of the screen regardless of screen size. */
-	top: 0;
-	left: 0;
-	height: 8vmin;
-	width: 20vmin;
-	padding: 1vmin;
-}
-
-/* Login display styles */
 .login-display img {
 	border-radius: 50%;
 	height: 100%;
@@ -204,16 +171,6 @@ html, body {
 
 /*--------- Other Displays -------------------------------------------------------------------------------------*/
 
-/* Displays buttons that the user can press to perform actions in the game UI */
-.action-button-display.pq-element {
-	/* position in the bottome center of the screen regardless of screen size. */
-	bottom: 0;
-	left: 50%;
-	transform: translateX(-50%); /* Shifts it by half its width to achieve true centering */
-	/* 1/5 the size of the smallest screen dimension */
-	width: 20vmin;
-	height: 50vmin; /*Testing*/
-}
 
 /* Adds styling to all the buttons in the action button display*/
 .action-button-display button {
@@ -223,13 +180,7 @@ html, body {
 }
 
 /* Displays the the results of the user's action on the screen. */
-.dialog-box.pq-element {
-	/* Position the element at the center of the screen */
-	top: 25%;
-	left: 50%;
-	transform: translate(-50%, -50%); /* Shifts it by half its width and height to achieve true centering */
-	height: 20vmin;
-	width: 100vmin;
+.dialog-box {
 	/* Styling */
 	font-size: var(--pq-font-normal);
 	color: var(--pq-font-color);
@@ -237,22 +188,10 @@ html, body {
 	padding: 1vmin;
 }
 
-/* A display for the menu button in the game UI. Must also be a pq-element.*/
-.menu-button.pq-element {
-	/* position in the top right of the screen regardless of screen size. */
-	top: 0;
-	right: 0;
-	height: 8vmin;
-	width: 17vmin;
-	padding: 2vmin;
-	justify-content: center;
-}
-
 /* Applies styling to the button inside of the menu button display.*/
-.menu-button button {
+.menu-button {
 	width: 100%;
 	height: 100%;
-	font-size: var(--pq-font-normal);
 }
 
 /*--------------------- Buttons ---------------------------*/
@@ -264,10 +203,22 @@ html, body {
 }
 
 .pq-button {
+	padding-top: 5px;
+	padding-bottom: 5px;
 	background-color: var(--background-color-primary);
+	font-size: var(--pq-font-normal);
 	color: var(--pq-font-color);
 	border: var(--pq-border);
 	border-radius: 10px;
+}
+
+.pq-tab {
+	position:absolute;
+	background-color: var(--background-color-highlight);
+	font-size: var(--pq-font-normal);
+	color: var(--pq-font-color);
+	border: var(--pq-border);
+	border-bottom:none;
 }
 
 .modal-header .btn-close {

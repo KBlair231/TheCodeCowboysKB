@@ -11,11 +11,9 @@
 
 <div class="pq-container">
 	<!-- Menu Button -->
-	<div class="menu-button pq-element">
-		<button class="pq-button" data-bs-toggle="modal" data-bs-target="#gameModal">Menu</button>
-	</div>
+	<button class="pq-button" id="pq-modal-open" style="top:0; right:0; height: 7vmin; width: 14vmin;"> Menu </button>
 	<!-- Login Display -->
-	<div class="login-display pq-element">
+	<div class="login-display" style="top: 0; left: 0; height: 8vmin; width: 20vmin;">
 		@if(isUserLoggedIn) {
 			<img src="@userProfileImage" alt="User Profile Image" />
 			<a class="pq-link" href="/Account/SignOutFromGoogleLogin">Logout</a>
@@ -25,94 +23,75 @@
 		}
 	</div>
 	<!-- Dialog Box -->
-	<div class="dialog-box pq-element"></div>
+	<div class="dialog-box pq-center-element-x" style="top: 25%; left: 50%; height: 20vmin; width: 100vmin;"></div>
 	<!-- Player Display -->
-	<div class="player-display pq-element pq-container" id="player-display">@*This also a pq-container so that the below elements can be positioned freely.*@
-		<div class="player-name pq-element"></div>
-		<img class="player-image pq-element" src="~/images/LoadingImage.png" />
-		<img class="player-potions-icon pq-element" src="~/images/PotionIcon.png" alt="Potion Icon">
-		<div class="player-potions stat-text pq-element" id="player-health-potions"></div>
-		<img class="player-attack-icon pq-element" src="~/images/SwordIcon.png" alt="Attack Icon">
-		<span class="player-attack stat-text pq-element" id="player-attack">0</span>
-		<img class="player-defense-icon pq-element" src="~/images/ShieldIcon.png" alt="Shield Icon">
-		<span class="player-defense stat-text pq-element" id="player-defense">0</span>
-		<span class="player-hp stat-text pq-element" id="player-hp"></span>
+	<div class="pq-container" id="player-display" style="bottom: 0; left: 0; width: 50vmin; height: 50vmin;">
+		<div class="player-name" style="top: 2%; left: 4%;"></div>
+		<img class="player-image" src="~/images/LoadingImage.png" style="top: 10%; left: 3%; height: 75%; width: auto;" />
+		<img class="player-potions-icon" src="~/images/PotionIcon.png" alt="Potion Icon" style="top: 70%; left: 76%; height: 15%; width: auto;">
+		<div class="player-potions stat-text" id="player-health-potions" style="top: 74%; left: 89%;"></div>
+		<img class="player-attack-icon" src="~/images/SwordIcon.png" alt="Attack Icon" style="bottom: 0; left: 3%; height: 15%; width: auto;">
+		<span class="player-attack stat-text" id="player-attack" style="bottom: 1%; left: 15%;">0</span>
+		<img class="player-defense-icon" src="~/images/ShieldIcon.png" alt="Shield Icon" style="bottom: 0; left: 25%; height: 15%; width: auto;">
+		<span class="player-defense stat-text" id="player-defense" style="bottom: 1%; left: 38%;">0</span>
+		<span class="player-hp stat-text" id="player-hp" style="bottom: 3%; right: 25%;"></span>
 	</div>
 	<!-- Action Buttons Display -->
-	<div class="action-button-display pq-element" id="action-button-display">
-		<button class="pq-button" id="attack-btn">Attack</button>
-		<button class="pq-button" id="health-potion-btn">Use Potion</button>
+	<div class="pq-center-element-x" id="action-button-display" style="bottom: 0; left: 50%; height: 45vmin; width: fit-content;">
+		<button class="pq-button" id="attack-btn" style="margin-bottom:2vmin; width: 100%;">Attack</button>
+		<button class="pq-button" id="health-potion-btn" style="margin-bottom:2vmin; width: 100%;">Use Potion</button>
 	</div>
 	<!-- Enemy Display -->
-	<div class="enemy-display pq-element pq-container" id="enemy-display">@*This also a pq-container so that the below elements can be positioned freely.*@
-		<div class="enemy-name pq-element" id="enemy-name"></div>
-		<img class="enemy-image pq-element" id="enemy-image" src="~/images/LoadingImage.png" />
-		<img class="enemy-attack-icon pq-element" src="~/images/SwordIcon.png" alt="Attack Icon">
-		<span class="enemy-attack stat-text pq-element" id="enemy-attack">0</span>
-		<img class="enemy-defense-icon pq-element" src="~/images/ShieldIcon.png" alt="Shield Icon">
-		<span class="enemy-defense stat-text pq-element" id="enemy-defense">0</span>
-		<span class="enemy-hp stat-text pq-element" id="enemy-hp"></span>
+	<div class="pq-container" id="enemy-display" style="bottom: 0; right: 0; width: 50vmin; height: 50vmin;">
+		<div class="enemy-name" id="enemy-name" style="top: 2%; right: 4%;"></div>
+		<img class="enemy-image" id="enemy-image" src="~/images/LoadingImage.png" style="top: 10%; right: 3%; height: 75%; width: auto;" />
+		<img class="enemy-attack-icon" src="~/images/SwordIcon.png" alt="Attack Icon" style="bottom: 0; right: 62%; height: 15%; width: auto;">
+		<span class="enemy-attack stat-text" id="enemy-attack" style="bottom: 1%; right: 62%;"></span>
+		<img class="enemy-defense-icon" src="~/images/ShieldIcon.png" alt="Shield Icon" style="bottom: 0; right: 40%; height: 15%; width: auto;">
+		<span class="enemy-defense stat-text" id="enemy-defense" style="bottom: 1%; right: 38%;"></span>
+		<span class="enemy-hp stat-text" id="enemy-hp" style="bottom: 3%; right: 5%;"></span>
 	</div>
 </div>
 
-<!-- Menu Modal -->
-<div class="modal fade" id="gameModal" tabindex="-1" aria-labelledby="gameModalLabel" aria-hidden="true">
-	<div class="modal-dialog modal-fullscreen">
-		<div class="modal-content BackgroundColorDark">
-			<div class="modal-header">
-				<div class="modal-title" id="modal-label" style="font-size: 4vh; padding-left: 20px; padding-right: 10px; height: 4vh; width: auto; color: white; ">Menu</div>
-				<button type="button" class="MenuButton PQBorder PQFont px-5 mb-3 d-block" style="height:4vh; font-size: 2vh;" data-bs-dismiss="modal" aria-label="Close">Close</button>
-			</div>
-			<div class="modal-body">
-				<div class="row justify-content-between" style="padding-left: 30px; padding-right:30px">
-					<!--Player column-->
-					<div class="col" id="player-display" style="max-width: fit-content; padding: 0px;">
-						<!--Player name-->
-						<div class="player-name text-start" id="player-name" style="font-size: 3vh; padding-left: 10px; padding-right: 10px; height: 4vh; width: auto; color: white; "></div>
-						<div class="row" style="margin-bottom: 3px;">
-							<!--So that the player portrait is inline-->
-							<div class="d-flex float-start" style="height: fit-content; width: fit-content;">
-								<!--Player image-->
-								<img class="player-image float-start" id="player-image" src="~/images/LoadingImage.png" style="height: 36vh; width: auto; border: 2px solid white;">
-							</div>
+<div class="pq-modal-fullscreen" id="pq-modal">
+	<div class="pq-container">
+		<!-- Player display on the left -->
+		<button class="pq-button" id="pq-modal-close" style="top:0; right:2vmin; height: 8vmin; width: 17vmin;"> Close </button>
+		<div class="player-name" style="top:15vmin; left:5vmin; height:6vmin; width:40vmin"></div>
+		<img class="player-image" style="top:20vmin; left:5vmin; height: 40vmin; width: auto;" src="~/images/LoadingImage.png" alt="Alternate Text" />
+		<!-- Stats box label -->
+		<div class="" style="bottom:30vmin; left:6vmin; height: 5vmin; width: 17vmin; font-size:3vmin; color: white;"> Stats </div>
+		<!-- Stats Box -->
+		<div class="pq-container PQBorder" style="bottom:0; left:5vmin; height:30vmin; width:40vmin">
+			<span class="stat-text" style="top:2%; left:5%; height: 15%; width:100%">Health: </span>
+			<span class="player-hp stat-text" id="player-hp" style="top:2%; left:30%; height: 15%; width:100%"></span>
+			<img class="player-defense-icon" src="~/images/ShieldIcon.png" alt="Shield Icon" style="top:19%; left:2%; height: 20%; width:auto">
+			<span class="player-defense stat-text" id="player-defense" style="top:22%; left:17%; height: auto; width:auto">0</span>
+			<img class="player-attack-icon" src="~/images/SwordIcon.png" alt="Attack Icon" style="top:40%; left:2%; height: 19%; width:auto">
+			<span class="player-attack stat-text" id="player-attack" style="top:44%; left:17%; height: auto; width:auto">0</span>
+		</div>
+		<!--Tab Menu-->
+		<div class="pq-tab-window PQBorder" style="bottom:0; right:0vmin; height:85vmin; width:150vmin; max-width: 97%;">
+			<!--Tab Buttons-->
+			<button class="pq-tab" id="inventory-button" style="top:-4.5vmin; left:1vmin; height: 4vmin; width: 12vmin;"> Inventory </button>
+			<!-- Inventory window -->
+			<div class="pq-container">
+				<div class="pq-inventory-display" style="bottom:0; left:0; height: 35%; width: 100%">
+					@for(int i = 1;i <= 20;i++) {
+						<div class="pq-inventory-slot">
+						@if(i < 5) {//Fill the first 4 slots with placeholder images.
+								string imageUri = "~/images/PlaceholderItem" + i + ".png";
+								@* string imageUri = "~/images/PlaceholderItem.1png"; *@
+								<img src="@Url.Content(imageUri)">
+						}
 						</div>
-						<div class="text-start" style="font-size: 3vh; height: 4vh; width: auto; color: white;">
-							<!--Stats label-->
-							<div class="row" style="margin-bottom: 3px;">
-								<div class="text-start" id="stats-label" style="font-size: 3vh; padding-left: 20px; padding-right: 10px; height: 4vh; width: auto; color: white; ">Stats</div>
-							</div>
-							<!--Player Stat Box-->
-							<div class="float-start" style="border: 2px solid white; width:469.8px; padding: 30px; display: inline-block;">
-								<!--Player Health row-->
-								<div class="row" style="margin-top: 0px">
-									<span class="text-start p-0" id="health-label" style="font-size: 3vh; height: 4vh; width: auto; color: white; ">Health: </span>
-									<!--Player health-->
-									<span class="player-hp text-start px-2" id="player-hp" style="font-size: 3vh; height: 4vh; width: auto; color: white;"></span>
-								</div>
-								<!--Player Attack row-->
-								<div class="row" style="margin-top: 30px">
-									<!--Player Attack icon-->
-									<img class="align-self-end" style="height: 5vh; width: auto;" src="~/images/SwordIcon.png" alt="Attack Icon">
-									<div class="text-start p-0" id="attack-label" style="font-size: 3vh; height: 4vh; width: auto; color: white; ">Attack:</div>
-									<!--Player attack stat-->
-									<div class="player-attack" id="player-attack" style="font-size: 3vh; padding-left: 10px; height: 4vh; width: auto; color: white; ">0</div>
-								</div>
-								<!--Player Defense row-->
-								<div class="row" style="margin-top: 30px">
-									<!--Player Defense icon-->
-									<img class="align-self-end" style="height: 5vh; width: auto;" src="~/images/ShieldIcon.png" alt="Shield Icon">
-									<span class="text-start p-0" id="defense-label" style="font-size: 3vh; height: 4vh; width: auto; color: white; ">Defense:</span>
-									<!--Player Defense stat-->
-									<span class="player-defense text-start" id="player-defense" style="font-size: 3vh; padding-left: 10px; height: 4vh; width: auto; color: white; ">0</span>
-								</div>
-							</div>
-						</div>
-					</div>
+					}
 				</div>
 			</div>
 		</div>
 	</div>
 </div>
+
 <!-- Respawn Modal -->
 <div class="modal fade" id="respawnModal" tabindex="-1" aria-labelledby="respawnModalLabel" aria-hidden="true">
 	<div class="modal-dialog PQBorder PQFont text-light">
@@ -149,3 +128,4 @@
 
 <script src="~/js/Tutorial.js"></script>
 <script src="~/js/Game.js"></script>
+<script src="~/js/Menu.js"></script>

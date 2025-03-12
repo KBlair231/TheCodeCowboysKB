@@ -41,6 +41,8 @@ namespace PromptQuest.Controllers {
 
 		[HttpGet]
 		public IActionResult Continue() {
+			//Assume the user has already completed the tutorial, if they haven't then sucks to suck.
+			_gameService.SetTutorialFlag(false);
 			return RedirectToAction("Game");
 		}
 
