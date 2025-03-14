@@ -40,6 +40,43 @@ body {
 		user-select: none; /* Prevents text selection */
 	}
 
+/* Allows for tabs in modal to be shown and hidden */
+.tab-content {
+	display: none;
+}
+
+/* Allows for tabs in modal to be shown and hidden */
+.active-tab {
+	display: block;
+}
+
+/* Style for map container */
+.map-container {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	gap: 10px;
+	margin-top: 20px;
+	position: relative;
+}
+
+/* Style for map nodes */
+.map-node {
+	width: 30px;
+	height: 30px;
+	border-radius: 50%;
+	background-color: var(--background-color-highlight);
+	border: 2px solid white;
+	cursor: pointer;
+}
+
+/* Style for the dotted connecting lines */
+.map-line {
+	width: 50px;
+	height: 2px;
+	background: repeating-linear-gradient(90deg, #ccc, #ccc 5px, transparent 5px, transparent 10px);
+}
+
 /* We have to have this here instead of in the view because it breaks the bracket coloring in the text editor for some reason. */
 .pq-center-element-x {
 	transform: translateX(-50%); /* Shifts it by half its width to achieve true centering */

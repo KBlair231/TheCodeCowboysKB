@@ -21,3 +21,19 @@
 		}
 	});
 });
+
+// Function to switch between tabs in the modal
+function switchTab(tabName) {
+	// Hide all tabs
+	document.querySelectorAll('.tab-content').forEach(tab => {
+		tab.classList.remove('active-tab');
+	});
+
+	// Show the selected tab
+	document.getElementById(tabName + '-tab').classList.add('active-tab');
+}
+
+// Set Inventory as default active tab on page load
+document.addEventListener("DOMContentLoaded", function () {
+	switchTab('inventory');
+});
