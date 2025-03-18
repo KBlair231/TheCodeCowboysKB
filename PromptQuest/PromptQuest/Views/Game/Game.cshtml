@@ -80,15 +80,19 @@
 			<button class="pq-tab" id="map-button" style="top:-4.5vmin; left:14vmin; height: 4vmin; width: 12vmin;" onclick="switchTab('map')"> Map </button>
 			<!-- Inventory window -->
 			<div id="inventory-tab" class="pq-container tab-content active-tab">
+				<div class="pq-inventory-display pq-container" style="top:0; right:0; height: 60%; width: 75%; border:white solid 2px">
+					<div id="item-name" style="top:5%; height:15%; width:45%; left:45%; font-size:24px; color:white;"></div>
+					<img id="item-image" src="~/images/PlaceholderItem1.png" style="bottom:5%; left:2%; height:90%; width:40%; display:none; border-radius:10px;">
+					<img id="shield-icon" src="~/images/ShieldIcon.png" style="bottom:10%; right: 45%; height:20%; width:10%; display:none;">
+					<div id="item-defense" style="bottom:10%; right:35%; height:20%; width:10%; font-size:50px; color:white;"></div>
+					<img id="sword-icon" src="~/images/SwordIcon.png" style="bottom:10%; right: 25%; height:20%; width:10%; display:none;">
+					<div id="item-attack" style="bottom:10%; right:15%; height:20%; width:10%; font-size:50px; color:white;"></div>
+				</div>
 				<div class="pq-inventory-display" style="bottom:0; left:0; height: 35%; width: 100%">
 					@for (int i = 1; i <= 20; i++)
 					{
-						<div class="pq-inventory-slot">
-							@if (i < 5)
-							{ // Fill the first 4 slots with placeholder images.
-								string imageUri = "~/images/PlaceholderItem" + i + ".png";
-								<img src="@Url.Content(imageUri)">
-							}
+						<div class="pq-inventory-slot" id="inventory-slot-@i">
+							
 						</div>
 					}
 				</div>
@@ -150,3 +154,4 @@
 <script src="~/js/Tutorial.js"></script>
 <script src="~/js/Game.js"></script>
 <script src="~/js/Menu.js"></script>
+<script src="~/js/Inventory.js"></script>

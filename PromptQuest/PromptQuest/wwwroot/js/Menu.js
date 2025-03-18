@@ -31,6 +31,10 @@ function switchTab(tabName) {
 
 	// Show the selected tab
 	document.getElementById(tabName + '-tab').classList.add('active-tab');
+	if (tabName === 'inventory') {
+		// Load items into the inventory tab
+		LoadItems();
+	}
 }
 
 // Set Inventory as default active tab on page load
