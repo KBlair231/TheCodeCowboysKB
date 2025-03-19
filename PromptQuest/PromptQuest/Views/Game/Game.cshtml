@@ -17,7 +17,7 @@
 	<div class="login-display" style="top: 0; left: 0; height: 8vmin; width: 20vmin;">
 		@if (isUserLoggedIn)
 		{
-			<img src="@userProfileImage" alt="User Profile Image" />
+			<img src="@userProfileImage"/>
 			<a class="pq-link" href="/Account/SignOutFromGoogleLogin">Logout</a>
 		}
 		else
@@ -61,32 +61,32 @@
 		<!-- Player display on the left -->
 		<button class="pq-button" id="pq-modal-close" style="top:0; right:2vmin; height: 8vmin; width: 17vmin;"> Close </button>
 		<div class="player-name" style="top:15vmin; left:5vmin; height:6vmin; width:40vmin"></div>
-		<img class="player-image" style="top:20vmin; left:5vmin; height: 40vmin; width: auto;" src="~/images/LoadingImage.png" alt="Alternate Text" />
+		<img class="player-image" style="top:20vmin; left:5vmin; height: 40vmin; width: auto; max-width:25%; max-height:auto;" src="~/images/LoadingImage.png" alt="Alternate Text" />
 		<!-- Stats box label -->
 		<div class="" style="bottom:30vmin; left:6vmin; height: 5vmin; width: 17vmin; font-size:3vmin; color: white;"> Stats </div>
 		<!-- Stats Box -->
-		<div class="pq-container PQBorder" style="bottom:0; left:5vmin; height:30vmin; width:40vmin">
+		<div class="pq-container pq-border" style="bottom:0; left:5vmin; height:30vmin; width: 40vmin; max-width:25%">
 			<span class="stat-text" style="top:2%; left:5%; height: 15%; width:100%">Health: </span>
-			<span class="player-hp stat-text" id="player-hp" style="top:2%; left:30%; height: 15%; width:100%"></span>
+			<span class="player-hp stat-text" id="player-hp" style="top:2%; left:40%; height: 15%; width:100%"></span>
 			<img class="player-defense-icon" src="~/images/ShieldIcon.png" alt="Shield Icon" style="top:19%; left:2%; height: 20%; width:auto">
-			<span class="player-defense stat-text" id="player-defense" style="top:22%; left:17%; height: auto; width:auto">0</span>
+			<span class="player-defense stat-text" id="player-defense" style="top:22%; left:20%; height: auto; width:auto">0</span>
 			<img class="player-attack-icon" src="~/images/SwordIcon.png" alt="Attack Icon" style="top:40%; left:2%; height: 19%; width:auto">
-			<span class="player-attack stat-text" id="player-attack" style="top:44%; left:17%; height: auto; width:auto">0</span>
+			<span class="player-attack stat-text" id="player-attack" style="top:44%; left:20%; height: auto; width:auto">0</span>
 		</div>
 		<!-- Tab Menu -->
-		<div class="pq-tab-window PQBorder" style="bottom:0; right:0vmin; height:85vmin; width:150vmin; max-width: 97%;">
+		<div class="pq-tab-window pq-border" style="bottom:0; right:0vmin; height:85vmin; width:150vmin; max-width: 70%;">
 			<!-- Tab Buttons -->
 			<button class="pq-tab" id="inventory-button" style="top:-4.5vmin; left:1vmin; height: 4vmin; width: 12vmin;" onclick="switchTab('inventory')"> Inventory </button>
 			<button class="pq-tab" id="map-button" style="top:-4.5vmin; left:14vmin; height: 4vmin; width: 12vmin;" onclick="switchTab('map')"> Map </button>
 			<!-- Inventory window -->
 			<div id="inventory-tab" class="pq-container tab-content">
 				<div class="pq-inventory-display pq-container" style="top:0; right:0; height: 60%; width: 75%; border:white solid 2px">
-					<div id="item-name" style="top:5%; height:15%; width:45%; left:45%; font-size:24px; color:white;"></div>
-					<img id="item-image" src="~/images/PlaceholderItem1.png" style="bottom:5%; left:2%; height:90%; width:40%; display:none; border-radius:10px;">
-					<img id="shield-icon" src="~/images/ShieldIcon.png" style="bottom:10%; right: 45%; height:20%; width:10%; display:none;">
-					<div id="item-defense" style="bottom:10%; right:35%; height:20%; width:10%; font-size:50px; color:white;"></div>
-					<img id="sword-icon" src="~/images/SwordIcon.png" style="bottom:10%; right: 25%; height:20%; width:10%; display:none;">
-					<div id="item-attack" style="bottom:10%; right:15%; height:20%; width:10%; font-size:50px; color:white;"></div>
+					<div id="item-name" class="pq-font" style="top:5%; right: 0; height:15%; width:45%; font-size:4vmin;"></div>
+					<img id="item-image" src="~/images/PlaceholderItem1.png" class="pq-center-element-y" style="top:50%; left:5%; height:auto; width:40%; display:none; border-radius:10px;">
+					<img id="shield-icon" src="~/images/ShieldIcon.png" style="bottom:10%; right: 40%; height:20%; width:auto; display:none;">
+					<div id="item-defense" class="pq-font" style="bottom:5%; right:30%; height:20%; width:10%; font-size:4vmin;"></div>
+					<img id="sword-icon" src="~/images/SwordIcon.png" style="bottom:10%; right: 20%; height:20%; width:auto; display:none;">
+					<div id="item-attack" class="pq-font" style="bottom:5%; right:10%; height:20%; width:10%; font-size:4vmin;"></div>
 				</div>
 				<div class="pq-inventory-display" style="bottom:0; left:0; height: 35%; width: 100%">
 					@for (int i = 1; i <= 20; i++)
@@ -108,7 +108,7 @@
 
 <!-- Respawn Modal -->
 <div class="modal fade" id="respawnModal" tabindex="-1" aria-labelledby="respawnModalLabel" aria-hidden="true">
-	<div class="modal-dialog PQBorder PQFont text-light">
+	<div class="modal-dialog pq-border pq-font text-light">
 		<div class="modal-content BackgroundColorDark p-2">
 			<div class="modal-header" style="border:none;">
 				<h5 class="modal-title" id="respawnModalLabel">You have been defeated!</h5>
@@ -118,7 +118,7 @@
 				Press the button below to respawn and fight again.
 			</div>
 			<div class="modal-footer" style="border:none;">
-				<button type="button" class="btn MenuButton PQFont" onclick="respawnPlayer()">Respawn</button>
+				<button type="button" class="btn pq-button pq-font" onclick="respawnPlayer()">Respawn</button>
 			</div>
 		</div>
 	</div>
@@ -126,7 +126,7 @@
 
 <!-- Tutorial Modal -->
 <div class="modal fade" id="tutorialModal" tabindex="-1" aria-labelledby="tutorialModalLabel" aria-hidden="true">
-	<div class="modal-dialog PQBorder PQFont text-light">
+	<div class="modal-dialog pq-border pq-font text-light">
 		<div class="modal-content BackgroundColorDark p-2">
 			<div class="modal-header" style="border:none;">
 				<h5 class="modal-title" id="tutorialModalLabel">Welcome to the tutorial!</h5>
@@ -136,7 +136,7 @@
 				@*text will be filled out via JS*@
 			</div>
 			<div class="modal-footer" style="border:none;">
-				<button type="button" class="btn MenuButton PQFont" onclick="endTutorial()">Skip Tutorial</button>
+				<button type="button" class="btn pq-button pq-font" onclick="endTutorial()">Skip Tutorial</button>
 			</div>
 		</div>
 	</div>
@@ -144,6 +144,7 @@
 
 <script src="~/js/Tutorial.js"></script>
 <script src="~/js/Game.js"></script>
+<script src="~/js/Combat.js"></script>
 <script src="~/js/Map.js"></script>
 <script src="~/js/Menu.js"></script>
 <script src="~/js/Inventory.js"></script>

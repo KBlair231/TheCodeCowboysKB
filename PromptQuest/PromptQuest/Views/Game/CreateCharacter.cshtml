@@ -11,50 +11,30 @@
 	}
 }
 
-<header>
+<div class="pq-container">
 	<!-- Login Display -->
-	<div class="login-display pq-element">
+	<div class="login-display" style="top: 0; left: 0; height: 8vmin; width: 20vmin;">
 		@if(isUserLoggedIn) {
-			<img src="@userProfileImage" alt="User Profile Image" />
+			<img src="@userProfileImage"/>
 			<a class="pq-link" href="/Account/SignOutFromGoogleLogin">Logout</a>
 		}
 		else {
 			<a class="pq-link" href="/Account/GoogleLogin">Login with Google</a>
 		}
 	</div>
-</header>
-<div class="container-fluid BackgroundColorDark" style="padding:25px;">
-	<div class="row justify-content-center h-100">
-		<div class="col-6 text-center" style="border: 2px solid white; border-radius: 150px; padding:45px;">
-			<img src="~/images/Warrior.png" alt="Default Player Portrait" id="player-image" style="border: 2px solid white; margin-bottom: 35px; width: 392px; height:392px;">
-			<div class="row justify-content-center">
-				<form asp-controller="Game" asp-action="CreateCharacter" method="post">
-					<div class="form-group row">
-						<div class="col d-flex justify-content-center">
-							<input asp-for="Name" type="text" minlength="1" maxlength="25" class="form-control pq-form-control" id="name" name="name" style="border: 2px solid white; width:392px; height:52px;" placeholder="Enter Character's Name" />
-						</div>
-					</div>
-					<div class="row" style="margin-bottom:22px;">
-						<span asp-validation-for="Name" class="text-danger"></span>
-					</div>
-					<div class="form-group row">
-						<div class="col d-flex justify-content-center">
-							<select asp-for="Class" class="form-control pq-form-control" id="class-select" onchange="updatePlayerImage()" style="margin-bottom:22px; border: 2px solid white; width:392px; height:52px;">
-								<option value="Warrior">Warrior</option>
-								<option value="Mage">Mage</option>
-								<option value="Archer">Archer</option>
-							</select>
-							<span asp-validation-for="Class" class="text-danger"></span>
-						</div>
-					</div>
-					<div class="form-group row">
-						<div class="col">
-							<button type="submit" id="createCharacterButton" class="MenuButton d-inline-block" style="background-color:darkgreen; padding:5px; width: 277px; height:63px;">Start Adventure</button>
-						</div>
-					</div>
-				</form>
-			</div>
-		</div>
+	<div class="pq-container pq-center-element-x" style="height: 100%; width: 50%; top: 0; left: 50%; border: .1vmin solid white; border-radius: 50px;">
+		<img src="~/images/Warrior.png" alt="Default Player Portrait" id="player-image" class="pq-center-element-x" style="height: 50%; width: auto; top:5%; left: 50%; border: .1vmin solid white; max-width: 100%;">
+		<form asp-controller="Game" asp-action="CreateCharacter" method="post" class="pq-form pq-center-element-x" style="height: 45%; width: 70%; bottom:0; left: 50%;">
+			<input asp-for="Name" type="text" minlength="1" maxlength="25" class="pq-form-control" id="name" name="name" placeholder="Enter Character's Name" />
+			<span asp-validation-for="Name" class="pq-validation-text"></span>
+			<select asp-for="Class" class="pq-form-control" id="class-select" onchange="updatePlayerImage()">
+				<option value="Warrior">Warrior</option>
+				<option value="Mage">Mage</option>
+				<option value="Archer">Archer</option>
+			</select>
+			<span asp-validation-for="Class" class="text-danger"></span>
+			<button type="submit" id="createCharacterButton" class="pq-button" style="background-color:darkgreen; margin-top:20px;">Start Adventure</button>
+		</form>
 	</div>
 </div>
 

@@ -3,10 +3,10 @@ using PromptQuest.Models;
 
 namespace PromptQuest.Services {
 	public interface IMapService {
-		public void MovePlayer(GameState gameState);
+		public void MovePlayer(GameState gameState, int mapNodeId = 0);
 		public Map GetMap();
 	}
-	public class MapService: IMapService {
+	public class MapService:IMapService {
 		private static readonly List<MapNode> _mapNodes = new List<MapNode>
 			{
 					new MapNode { MapNodeId = 1 },
@@ -31,15 +31,23 @@ namespace PromptQuest.Services {
 					new MapEdge { MapNodeIdStart = 8, MapNodeIdEnd = 9 },
 					new MapEdge { MapNodeIdStart = 9, MapNodeIdEnd = 10 }
 				};
-		private static readonly Map _map = new Map() { ListMapNodes = _mapNodes, ListMapEdges = _mapEdges };
+		private static readonly Map _map = new Map() { ListMapNodes = _mapNodes,ListMapEdges = _mapEdges };
 
-		public void MovePlayer(GameState gameState) {
+		// Moves the player to the mapNode with the given mapNodeId, if mapNodeId isn't provided, the player's location (mapNodeId) increases by 1.
+		public void MovePlayer(GameState gameState, int mapNodeId = 0) {
 			// Check if the player has reached the end of the map.
 			int mapNodeIdFinal = _mapNodes.Max(x => x.MapNodeId);
 			if(gameState.PlayerLocation == mapNodeIdFinal) {
 				return;
 			}
-			gameState.PlayerLocation++;
+			if(mapNodeId == 0) {
+				//Move forward one location. Only works for now because map is linear.
+				gameState.PlayerLocation++;
+			}
+			else {
+				// Set player's location to the selected mapNode
+				gameState.PlayerLocation = mapNodeId;
+			}
 			gameState.IsLocationComplete = false;
 			return;
 		}

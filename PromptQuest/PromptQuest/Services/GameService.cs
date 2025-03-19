@@ -152,6 +152,9 @@ namespace PromptQuest.Services {
 					_databaseService.DeleteEnemy(gameState.Enemy.EnemyId);
 				}
 			}
+			// Restart the player at the first location.
+			_mapService.MovePlayer(gameState, 1);
+			// Start a new fight.
 			_combatService.StartCombat(gameState);
 			// Update current gamesate in the session
 			UpdateGameState(gameState);

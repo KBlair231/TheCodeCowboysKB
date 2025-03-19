@@ -26,6 +26,7 @@ namespace PromptQuest.Controllers {
 			player.CurrentHealth = 15;
 			player.HealthPotions = 2;
 			player.Attack = 3;
+			player.Defense = 1;
 			player.Class = player.Class;
 			_gameService.SetTutorialFlag(true);
 			if(ModelState.IsValid) { // Character created succesfully

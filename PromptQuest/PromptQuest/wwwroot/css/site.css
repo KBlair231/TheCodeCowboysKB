@@ -20,6 +20,7 @@ html, body {
 	width: 100vw;
 	background-color: var(--background-color-primary);
 	margin: 0;
+	font-size: 16pt;
 }
 
 body {
@@ -219,7 +220,6 @@ body {
 
 /*--------- Other Displays -------------------------------------------------------------------------------------*/
 
-
 /* Adds styling to all the buttons in the action button display*/
 .action-button-display button {
 	width: 100%;
@@ -242,23 +242,29 @@ body {
 	height: 100%;
 }
 
-/*--------------------- Buttons ---------------------------*/
-
-.MenuButton {
-	background-color: #171822;
-	border: solid 2px white;
-	border-radius: 15px;
+.pq-form {
+	padding: 20px;
 }
 
+/*--------------------- Buttons ---------------------------*/
+
 .pq-button {
-	padding-top: 5px;
-	padding-bottom: 5px;
+	padding: 10px;
 	background-color: var(--background-color-primary);
 	font-size: var(--pq-font-normal);
 	color: var(--pq-font-color);
 	border: var(--pq-border);
 	border-radius: 10px;
+	/*For when the butotn is applied to an anchor tag*/
+	text-decoration: none;
+	cursor: pointer;
 }
+
+	.pq-button:hover {
+		/*Overide hyperlink styling for when this is applied to anchor tag*/
+		color: var(--pq-font-color);
+		background-color: var(--background-color-highlight);
+	}
 
 .pq-tab {
 	position: absolute;
@@ -288,8 +294,8 @@ body {
 }
 
 /*---------------------- Border ----------------------------*/
-.PQBorder {
-	border: solid 2px white;
+.pq-border {
+	border: var(--pq-border);
 	border-radius: 5px;
 }
 
@@ -300,32 +306,60 @@ body {
 }
 
 .pq-form-control {
+	display: block;
+	padding: 10px;
+	margin-top: 25px;
+	width: 100%;
 	color: var(--pq-font-color) !important;
 	background-color: var(--background-color-primary) !important;
+	border: var(--pq-border);
 }
 
-	/* For overwriting the highlight that happens after autofilling the control */
-	.pq-form-control:-webkit-autofill {
-		-webkit-text-fill-color: var(--pq-font-color) !important;
-		-webkit-box-shadow: 0 0 0 30px var(--background-color-primary) inset !important;
-	}
-
-.AutoScale {
-	width: auto;
+.pq-validation-text {
+	display: block;
+	margin-top: 5px;
+	color: darkred;
 }
 
-.PQFontTitle {
-	color: white;
+/* For overwriting the highlight that happens after autofilling the control */
+.pq-form-control:-webkit-autofill {
+	-webkit-text-fill-color: var(--pq-font-color) !important;
+	-webkit-box-shadow: 0 0 0 30px var(--background-color-primary) inset !important;
+}
+
+.pq-title {
+	color: var(--pq-font-color);
 	font-style: normal;
 	font-family: Algerian;
+	font-size: 5vmin;
+	margin-left:auto;
 }
 
 .BackgroundColorDark {
 	background-color: var(--background-color-primary);
 }
 
-
-.PQFont {
+.pq-font {
+	font-size: 1rem;
 	color: white;
 	font-style: normal;
 }
+
+.pq-scrollbar {
+	overflow-y: auto; /* Only adds scrollbar if needed. */
+	padding-right: 2rem;
+}
+
+	.pq-scrollbar::-webkit-scrollbar-track {
+		background-color: black !important; /* Background of the scrollbar track */
+	}
+
+	.pq-scrollbar::-webkit-scrollbar-thumb {
+		background-color: black !important; /* Color of the scrollbar thumb */
+		border-radius: 10px !important; /* Rounded edges */
+		border: 2px solid white !important; /* Adds a border around the thumb */
+	}
+
+		.pq-scrollbar::-webkit-scrollbar-thumb:hover {
+			background-color: black !important; /* Changes on hover */
+		}

@@ -1,53 +1,41 @@
-﻿@*
-    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
-*@
-@{
-}
-
-<div class="justify-content-center container-fluid BackgroundColorDark" style="color: white;">
+﻿<div class="pq-container" style="">
 	<!-- Logo -->
-	<div class="row justify-content-center">
 		<!-- TODO: Make game logo responsive -->
-		<img src="~/images/PromptQuestLogo.png" alt="The Prompt Quest logo" class="AutoScale" style="height:20vh;">
-	</div>
+	<img src="~/images/PromptQuestLogo.png" alt="The Prompt Quest logo" class="pq-center-element-x" style="height:20%; width: auto; top:0; left:50%; max-width:100%;">
 	<!-- Title -->
-	<div class="row justify-content-center">
-		<div class="PQFontTitle AutoScale" style="font-size:6vh">Welcome to our About page!</div>
+	<div class="pq-title pq-center-element-x" style="height:10%; width: max-content; top: 20%; left:50%; max-width: 100%;">Welcome to our About page!</div>
+	<div class="pq-center-element-x pq-scrollbar pq-border" style="height:60%; width: 75%; top: 30%; left:50%; font-size:1vmin; padding-left: 5%; padding-right: 5%; padding-top:2%;">
+		<p class="pq-font" style="font-size:3vmin;">
+			We are the Code Cowboys! A group of 4 seniors at Western Oregon University that decided to make a browser game for our capstone project.
+			On this page, we will tell you a little bit about our game, Prompt Quest, and the team that made it.
+			Our core mission is to provide players with a burst of entertainment during their downtime.
+			Designed to be effortlessly accessible, our game invites players to jump in and enjoy instantly.
+			The game's charm lies in its unpredictability, delivering hilarious and engaging outcomes based on player input.
+			This project stems from our collective passion for game design and our desire to enhance our programming and design skills.
+			We believe our game offers a unique experience that sets it apart from anything currently available.
+		</p>
+		<p class="pq-font" style="font-size:3vmin;">
+			Our team consists of: <br />
+			- Ben: Maintainer/Developer <br />
+			- Jose: Developer <br />
+			- Kaleb: Developer <br />
+			- Kyle: Developer <br />
+			We hope you enjoy our game and have fun playing it!
+		</p>
+		<p class="pq-font" style="font-size:3vmin;">
+			Tools and Resources Used:<br />
+			- Programming Language: C#, JS, CSHTML <br />
+			- Framework: ASP.NET MVC, .NET 8.0 <br />
+			- IDE: Visual Studio 2022 <br />
+			- Version Control: Git, GitHub <br />
+			- Libraries: Bootstrap, jQuery <br />
+			- Authentication: Google OAuth <br />
+			- Design: Miro <br />
+			- Project Management: Jira, Discord <br />
+			- Hosting: Azure <br />
+			- Other Resources: Stack Overflow, MDN Web Docs, Microsoft Learn, Copilot
+		</p>
 	</div>
-	<div class="row justify-content-center">
-		<div class="col-6">
-			<p class="text-center">
-				We are the Code Cowboys! A group of 4 seniors at Western Oregon University that decided to make a browser game for our capstone project.
-				On this page, we will tell you a little bit about our game, Prompt Quest, and the team that made it.
-				Our core mission is to provide players with a burst of entertainment during their downtime.
-				Designed to be effortlessly accessible, our game invites players to jump in and enjoy instantly.
-				The game's charm lies in its unpredictability, delivering hilarious and engaging outcomes based on player input.
-				This project stems from our collective passion for game design and our desire to enhance our programming and design skills.
-				We believe our game offers a unique experience that sets it apart from anything currently available.
-			</p>
-			<p class="text-center">
-				Our team consists of: <br />
-				- Ben: Maintainer/Developer <br />
-				- Jose: Developer <br />
-				- Kaleb: Developer <br />
-				- Kyle: Developer <br />
-				We hope you enjoy our game and have fun playing it!
-			</p>
-			<p class="text-center">
-				Tools and Resources Used:<br />
-				- Programming Language: C#, JS, CSHTML <br />
-				- Framework: ASP.NET MVC, .NET 8.0 <br />
-				- IDE: Visual Studio 2022 <br />
-				- Version Control: Git, GitHub <br />
-				- Libraries: Bootstrap, jQuery <br />
-				- Authentication: Google OAuth <br />
-				- Design: Miro <br />
-				- Project Management: Jira, Discord <br />
-				- Hosting: Azure <br />
-				- Other Resources: Stack Overflow, MDN Web Docs, Microsoft Learn, Copilot
-			</p>
-			<!-- Button back to Main Menu -->
-			<a href="/" class="btn MenuButton PQFont AutoScale" style="height:7vh; font-size: 3vh; width:100%; margin-top: 3vh;">Back to Main Menu</a>
-		</div>
-	</div>
+	<!-- Button back to Main Menu -->
+	<a href="/Home/Index" class="pq-button" style="height:6%; width: max-content; bottom:0; left:12.5%; max-width: 100%;">Back to Main Menu</a>
 </div>

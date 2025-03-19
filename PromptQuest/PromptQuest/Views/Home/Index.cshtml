@@ -8,43 +8,36 @@
 	}
 }
 
-<header>
-	<!-- Login Display -->
-	<div class="login-display pq-element">
-		@if(isUserLoggedIn) {
-			<img src="@userProfileImage" alt="User Profile Image" />
-			<a class="pq-link" href="/Account/SignOutFromGoogleLogin">Logout</a>
-		}
-		else {
-			<a class="pq-link" href="/Account/GoogleLogin">Login with Google</a>
-		}
+<!-- Login Display -->
+<div class="pq-container">
+	<div class="login-display" style="top: 0; left: 0; height: 8vmin; width: 20vmin;">
+			@if(isUserLoggedIn) {
+				<img src="@userProfileImage"/>
+				<a class="pq-link" href="/Account/SignOutFromGoogleLogin">Logout</a>
+			}
+			else {
+				<a class="pq-link" href="/Account/GoogleLogin">Login with Google</a>
+			}
 	</div>
-</header>
-<div class="container-fluid BackgroundColorDark">
-	<!-- Logo -->
-	<div class="row justify-content-center">
-		<!-- TODO: Make game logo responsive -->
-		<img src="~/images/PromptQuestLogo.png" alt="The Prompt Quest logo" class="AutoScale" style="height:50vh;">
-	</div>
-	<!-- Title -->
-	<div class="row justify-content-center">
-		<div class="PQFontTitle AutoScale" style="font-size:6vh">Prompt Quest</div>
-	</div>
-	<!-- New Adventure button -->
-	<div class="row justify-content-center ">
-		<div class="col-auto justify-content-center">
+	<div class="pq-container pq-center-element-x" style="width:50%; height:100%; top:0; left:50%;">
+		<!-- Logo -->
+		<img src="~/images/PromptQuestLogo.png" alt="The Prompt Quest logo" class="pq-center-element-x" style="height: 50%; width: auto; max-width: 100%; top:0; left:50%;">
+		<!-- Title -->
+		<div class="pq-title pq-center-element-x" style="height: 10%; width: max-content; top:50%; left:50%; overflow:hidden; max-width: 100%">Prompt Quest</div>
+		<!-- New Adventure button -->
+		<div class="action-button-display pq-center-element-x" style="height: 40%; width: 50%; bottom:0; left:50%;">
 			<form class="text-center">
-				<button class="MenuButton PQFont AutoScale" style=" height:7vh; font-size: 3vh; width:100%; margin-bottom: 3vh;" asp-controller="Game" asp-action="CreateCharacter">
+			<button class="pq-button" asp-controller="Game" asp-action="CreateCharacter">
 					New Adventure
 				</button>
 			</form>
 			<form class="text-center">
-				<button class="MenuButton PQFont AutoScale" id="continue-btn" style=" height:7vh; font-size: 3vh; margin-bottom: 3vh; width:100%" asp-controller="Game" asp-action="Continue">
+				<button class="pq-button" id="continue-btn" asp-controller="Game" asp-action="Continue">
 					Continue
 				</button>
 			</form>
 			<form class="text-center">
-				<button class="MenuButton PQFont AutoScale" style="height:7vh; font-size: 3vh; width:100%" asp-controller="Game" asp-action="About">
+				<button class="pq-button" asp-controller="Game" asp-action="About">
 					About Us
 				</button>
 			</form>
@@ -52,4 +45,4 @@
 	</div>
 </div>
 
-	<script src="~/js/Index.js" asp-append-version="true"></script>
+<script src="~/js/Index.js" asp-append-version="true"></script>
