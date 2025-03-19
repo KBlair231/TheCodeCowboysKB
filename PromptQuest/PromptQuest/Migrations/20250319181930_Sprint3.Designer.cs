@@ -11,7 +11,7 @@ using PromptQuest.Models;
 namespace PromptQuest.Migrations
 {
     [DbContext(typeof(GameStateDbContext))]
-    [Migration("20250319090506_Sprint3")]
+    [Migration("20250319181930_Sprint3")]
     partial class Sprint3
     {
         /// <inheritdoc />
@@ -89,6 +89,33 @@ namespace PromptQuest.Migrations
                     b.ToTable("GameStates");
                 });
 
+            modelBuilder.Entity("PromptQuest.Models.Item", b =>
+                {
+                    b.Property<int>("ItemId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ItemId"));
+
+                    b.Property<int>("ATK")
+                        .HasColumnType("int");
+
+                    b.Property<int>("DEF")
+                        .HasColumnType("int");
+
+                    b.Property<string>("IMG")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("ItemId");
+
+                    b.ToTable("Item");
+                });
+
             modelBuilder.Entity("PromptQuest.Models.Player", b =>
                 {
                     b.Property<int>("PlayerId")
@@ -113,6 +140,9 @@ namespace PromptQuest.Migrations
                     b.Property<int>("HealthPotions")
                         .HasColumnType("int");
 
+                    b.Property<int>("ItemId")
+                        .HasColumnType("int");
+
                     b.Property<int>("MaxHealth")
                         .HasColumnType("int");
 
@@ -121,6 +151,8 @@ namespace PromptQuest.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("PlayerId");
+
+                    b.HasIndex("ItemId");
 
                     b.ToTable("Players");
                 });
@@ -138,6 +170,17 @@ namespace PromptQuest.Migrations
                     b.Navigation("Enemy");
 
                     b.Navigation("Player");
+                });
+
+            modelBuilder.Entity("PromptQuest.Models.Player", b =>
+                {
+                    b.HasOne("PromptQuest.Models.Item", "item")
+                        .WithMany()
+                        .HasForeignKey("ItemId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("item");
                 });
 #pragma warning restore 612, 618
         }
