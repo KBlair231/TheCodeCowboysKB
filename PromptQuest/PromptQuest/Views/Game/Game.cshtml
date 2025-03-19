@@ -79,7 +79,9 @@
 			<button class="pq-tab" id="inventory-button" style="top:-4.5vmin; left:1vmin; height: 4vmin; width: 12vmin;" onclick="switchTab('inventory')"> Inventory </button>
 			<button class="pq-tab" id="map-button" style="top:-4.5vmin; left:14vmin; height: 4vmin; width: 12vmin;" onclick="switchTab('map')"> Map </button>
 			<!-- Inventory window -->
-			<div id="inventory-tab" class="pq-container tab-content">
+			<div id="inventory-tab" class="pq-container tab-content" >
+				<div id="equipped-item" class="pq-inventory-slot" style="top:5%; height:15%; left:5%;"></div>
+				<div id="equip-button" class="pq-inventory-slot" style="top:25%; height:10%; left:5%; color:white;">Equip Item</div>
 				<div class="pq-inventory-display pq-container" style="top:0; right:0; height: 60%; width: 75%; border:white solid 2px">
 					<div id="item-name" class="pq-font" style="top:5%; right: 0; height:15%; width:45%; font-size:4vmin;"></div>
 					<img id="item-image" src="~/images/PlaceholderItem1.png" class="pq-center-element-y" style="top:50%; left:5%; height:auto; width:40%; display:none; border-radius:10px;">

@@ -15,10 +15,12 @@ namespace PromptQuest.Services {
 		void RespawnPlayer();
 		PQActionResult ExecutePlayerAction(string action);
 		PQActionResult ExecuteEnemyAction();
+		PQActionResult EquipItem(string itemName, int itemATK, int itemDEF, string itemIMG);
 		void StartNewGame();
 		public bool IsTutorial();
 		public void SetTutorialFlag(bool Flag);
 		public Map GetMap();
+		public Item GetItem();
 	}
 
 	public class GameService : IGameService {
@@ -118,7 +120,10 @@ namespace PromptQuest.Services {
 		public Map GetMap() {
 			return _mapService.GetMap();
 		}
-
+		public Item GetItem(){
+			GameState gameState = GetGameState();
+			return gameState.Player.item;
+		}
 		#endregion Get Methods - End
 
 		#region Game Flow Methods
@@ -188,6 +193,23 @@ namespace PromptQuest.Services {
 			PQActionResult pQActionResult = gameState.ToPQActionResult();
 			pQActionResult.Message = message;
 			return pQActionResult;
+		}
+		/// <summary>
+		/// equips an item to the player, altering their stats
+		/// </summary>
+		/// <returns></returns>
+		public PQActionResult EquipItem(string itemName, int itemATK, int itemDEF, string itemIMG)
+		{
+			GameState gameState = GetGameState();
+			gameState.Player.item.name = itemName;
+			gameState.Player.item.ATK = itemATK;
+			gameState.Player.item.DEF = itemDEF;
+			gameState.Player.item.IMG = itemIMG;
+			UpdateGameState(gameState);
+			PQActionResult pQActionResult = gameState.ToPQActionResult();
+			pQActionResult.Message = "Equipped the "+itemName;
+			return pQActionResult;
+
 		}
 
 		/// <summary>Execute an enemy action.  Does not take an action string because the enemy's action is determined server side. </summary>
