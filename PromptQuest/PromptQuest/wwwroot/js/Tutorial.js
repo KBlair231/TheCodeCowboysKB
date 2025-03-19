@@ -73,8 +73,21 @@ function tutorialStep4() {
 
 async function tutorialStep5() {
 	showTutorialModal("Tutorial 5/5: The End!", "The Tutorial has ended, good luck!")
-	attackButton.style.visibility = "visible";
-	await fetch("/Game/EndTutorial", { method: "POST" });
+	endTutorial()
 }
 
+async function endTutorial() {
+	attackButton.style.visibility = "visible";
+	potionButton.style.visibility = "visible";
+	attackButton.removeEventListener("click", tutorialStep2);
+	attackButton.removeEventListener("click", tutorialStep3);
+	attackButton.removeEventListener("click", tutorialStep4);
+	attackButton.removeEventListener("click", tutorialStep5);
+	tutorialCounter = 100;
+	tutorialModal.hide();
+	if (gameState.isPlayersTurn == true) {
+		enableCombatButtons();// Start player's turn.
+	}
+	await fetch("/Game/EndTutorial", { method: "POST" });
+}
 //----------- Helper Functions - End -----------------------------------------------------------------------------------------------------------
