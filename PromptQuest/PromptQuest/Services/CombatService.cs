@@ -3,10 +3,10 @@
 namespace PromptQuest.Services {
 
 	public interface ICombatService {
-		void StartCombat(GameState gameState);
-		PQActionResult PlayerAttack(GameState gameState);
-		PQActionResult PlayerUseHealthPotion(GameState gameState);
-		PQActionResult EnemyAttack(GameState gameState);
+		string StartCombat(GameState gameState);
+		string PlayerAttack(GameState gameState);
+		string PlayerUseHealthPotion(GameState gameState);
+		string EnemyAttack(GameState gameState);
 		void RespawnPlayer(GameState gameState);
 		Enemy GetEnemy();
 	}
@@ -14,13 +14,13 @@ namespace PromptQuest.Services {
 	public class CombatService : ICombatService {
 
 		/// <summary>Initiates combat between the player and an enemy and updates the game state. </summary>
-		public void StartCombat(GameState gameState) {
+		public string StartCombat(GameState gameState) {
 			gameState.InCombat = true;
 			gameState.IsPlayersTurn = true; // Player always goes first, for now.
-			Enemy enemy = GetEnemy();
 			gameState.Enemy = GetEnemy();
 			gameState.Player.HealthPotions = 2; // Set player's health potions to 2 when combat starts (Temporary)
 			string message = $"The {gameState.Enemy.Name} attacked!"; // Let the user know that combat started.
+		  return message;
 		}
 
 		/// <summary>Respawns the player by resetting their health and potions, and updates the game state.</summary>
@@ -31,8 +31,8 @@ namespace PromptQuest.Services {
 		}
 		#region Player Action Methods
 
-		/// <summary> Calculates the damage that the player does to the enemy, updates the game state, then returns an ActionResult.</summary>
-		public PQActionResult PlayerAttack(GameState gameState) {
+		/// <summary> Calculates the damage that the player does to the enemy, updates the game state, then returns a message.</summary>
+		public string PlayerAttack(GameState gameState) {
 			// Calculate damage as attack - defense.
 			int damage = gameState.Player.Attack - gameState.Enemy.Defense;
 			// If attack is less than one make it one.
@@ -46,33 +46,26 @@ namespace PromptQuest.Services {
 			if (gameState.Enemy.CurrentHealth <= 0) {
 				gameState.InCombat = false; // Enemy is dead, combat has ended.
 				gameState.IsPlayersTurn = false; // Zero this field out because combat is over.
+				gameState.IsLocationComplete = true; // Player has completed the current area.
 				message += $", you have defeated the {gameState.Enemy.Name}."; // Let them know in the same message.
 			}
 			// Enemy didn't die, so now it is their turn.
 			gameState.IsPlayersTurn = false;
-			// Return an action result with the message describing what happened.
-			PQActionResult actionResult = gameState.ToActionResult();
-			actionResult.Message = message;
-			return actionResult;
+			return message;
 		}
 
-		/// <summary>Calculates the amount healed by a Health Potion, updates the game state, then returns a PQActionResult.</summary>
-		public PQActionResult PlayerUseHealthPotion(GameState gameState) {
-			PQActionResult actionResult;
+		/// <summary>Calculates the amount healed by a Health Potion, updates the game state, then returns a message.</summary>
+		public string PlayerUseHealthPotion(GameState gameState) {
 			string message;
 			// If player has no potions, don't let them heal.
 			if (gameState.Player.HealthPotions <= 0) {
 				message = "You have no Health Potions!";
-				actionResult = gameState.ToActionResult();
-				actionResult.Message = message;
-				return actionResult;
+				return message;
 			}
 			// If player is already at max health, don't let them heal.
 			if (gameState.Player.CurrentHealth == gameState.Player.MaxHealth) {
 				message = "You are already at max health!";
-				actionResult = gameState.ToActionResult();
-				actionResult.Message = message;
-				return actionResult;
+				return message;
 			}
 			// Update player health and number of potions.
 			gameState.Player.HealthPotions -= 1;
@@ -85,18 +78,15 @@ namespace PromptQuest.Services {
 			}
 			// Healing cannot possibly end combat, so no reason to check if combat has ended.
 			// Healing does not end the player's turn.
-			// Return an action result with the message describing what happened.
-			actionResult = gameState.ToActionResult();
-			actionResult.Message = message;
-			return actionResult;
+			return message;
 		}
 
 		#endregion  Player Action Methods - End
 
 		#region Enemy Action Methods
 
-		/// <summary>Calculates the damage that the enemy does to the player, updates the game state, then returns a PQActionResult.</summary>
-		public PQActionResult EnemyAttack(GameState gameState) {
+		/// <summary>Calculates the damage that the enemy does to the player, updates the game state, then returns a message.</summary>
+		public string EnemyAttack(GameState gameState) {
 			// Calculate damage as attack - defense.
 			int damage = gameState.Enemy.Attack - gameState.Player.Defense;
 			// If attack is less than one make it one.
@@ -114,10 +104,7 @@ namespace PromptQuest.Services {
 			}
 			// Player didn't die, so now it is their turn.
 			gameState.IsPlayersTurn = true;
-			// Return an action result with the message describing what happened.
-			PQActionResult actionResult = gameState.ToActionResult();
-			actionResult.Message = message;
-			return actionResult;
+			return message;
 		}
 
 		#endregion Enemy Action Methods - end

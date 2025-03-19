@@ -46,18 +46,16 @@ body {
 }
 
 /* Allows for tabs in modal to be shown and hidden */
-.active-tab {
+.show-tab {
 	display: block;
 }
 
 /* Style for map container */
-.map-container {
+.pq-map-display {
 	display: flex;
 	align-items: center;
 	justify-content: center;
 	gap: 10px;
-	margin-top: 20px;
-	position: relative;
 }
 
 /* Style for map nodes */
@@ -70,8 +68,21 @@ body {
 	cursor: pointer;
 }
 
+.map-node-disabled {
+	border: none;
+	cursor: not-allowed;
+}
+
+.map-node-completed {
+	border: 2px solid green;
+}
+
+.map-node-current {
+	border: 2px solid orange;
+}
+
 /* Style for the dotted connecting lines */
-.map-line {
+.map-edge {
 	width: 50px;
 	height: 2px;
 	background: repeating-linear-gradient(90deg, #ccc, #ccc 5px, transparent 5px, transparent 10px);
@@ -251,11 +262,19 @@ body {
 
 .pq-tab {
 	position: absolute;
-	background-color: var(--background-color-highlight);
+	background-color: var(--background-color-primary);
 	font-size: var(--pq-font-normal);
 	color: var(--pq-font-color);
 	border: var(--pq-border);
 	border-bottom: none;
+}
+
+.pq-tab-current {
+	background-color: var(--background-color-highlight);
+}
+
+.pq-tab:hover {
+	background-color: var(--background-color-highlight);
 }
 
 .modal-header .btn-close {

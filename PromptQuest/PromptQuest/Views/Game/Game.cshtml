@@ -79,7 +79,7 @@
 			<button class="pq-tab" id="inventory-button" style="top:-4.5vmin; left:1vmin; height: 4vmin; width: 12vmin;" onclick="switchTab('inventory')"> Inventory </button>
 			<button class="pq-tab" id="map-button" style="top:-4.5vmin; left:14vmin; height: 4vmin; width: 12vmin;" onclick="switchTab('map')"> Map </button>
 			<!-- Inventory window -->
-			<div id="inventory-tab" class="pq-container tab-content active-tab">
+			<div id="inventory-tab" class="pq-container tab-content">
 				<div class="pq-inventory-display pq-container" style="top:0; right:0; height: 60%; width: 75%; border:white solid 2px">
 					<div id="item-name" style="top:5%; height:15%; width:45%; left:45%; font-size:24px; color:white;"></div>
 					<img id="item-image" src="~/images/PlaceholderItem1.png" style="bottom:5%; left:2%; height:90%; width:40%; display:none; border-radius:10px;">
@@ -99,18 +99,7 @@
 			</div>
 			<!-- Map window -->
 			<div id="map-tab" class="pq-container tab-content">
-				<div class="pq-map-display" style="bottom:0; left:0; height: 35%; width: 100%">
-					<div class="map-container">
-						<!-- Generate 10 nodes in a straight line -->
-						@for (int i = 1; i <= 10; i++)
-						{
-							<button class="map-node"></button>
-							@if (i < 10)
-							{
-								<div class="map-line"></div> <!-- Line between nodes -->
-							}
-						}
-					</div>
+				<div class="pq-map-display" id="map-container" style="bottom:0; left:0; height: 35%; width: 100%">
 				</div>
 			</div>
 		</div>
@@ -153,8 +142,8 @@
 	</div>
 </div>
 
-
 <script src="~/js/Tutorial.js"></script>
 <script src="~/js/Game.js"></script>
+<script src="~/js/Map.js"></script>
 <script src="~/js/Menu.js"></script>
 <script src="~/js/Inventory.js"></script>

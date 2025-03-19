@@ -103,5 +103,19 @@ namespace PromptQuest.Controllers {
 			_gameService.RespawnPlayer();
 			return Ok();
 		}
+
+		[HttpPost]
+		public IActionResult MovePlayerToNextLocation()
+		{
+			PQActionResult ActionResult = _gameService.ExecutePlayerAction("move");
+			return Json(ActionResult);
+		}
+
+		[HttpGet]
+		public IActionResult GetMap()
+		{
+			Map map = _gameService.GetMap();
+			return Json(map);
+		}
 	}
 }

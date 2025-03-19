@@ -39,6 +39,7 @@ builder.Services.AddScoped<IGameService,GameService>();
 builder.Services.AddScoped<ICombatService,CombatService>();
 builder.Services.AddScoped<ISessionService,SessionService>();
 builder.Services.AddScoped<IDatabaseService,DatabaseService>();
+builder.Services.AddScoped<IMapService,MapService>();
 // Add Google authentication services
 builder.Services.AddAuthentication(options => {
 	options.DefaultAuthenticateScheme = "Application";

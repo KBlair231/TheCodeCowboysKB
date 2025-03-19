@@ -15,6 +15,10 @@
 		public bool InCombat { get; set; } = false;
 		///<summary> Whether or not it is the player's turn. </summary>
 		public bool IsPlayersTurn {get; set;} = false;
+		///<summary> The mapNodeId of the mapNode the player is currently at. </summary>
+		public int PlayerLocation { get; set; } = 1;
+		///<summary> Whether or not the player has completed the current area </summary>
+		public bool IsLocationComplete{ get; set; } = false;
 	}
 
 	/// <summary> A partial model of the GameStateModel returned to the view so that it can update what the action changed.  This way we don't have to return the entire GameStateModel. </summary>
@@ -31,19 +35,25 @@
 		public bool InCombat { get; set; } = false;
 		///<summary> Whether or not it is the player's turn. </summary>
 		public bool IsPlayersTurn {get; set;} = false;
+		///<summary> The mapNodeId of the mapNode the player is currently at. </summary>
+		public int PlayerLocation { get; set; } = 1;
+		///<summary> Whether or not the player has completed the current area </summary>
+		public bool IsLocationComplete{ get; set; } = false;
 	}
 
 	/// <summary> Extension methods for the GameState model. </summary>
 	public static class GameStateExtensionMethods {
 
-		/// <summary> Creates an ActionResult with a blank Message based on the GameState. </summary>
-		public static PQActionResult ToActionResult(this GameState gameState) {
+		/// <summary> Creates a PQActionResult based on the GameState with a blank Message. </summary>
+		public static PQActionResult ToPQActionResult(this GameState gameState) {
 			PQActionResult actionResult = new PQActionResult();
 			actionResult.PlayerHealth = gameState.Player.CurrentHealth;
 			actionResult.PlayerHealthPotions = gameState.Player.HealthPotions;
 			actionResult.EnemyHealth = gameState.Enemy.CurrentHealth;
 			actionResult.InCombat = gameState.InCombat;
 			actionResult.IsPlayersTurn = gameState.IsPlayersTurn;
+			actionResult.PlayerLocation = gameState.PlayerLocation;
+			actionResult.IsLocationComplete = gameState.IsLocationComplete;
 			return actionResult;
 		}
 	}

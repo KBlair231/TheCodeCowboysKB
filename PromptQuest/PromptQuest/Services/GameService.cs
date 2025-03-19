@@ -18,17 +18,20 @@ namespace PromptQuest.Services {
 		void StartNewGame();
 		public bool IsTutorial();
 		public void SetTutorialFlag(bool Flag);
+		public Map GetMap();
 	}
 
-	public class GameService:IGameService {
+	public class GameService : IGameService {
 		private readonly ISessionService _sessionService;
 		private readonly IDatabaseService _databaseService;
 		private readonly ICombatService _combatService;
+		private readonly IMapService _mapService;
 
-		public GameService(IHttpContextAccessor httpContextAccessor,ISessionService sessionService,IDatabaseService databaseService, ICombatService combatService) {
+		public GameService(IHttpContextAccessor httpContextAccessor, ISessionService sessionService, IDatabaseService databaseService, ICombatService combatService, IMapService mapService) {
 			_sessionService = sessionService;
 			_databaseService = databaseService;
 			_combatService = combatService;
+			_mapService = mapService;
 		}
 
 		#region Game State and Session Management Methods
@@ -62,11 +65,10 @@ namespace PromptQuest.Services {
 			}
 			return gameState;
 		}
-		public bool IsTutorial(){
+		public bool IsTutorial() {
 			return _sessionService.GetTutorialFlag();
 		}
-		public void SetTutorialFlag(bool Flag)
-		{
+		public void SetTutorialFlag(bool Flag) {
 			_sessionService.SetTutorialFlag(Flag);
 		}
 		/// <summary> Updates the current game state in the session for all users and in the database for logged in users.</summary>
@@ -84,7 +86,7 @@ namespace PromptQuest.Services {
 			if(!_databaseService.IsAuthenticatedUser()) {// User isn't logged in.
 				return false;
 			}
-			if (GetGameState() == null) { // User is logged in but doesn't have a saved game.
+			if(GetGameState() == null) { // User is logged in but doesn't have a saved game.
 				return false;
 			}
 			return true; // User is logged in and has a saved game.
@@ -110,6 +112,14 @@ namespace PromptQuest.Services {
 			UpdateGameState(gameState);
 		}
 		#endregion Update Methods - End
+
+		#region Get Methods
+
+		public Map GetMap() {
+			return _mapService.GetMap();
+		}
+
+		#endregion Get Methods - End
 
 		#region Game Flow Methods
 
@@ -155,21 +165,26 @@ namespace PromptQuest.Services {
 		public PQActionResult ExecutePlayerAction(string action) {
 			// Get current gamestate
 			GameState gameState = GetGameState();
-			// Determine which action it is and execute it, then return a PQActionResult
-			PQActionResult actionResult;
+			// Determine which action it is and execute it, then return a PQActionResult			
+			string message = "";
 			switch(action.ToLower()) {
 				case "attack":
-					actionResult = _combatService.PlayerAttack(gameState);
+					message += _combatService.PlayerAttack(gameState);
 					break;
 				case "heal":
-					actionResult = _combatService.PlayerUseHealthPotion(gameState);
+					message += _combatService.PlayerUseHealthPotion(gameState);
+					break;
+				case "move":
+					_mapService.MovePlayer(gameState);
 					break;
 				default:
 					throw new ArgumentOutOfRangeException(nameof(action), action, null);
 			}
 			// Update current gamesate
 			UpdateGameState(gameState);
-			return actionResult;
+			PQActionResult pQActionResult = gameState.ToPQActionResult();
+			pQActionResult.Message = message;
+			return pQActionResult;
 		}
 
 		/// <summary>Execute an enemy action.  Does not take an action string because the enemy's action is determined server side. </summary>
@@ -177,10 +192,12 @@ namespace PromptQuest.Services {
 			// Get current gamestate
 			GameState gameState = GetGameState();
 			// Execute the action and return a PQActionResult
-			PQActionResult actionResult = _combatService.EnemyAttack(gameState); // Enemy only attacks for now.
+			string message = _combatService.EnemyAttack(gameState); // Enemy only attacks for now.
 																																					 // Update current gamesate
 			UpdateGameState(gameState);
-			return actionResult;
+		  PQActionResult pQActionResult = gameState.ToPQActionResult();
+			pQActionResult.Message = message;
+			return pQActionResult;
 		}
 
 		#endregion Action Routing Methods - End

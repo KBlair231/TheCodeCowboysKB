@@ -11,9 +11,9 @@ namespace PromptQuest.Models {
 		public int HealthPotions { get; set; }
 		public int MaxHealth { get; set; }
 		public int CurrentHealth { get; set; }
-		public int Defense { get; set; } = 1;
+		public int Defense { get; set; }
 		public int Attack { get; set; }
 		[Required]
-		public string Class { get; set; }
+		public string Class { get; set; } = "";
 	}
 }

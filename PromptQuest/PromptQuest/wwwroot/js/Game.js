@@ -44,7 +44,7 @@ async function executePlayerAction(action) {
 			let actionResult = response;
 			console.log('Player action (' + action + ') executed successfully:', actionResult);
 			updateLocalGameState(actionResult); // Update local gameState variable with whatever the action changed.  
-			updateDisplay() // Update screen to show whatever the action changed.  
+			updateDisplay() // Update screen to show whatever the action changed.
 			addLogEntry(actionResult.message);
 		},
 		error: function (xhr, status, error) {
@@ -56,6 +56,7 @@ async function executePlayerAction(action) {
 		hideCombatUI(); // They aren't, hide combat UI
 		return;
 	}
+	showCombatUI();
 	if (gameState.isPlayersTurn == false) {
 		disableCombatButtons(); // They are, but it's not the player's turn anymore
 		// Add a small delay so that the enemy's turn takes time.  
@@ -121,6 +122,10 @@ function updateLocalGameState(actionResult) {
 	gameState.player.healthPotions = actionResult.playerHealthPotions;
 	// Update enemy health.
 	gameState.enemy.currentHealth = actionResult.enemyHealth;
+	// Update player location
+	gameState.playerLocation = actionResult.playerLocation;
+	// Update isLocationComplete
+	gameState.isLocationComplete = actionResult.isLocationComplete;
 	// Log the updated gameState for debugging.
 	console.log('Updated local gameState:', gameState);
 }
@@ -223,8 +228,7 @@ function hideCombatUI() {
 	// Check if player is still alive 
 	if (gameState.player.currentHealth > 0) {
 		// Allow player to start the next fight
-		addLogEntry("Press [SPACE] to fight the next enemy.");
-		enableNextFightTrigger(); // Wait for space key press
+		addLogEntry("Check your map to move to the next location!");
 	}
 	else {
 		// Player is dead
