@@ -29,7 +29,7 @@ namespace PromptQuest.Services {
 		private readonly ICombatService _combatService;
 		private readonly IMapService _mapService;
 
-		public GameService(IHttpContextAccessor httpContextAccessor, ISessionService sessionService, IDatabaseService databaseService, ICombatService combatService, IMapService mapService) {
+		public GameService(ISessionService sessionService, IDatabaseService databaseService, ICombatService combatService, IMapService mapService) {
 			_sessionService = sessionService;
 			_databaseService = databaseService;
 			_combatService = combatService;
@@ -73,6 +73,7 @@ namespace PromptQuest.Services {
 		public void SetTutorialFlag(bool Flag) {
 			_sessionService.SetTutorialFlag(Flag);
 		}
+
 		/// <summary> Updates the current game state in the session for all users and in the database for logged in users.</summary>
 		private void UpdateGameState(GameState gameState) {
 			if(_databaseService.IsAuthenticatedUser()) {

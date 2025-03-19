@@ -39,7 +39,7 @@ namespace PromptQuest.Tests.Services {
 			// Check that we at least returned something
 			Assert.That(result, Is.Not.Null);
 			// test gameState not result because that is what actually gets saved to the session, the result is just presentation logic.
-			// Enemy should take 1 damage -> 10 - 3 = 7
+			// Enemy should take 3 damage -> 10 - 3 = 7
 			Assert.That(_gameState.Enemy.CurrentHealth, Is.EqualTo(7));
 			// Check that it is Enemy's turn now.
 			Assert.That(_gameState.IsPlayersTurn, Is.False);

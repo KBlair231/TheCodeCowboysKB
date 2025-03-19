@@ -1,145 +1,141 @@
-using NUnit.Framework;
-using Microsoft.AspNetCore.Http;
-using Microsoft.Extensions.Caching.Memory;
-using Microsoft.Extensions.DependencyInjection;
-using System.Text.Json;
-using PromptQuest.Services;
-using PromptQuest.Models;
-using Microsoft.AspNetCore.Http.Features;
-using Microsoft.AspNetCore.Session;
-using Microsoft.Extensions.Caching.Distributed;
-using Microsoft.Extensions.Logging;
 using Moq;
+using NUnit.Framework;
+using PromptQuest.Models;
+using PromptQuest.Services;
 
 namespace PromptQuest.Tests.Services {
+	// This service simply routes actions to their proper services and delegates updates to the session or db. So, the tests here are slim and redundant in some cases.
+	// Most unit tests for services should reside in the unit test file for their respective service.
 	[TestFixture]
 	public class GameServiceTests {
 		private GameService _gameService;
-		private ISession _session;
-		private HttpContext _httpContext;
-
-		[OneTimeSetUp]
-		public void OneTimeSetUp() {
-			// Set up in-memory session
-			var serviceCollection = new ServiceCollection();
-			serviceCollection.AddDistributedMemoryCache();
-			var serviceProvider = serviceCollection.BuildServiceProvider();
-			var memoryCache = serviceProvider.GetService<IDistributedCache>();
-			var loggerFactory = new Mock<ILoggerFactory>().Object;
-			var tryEstablishSession = new Func<bool>(() => true);
-
-			_session = new DistributedSession(
-					memoryCache,
-					"SessionId",
-					TimeSpan.FromMinutes(5),
-					TimeSpan.FromMinutes(5),
-					tryEstablishSession,
-					loggerFactory,
-					true
-			);
-
-			_httpContext = new DefaultHttpContext();
-			_httpContext.Features.Set<ISessionFeature>(new SessionFeature { Session = _session });
-			var httpContextAccessor = new HttpContextAccessor { HttpContext = _httpContext };
-
-			//_gameService = new GameService();
-		}
+		private Mock<ISessionService> _mockSessionService;
+		private Mock<IDatabaseService> _mockDatabaseService;
+		private Mock<ICombatService> _mockCombatService;
+		private Mock<IMapService> _mockMapService;
 
 		[SetUp]
 		public void SetUp() {
+			// Initialize mocks
+			_mockSessionService = new Mock<ISessionService>();
+			_mockDatabaseService = new Mock<IDatabaseService>();
+			_mockCombatService = new Mock<ICombatService>();
+			_mockMapService = new Mock<IMapService>();
 
-			// Test GameState so that values aren't null when ations are executed.
-			GameState gameState = new GameState {
-				Player = new Player { Name = "TestPlayer",MaxHealth = 10,CurrentHealth = 10,Attack = 1,Defense = 1 }
-			};
-
-			// Initialize the session
-			_session.SetString("GameState",JsonSerializer.Serialize(gameState));
-
+			// Initialize GameService with mocks
+			_gameService = new GameService(
+					_mockSessionService.Object,
+					_mockDatabaseService.Object,
+					_mockCombatService.Object,
+					_mockMapService.Object
+			);
 		}
 
-
 		[Test]
-		public void GetGameState_ShouldReturnGameState() {
+		public void StartNewGame_AuthenticatedUser_GameStateIsUpdatedInDatabaseAndSession() {
 			// Arrange
-			string expectedPlayerName = "John the Deadly Knight";
-			GameState gameState = new GameState { Player = new Player { Name = expectedPlayerName } };
-			_session.SetString("GameState",JsonSerializer.Serialize(gameState));
+			var userGoogleId = "user123";
+			_mockDatabaseService.Setup(db => db.IsAuthenticatedUser()).Returns(true);
+			_mockDatabaseService.Setup(db => db.GetUserGoogleId()).Returns(userGoogleId);
 
 			// Act
-			GameState gameStateFromSession = _gameService.GetGameState();
+			_gameService.StartNewGame();
 
 			// Assert
-			Assert.AreEqual(expectedPlayerName,gameStateFromSession.Player.Name);
+			_mockDatabaseService.Verify(db => db.AddOrUpdateGameState(It.Is<GameState>(gs => gs.UserGoogleId == userGoogleId)),Times.Once);
+			_mockSessionService.Verify(session => session.UpdateGameState(It.IsAny<GameState>()),Times.Once);
 		}
 
 		[Test]
-		public void UpdatePlayer_ShouldUpdatePlayerInGameState() {
+		public void GetGameState_AuthenticatedUser_ReturnsGameStateFromDatabase() {
 			// Arrange
-			var expectedPlayerName = "UpdatedPlayer";
-			var player = new Player { Name = expectedPlayerName };
+			var userGoogleId = "user123";
+			var gameState = new GameState { UserGoogleId = userGoogleId };
+			_mockDatabaseService.Setup(db => db.IsAuthenticatedUser()).Returns(true);
+			_mockDatabaseService.Setup(db => db.GetUserGoogleId()).Returns(userGoogleId);
+			_mockDatabaseService.Setup(db => db.GetGameState(userGoogleId)).Returns(gameState);
 
 			// Act
-			_gameService.CreateCharacter(player);
 			var result = _gameService.GetGameState();
 
 			// Assert
-			Assert.AreEqual(expectedPlayerName,result.Player.Name);
+			Assert.That(result,Is.EqualTo(gameState));
 		}
 
 		[Test]
-		public void StartCombat_ShouldInitializeCombatState() {
-			// Act
-			_gameService.StartCombat();
-			GameState gameState = _gameService.GetGameState();
-
-			// Assert
-			// Check that StartCombat generates an enemy
-			Assert.IsNotNull(gameState.Enemy);
-			// Check that StartCombat sets InCombat flag to true
-			Assert.IsTrue(gameState.InCombat);
-			// Check that StartCombat sets IsPlayersTurn flag to true
-			Assert.IsTrue(gameState.InCombat);
-		}
-
-		/// <summary> This just tests that ExecutePlayerAction updates the gamestate in the session because there are separate tests for the actions themselves in their own services.</summary>
-		[Test]
-		public void ExecutePlayerAction_ShouldExecuteActionAndUpdateGameState() {
+		public void GetGameState_UnauthenticatedUser_ReturnsGameStateFromSession() {
 			// Arrange
-			GameState gameStateBefore = _gameService.GetGameState(); // get game state before action
-			_gameService.StartCombat(); // Start combat so there is an enemy
+			var gameState = new GameState();
+			_mockDatabaseService.Setup(db => db.IsAuthenticatedUser()).Returns(false);
+			_mockSessionService.Setup(session => session.GetGameState()).Returns(gameState);
 
 			// Act
-			var result = _gameService.ExecutePlayerAction("attack");
-			GameState gameStateAfter = _gameService.GetGameState();// get game state before action
+			var result = _gameService.GetGameState();
 
 			// Assert
-			// Check that we at least returned something
-			Assert.That(result,Is.Not.Null);
-			// Make sure game state retrieved from the session changed
-			Assert.That(gameStateBefore,Is.Not.EqualTo(gameStateAfter)); // Make sure game state changed 
+			Assert.That(result,Is.EqualTo(gameState));
 		}
 
-		/// <summary> This just tests that ExecuteEnemyAction updates the gamestate in the session because there are separate tests for the actions themselves in their own services</summary>
 		[Test]
-		public void ExecuteEnemyAction_ShouldExecuteActionAndUpdateGameState() {
+		public void DoesUserHaveSavedGame_NoAuthenticatedUser_ReturnsFalse() {
 			// Arrange
-			GameState gameStateBefore = _gameService.GetGameState(); // get game state before action
-			_gameService.StartCombat(); // Start combat so there is an enemy
+			var gameState = new GameState();
+			_mockDatabaseService.Setup(db => db.IsAuthenticatedUser()).Returns(false);
+			_mockSessionService.Setup(session => session.GetGameState()).Returns(gameState);
 
 			// Act
-			var result = _gameService.ExecuteEnemyAction();
-			GameState gameStateAfter = _gameService.GetGameState(); // get game state before action
+			var result = _gameService.DoesUserHaveSavedGame();
 
 			// Assert
-			// Check that we at least returned something
-			Assert.That(result,Is.Not.Null);
-			// Make sure game state retrieved from the session changed
-			Assert.That(gameStateBefore,Is.Not.EqualTo(gameStateAfter)); // Make sure game state changed 
+			Assert.That(result,Is.False);
 		}
-	}
 
-	public class SessionFeature:ISessionFeature {
-		public ISession Session { get; set; }
+		[Test]
+		public void DoesUserHaveSavedGame_AuthenticatedUserWithSavedGame_ReturnsTrue() {
+			// Arrange
+			var gameState = new GameState();
+			var userGoogleId = "user123";
+			_mockDatabaseService.Setup(db => db.IsAuthenticatedUser()).Returns(true);
+			_mockDatabaseService.Setup(db => db.GetUserGoogleId()).Returns(userGoogleId);
+			_mockDatabaseService.Setup(db => db.GetGameState(userGoogleId)).Returns(gameState);
+
+			// Act
+			var result = _gameService.DoesUserHaveSavedGame();
+
+			// Assert
+			Assert.That(result,Is.True);
+		}
+
+		[Test]
+		public void DoesUserHaveSavedGame_AuthenticatedUserWithoutSavedGame_ReturnsFalse() {
+			// Arrange
+			var userGoogleId = "user123";
+			_mockDatabaseService.Setup(db => db.IsAuthenticatedUser()).Returns(true);
+			_mockDatabaseService.Setup(db => db.GetUserGoogleId()).Returns(userGoogleId);
+
+			// Act
+			var result = _gameService.DoesUserHaveSavedGame();
+
+			// Assert
+			Assert.That(result,Is.False);
+		}
+
+		[Test]
+		public void CreateCharacter_AuthenticatedUser_DeletesOldCharacterAndUpdatesGameState() {
+			// Arrange
+			var player = new Player { PlayerId = 1,Name = "NewPlayer" };
+			var gameState = new GameState { Player = new Player { PlayerId = 0 } };
+			var userGoogleId = "user123";
+			_mockDatabaseService.Setup(db => db.IsAuthenticatedUser()).Returns(true);
+			_mockDatabaseService.Setup(db => db.GetUserGoogleId()).Returns(userGoogleId);
+			_mockDatabaseService.Setup(db => db.GetGameState(userGoogleId)).Returns(gameState);
+
+			// Act
+			_gameService.CreateCharacter(player);
+
+			// Assert
+			_mockDatabaseService.Verify(db => db.DeletePlayer(0),Times.Once);
+			_mockSessionService.Verify(session => session.UpdateGameState(It.Is<GameState>(gs => gs.Player == player)),Times.Once);
+		}
 	}
 }
