@@ -66,6 +66,12 @@ builder.Services.AddDbContext<GameStateDbContext>(options => {
 	options.UseSqlServer(connectionString);
 });
 
+// Add middleware to enforce HTTPS redirection
+builder.Services.AddHttpsRedirection(options =>
+{
+    options.HttpsPort = 7186; // Ensure this matches your SSL port
+});
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
