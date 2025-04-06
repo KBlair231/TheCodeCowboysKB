@@ -20,19 +20,17 @@ namespace Tests_BDD.Features
     [System.CodeDom.Compiler.GeneratedCodeAttribute("Reqnroll", "2.0.0.0")]
     [System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
     [NUnit.Framework.TestFixtureAttribute()]
-    [NUnit.Framework.DescriptionAttribute("Google Sign-In Integration")]
-    [NUnit.Framework.CategoryAttribute("scrum-92")]
-    public partial class GoogleSign_InIntegrationFeature
+    [NUnit.Framework.DescriptionAttribute("Inventory")]
+    public partial class InventoryFeature
     {
         
         private global::Reqnroll.ITestRunner testRunner;
         
-        private static string[] featureTags = new string[] {
-                "scrum-92"};
+        private static string[] featureTags = ((string[])(null));
         
-        private static global::Reqnroll.FeatureInfo featureInfo = new global::Reqnroll.FeatureInfo(new System.Globalization.CultureInfo("en-US"), "Features", "Google Sign-In Integration", "\tGives the user the ability to login using Google sign-in", global::Reqnroll.ProgrammingLanguage.CSharp, featureTags);
+        private static global::Reqnroll.FeatureInfo featureInfo = new global::Reqnroll.FeatureInfo(new System.Globalization.CultureInfo("en-US"), "Features", "Inventory", null, global::Reqnroll.ProgrammingLanguage.CSharp, featureTags);
         
-#line 1 "GoogleSignIn.feature"
+#line 1 "Inventory.feature"
 #line hidden
         
         [NUnit.Framework.OneTimeSetUpAttribute()]
@@ -84,13 +82,15 @@ namespace Tests_BDD.Features
         }
         
         [NUnit.Framework.TestAttribute()]
-        [NUnit.Framework.DescriptionAttribute("Redirect to Google Sign-In Page")]
-        public async System.Threading.Tasks.Task RedirectToGoogleSign_InPage()
+        [NUnit.Framework.DescriptionAttribute("Display item details when an item is clicked")]
+        [NUnit.Framework.CategoryAttribute("scrum-98")]
+        public async System.Threading.Tasks.Task DisplayItemDetailsWhenAnItemIsClicked()
         {
-            string[] tagsOfScenario = ((string[])(null));
+            string[] tagsOfScenario = new string[] {
+                    "scrum-98"};
             System.Collections.Specialized.OrderedDictionary argumentsOfScenario = new System.Collections.Specialized.OrderedDictionary();
-            global::Reqnroll.ScenarioInfo scenarioInfo = new global::Reqnroll.ScenarioInfo("Redirect to Google Sign-In Page", null, tagsOfScenario, argumentsOfScenario, featureTags);
-#line 5
+            global::Reqnroll.ScenarioInfo scenarioInfo = new global::Reqnroll.ScenarioInfo("Display item details when an item is clicked", null, tagsOfScenario, argumentsOfScenario, featureTags);
+#line 4
 this.ScenarioInitialize(scenarioInfo);
 #line hidden
             if ((global::Reqnroll.TagHelper.ContainsIgnoreTag(scenarioInfo.CombinedTags) || global::Reqnroll.TagHelper.ContainsIgnoreTag(featureTags)))
@@ -100,47 +100,14 @@ this.ScenarioInitialize(scenarioInfo);
             else
             {
                 await this.ScenarioStartAsync();
+#line 5
+ await testRunner.GivenAsync("I am on the inventory tab", ((string)(null)), ((global::Reqnroll.Table)(null)), "Given ");
+#line hidden
 #line 6
- await testRunner.GivenAsync("I am a user on the main menu", ((string)(null)), ((global::Reqnroll.Table)(null)), "Given ");
+ await testRunner.WhenAsync("I click on an item in the inventory", ((string)(null)), ((global::Reqnroll.Table)(null)), "When ");
 #line hidden
 #line 7
- await testRunner.WhenAsync("I click the log in button", ((string)(null)), ((global::Reqnroll.Table)(null)), "When ");
-#line hidden
-#line 8
- await testRunner.ThenAsync("I should be redirected to the Google sign in page", ((string)(null)), ((global::Reqnroll.Table)(null)), "Then ");
-#line hidden
-            }
-            await this.ScenarioCleanupAsync();
-        }
-        
-        [NUnit.Framework.TestAttribute()]
-        [NUnit.Framework.DescriptionAttribute("Successful Google Login")]
-        public async System.Threading.Tasks.Task SuccessfulGoogleLogin()
-        {
-            string[] tagsOfScenario = ((string[])(null));
-            System.Collections.Specialized.OrderedDictionary argumentsOfScenario = new System.Collections.Specialized.OrderedDictionary();
-            global::Reqnroll.ScenarioInfo scenarioInfo = new global::Reqnroll.ScenarioInfo("Successful Google Login", null, tagsOfScenario, argumentsOfScenario, featureTags);
-#line 10
-this.ScenarioInitialize(scenarioInfo);
-#line hidden
-            if ((global::Reqnroll.TagHelper.ContainsIgnoreTag(scenarioInfo.CombinedTags) || global::Reqnroll.TagHelper.ContainsIgnoreTag(featureTags)))
-            {
-                testRunner.SkipScenario();
-            }
-            else
-            {
-                await this.ScenarioStartAsync();
-#line 11
- await testRunner.GivenAsync("I am on the Google sign in page", ((string)(null)), ((global::Reqnroll.Table)(null)), "Given ");
-#line hidden
-#line 12
- await testRunner.WhenAsync("I sign in with my credentials", ((string)(null)), ((global::Reqnroll.Table)(null)), "When ");
-#line hidden
-#line 13
- await testRunner.ThenAsync("I should see my Google profile image", ((string)(null)), ((global::Reqnroll.Table)(null)), "Then ");
-#line hidden
-#line 14
- await testRunner.AndAsync("I should see an option to log out", ((string)(null)), ((global::Reqnroll.Table)(null)), "And ");
+ await testRunner.ThenAsync("I should see a window with that item\'s title, image, and stats", ((string)(null)), ((global::Reqnroll.Table)(null)), "Then ");
 #line hidden
             }
             await this.ScenarioCleanupAsync();
