@@ -130,5 +130,11 @@ namespace PromptQuest.Controllers {
 			Item item = _gameService.GetItem();
 			return Json(item);
 		}
+		[HttpGet]
+		public IActionResult SkipToBoss()
+		{
+			_gameService.SkipToBoss();
+			return RedirectToAction("Game");
+		}
 	}
 }

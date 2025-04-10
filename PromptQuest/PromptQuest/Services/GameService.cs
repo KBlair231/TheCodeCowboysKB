@@ -16,6 +16,7 @@ namespace PromptQuest.Services {
 		PQActionResult ExecutePlayerAction(string action);
 		PQActionResult ExecuteEnemyAction();
 		PQActionResult EquipItem(string itemName, int itemATK, int itemDEF, string itemIMG);
+		PQActionResult SkipToBoss();
 		void StartNewGame();
 		public bool IsTutorial();
 		public void SetTutorialFlag(bool Flag);
@@ -223,6 +224,18 @@ namespace PromptQuest.Services {
 			UpdateGameState(gameState);
 		  PQActionResult pQActionResult = gameState.ToPQActionResult();
 			pQActionResult.Message = message;
+			return pQActionResult;
+		}
+
+		public PQActionResult SkipToBoss() {				// This is a skip to the boss for testing purposes
+			// Get current gamestate
+			GameState gameState = GetGameState();
+			// Move the player to the room before the boss.
+			_mapService.MovePlayer(gameState, 9);
+			// Update current gamesate
+			UpdateGameState(gameState);
+			PQActionResult pQActionResult = gameState.ToPQActionResult();
+			pQActionResult.Message = "You have been teleported to the room before the boss.";
 			return pQActionResult;
 		}
 

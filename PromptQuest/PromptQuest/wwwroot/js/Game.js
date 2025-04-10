@@ -14,15 +14,16 @@ async function loadGame() {
 	if (gameState.player == null) {// new player or session expired
 		window.location.href = "/"; // boot them to the Main Menu.
 	}
-	// Update display with loaded data.  
-	updateDisplay(); 
-	if (gameState.isPlayersTurn == false) {
-		executeEnemyAction();
-	}
 	let flagresponse = await fetch("/Game/IsTutorial"); // get the tutorial flag
 	tutorialflag = await flagresponse.json()//if in the tutorial: start the tutorial
 	if (tutorialflag) {
 		startTutorial()
+	}
+	// Update display with loaded data.  
+	updateDisplay(); 
+	updateMap();
+	if (gameState.isPlayersTurn == false) {
+		executeEnemyAction();
 	}
 }
 

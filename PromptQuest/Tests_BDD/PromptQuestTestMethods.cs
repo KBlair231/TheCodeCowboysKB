@@ -59,5 +59,61 @@ namespace Tests_BDD {
 			WebDriverWait wait = new WebDriverWait(webDriver,TimeSpan.FromSeconds(10));
 			wait.Until(d => !d.FindElement(By.Id(modalId)).Displayed);
 		}
+
+		/// <summary> Repeatedly clicks attack until the enemy is defeated. </summary>
+		public static void ClearRoom(IWebDriver webDriver) {
+			// Equip better weapon from inventory
+			IWebElement menuButton = webDriver.FindElement(By.XPath("//button[normalize-space(text()='Menu')]"));
+			menuButton.Click();
+			// Wait for the menu modal to show
+			PromptQuestTestMethods.WaitForModalToOpen(webDriver, "pq-modal");
+			// Make sure the inventory tab is selected
+			IWebElement inventoryTab = webDriver.FindElement(By.Id("inventory-button"));
+			inventoryTab.Click();
+			// Click weapon
+			IWebElement weaponSlot = webDriver.FindElement(By.Id("inventory-slot-4"));
+			weaponSlot.Click();
+			// Click Equip Item
+			IWebElement equipButton = webDriver.FindElement(By.Id("equip-button"));
+			equipButton.Click();
+			// Close the menu
+			IWebElement closeButton = webDriver.FindElement(By.Id("pq-modal-close"));
+			closeButton.Click();
+			// Click on the attack button until the enemy is dead.
+			while (webDriver.FindElement(By.Id("enemy-display")).Displayed && webDriver.FindElement(By.Id("action-button-display")).Displayed) {
+				IWebElement attackButton = webDriver.FindElement(By.Id("attack-btn"));
+				if (int.Parse(webDriver.FindElement(By.Id("player-hp")).Text.Split("/")[0]) <= 10) {
+					IWebElement healthPotionButton = webDriver.FindElement(By.Id("health-potion-btn"));
+					healthPotionButton.Click();
+				}
+				attackButton.Click();
+			}
+		}
+
+		/// <summary> Gets you to the boss room with full health/potions. </summary>
+		public static void SkipToBoss(IWebDriver webDriver) {
+			// Navigate to the game page
+			webDriver.Navigate().GoToUrl("https://localhost:7186/Game/SkipToBoss");
+			// Defeat the room's enemy
+			PromptQuestTestMethods.ClearRoom(webDriver);
+			// Click the menu button
+			IWebElement menuButton = webDriver.FindElement(By.XPath("//button[normalize-space(text()='Menu')]"));
+			menuButton.Click();
+			// Wait for the menu modal to show
+			PromptQuestTestMethods.WaitForModalToOpen(webDriver, "pq-modal");
+			// Click the map tab
+			IWebElement mapTab = webDriver.FindElement(By.Id("map-button"));
+			mapTab.Click();
+			// Wait for the map modal to show
+			PromptQuestTestMethods.WaitForModalToOpen(webDriver, "map-tab");
+			// Click the tenth room with attribute data-node-id="10"
+			IWebElement tenthNode = webDriver.FindElement(By.XPath("//div[@data-node-id='10']"));
+			tenthNode.Click();
+			// Close the menu
+			IWebElement closeButton = webDriver.FindElement(By.Id("pq-modal-close"));
+			closeButton.Click();
+			// Wait for the boss to spawn
+			PromptQuestTestMethods.WaitForModalToOpen(webDriver, "attack-btn");
+		}
 	}
 }
