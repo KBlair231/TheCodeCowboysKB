@@ -10,7 +10,7 @@ namespace Tests_BDD {
 	static class PromptQuestTestMethods {
 
 		/// <summary> Takes in an IWebDriver object and navigates it through the process of creating a basic character. Run this before testing something from the game view. </summary>
-		public static void StartNewGame(IWebDriver webDriver,bool skipTutorial = true) {
+		public static void StartNewGame(IWebDriver webDriver, bool skipTutorial = true) {
 			try {
 				//Navigate to the Main menu page
 				webDriver.Navigate().GoToUrl("https://localhost:7186/");
@@ -49,14 +49,14 @@ namespace Tests_BDD {
 		/// <summary> Takes in a IWebDriver object and the id of a modal element and then waits until the modal has opened. </summary>
 		public static void WaitForModalToOpen(IWebDriver webDriver, string modalId) {
 			//Set timeout time to 10 seconds.
-			WebDriverWait wait = new WebDriverWait(webDriver,TimeSpan.FromSeconds(10));
+			WebDriverWait wait = new WebDriverWait(webDriver, TimeSpan.FromSeconds(10));
 			wait.Until(d => d.FindElement(By.Id(modalId)).Displayed);
 		}
 
 		/// <summary> Takes in a IWebDriver object and the id of a modal element and then waits until the modal has closed. </summary>
 		public static void WaitForModalToClose(IWebDriver webDriver, string modalId) {
 			//Set timeout time to 10 seconds.
-			WebDriverWait wait = new WebDriverWait(webDriver,TimeSpan.FromSeconds(10));
+			WebDriverWait wait = new WebDriverWait(webDriver, TimeSpan.FromSeconds(10));
 			wait.Until(d => !d.FindElement(By.Id(modalId)).Displayed);
 		}
 
