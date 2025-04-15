@@ -1,5 +1,5 @@
 ﻿// Global Variables
-let tabCurrent;
+let tabCurrent="none";
 
 document.addEventListener("DOMContentLoaded", async function () {
 	// Get modal elements
@@ -9,7 +9,13 @@ document.addEventListener("DOMContentLoaded", async function () {
 	// Open modal
 	openModalButton.addEventListener("click", () => {
 		modal.style.display = "block";
-		switchTab(tabCurrent);
+		if (tabCurrent === "none") {
+			// Inventory is the default tab
+			switchTab('inventory');
+		}
+		else {
+			switchTab(tabCurrent);
+		}
 	});
 	// Close modal
 	closeModalButton.addEventListener("click", () => {
@@ -21,8 +27,7 @@ document.addEventListener("DOMContentLoaded", async function () {
 			modal.style.display = "none";
 		}
 	});
-	// Inventory is the default tab
-	switchTab('inventory');
+	
 });
 
 // Function to switch between tabs in the modal
@@ -43,7 +48,7 @@ function switchTab(tabName) {
 	document.getElementById(tabName + '-tab').classList.add('active-tab');
 	if (tabName === 'inventory') {
 		// Load items into the inventory tab
-		LoadItems();
+		loadItems();
 	}
 	document.getElementById(tabName + '-tab').classList.add('show-tab');
 	if (tabName === 'map') {

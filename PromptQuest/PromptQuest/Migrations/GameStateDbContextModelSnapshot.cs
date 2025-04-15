@@ -79,9 +79,13 @@ namespace PromptQuest.Migrations
 
                     b.HasKey("UserGoogleId");
 
-                    b.HasIndex("EnemyId");
+                    b.HasIndex("EnemyId")
+                        .IsUnique()
+                        .HasFilter("[EnemyId] IS NOT NULL");
 
-                    b.HasIndex("PlayerId");
+                    b.HasIndex("PlayerId")
+                        .IsUnique()
+                        .HasFilter("[PlayerId] IS NOT NULL");
 
                     b.ToTable("GameStates");
                 });
@@ -94,23 +98,31 @@ namespace PromptQuest.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ItemId"));
 
-                    b.Property<int>("ATK")
+                    b.Property<int>("Attack")
                         .HasColumnType("int");
 
-                    b.Property<int>("DEF")
+                    b.Property<int>("Defense")
                         .HasColumnType("int");
 
-                    b.Property<string>("IMG")
+                    b.Property<bool>("Equipped")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("ImageSrc")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("name")
+                    b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("PlayerId")
+                        .HasColumnType("int");
 
                     b.HasKey("ItemId");
 
-                    b.ToTable("Item");
+                    b.HasIndex("PlayerId");
+
+                    b.ToTable("Items");
                 });
 
             modelBuilder.Entity("PromptQuest.Models.Player", b =>
@@ -137,9 +149,6 @@ namespace PromptQuest.Migrations
                     b.Property<int>("HealthPotions")
                         .HasColumnType("int");
 
-                    b.Property<int>("ItemId")
-                        .HasColumnType("int");
-
                     b.Property<int>("MaxHealth")
                         .HasColumnType("int");
 
@@ -149,35 +158,37 @@ namespace PromptQuest.Migrations
 
                     b.HasKey("PlayerId");
 
-                    b.HasIndex("ItemId");
-
                     b.ToTable("Players");
                 });
 
             modelBuilder.Entity("PromptQuest.Models.GameState", b =>
                 {
                     b.HasOne("PromptQuest.Models.Enemy", "Enemy")
-                        .WithMany()
-                        .HasForeignKey("EnemyId");
+                        .WithOne()
+                        .HasForeignKey("PromptQuest.Models.GameState", "EnemyId")
+                        .OnDelete(DeleteBehavior.Cascade);
 
                     b.HasOne("PromptQuest.Models.Player", "Player")
-                        .WithMany()
-                        .HasForeignKey("PlayerId");
+                        .WithOne()
+                        .HasForeignKey("PromptQuest.Models.GameState", "PlayerId")
+                        .OnDelete(DeleteBehavior.Cascade);
 
                     b.Navigation("Enemy");
 
                     b.Navigation("Player");
                 });
 
+            modelBuilder.Entity("PromptQuest.Models.Item", b =>
+                {
+                    b.HasOne("PromptQuest.Models.Player", null)
+                        .WithMany("Items")
+                        .HasForeignKey("PlayerId")
+                        .OnDelete(DeleteBehavior.Cascade);
+                });
+
             modelBuilder.Entity("PromptQuest.Models.Player", b =>
                 {
-                    b.HasOne("PromptQuest.Models.Item", "item")
-                        .WithMany()
-                        .HasForeignKey("ItemId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("item");
+                    b.Navigation("Items");
                 });
 #pragma warning restore 612, 618
         }

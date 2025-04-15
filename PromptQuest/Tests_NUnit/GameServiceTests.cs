@@ -34,15 +34,16 @@ namespace PromptQuest.Tests.Services {
 		[Test]
 		public void StartNewGame_AuthenticatedUser_GameStateIsUpdatedInDatabaseAndSession() {
 			// Arrange
+			var player = new Player { PlayerId = 1,Name = "NewPlayer" };
 			var userGoogleId = "user123";
 			_mockDatabaseService.Setup(db => db.IsAuthenticatedUser()).Returns(true);
 			_mockDatabaseService.Setup(db => db.GetUserGoogleId()).Returns(userGoogleId);
 
 			// Act
-			_gameService.StartNewGame();
+			_gameService.StartNewGame(player);
 
 			// Assert
-			_mockDatabaseService.Verify(db => db.AddOrUpdateGameState(It.Is<GameState>(gs => gs.UserGoogleId == userGoogleId)),Times.Once);
+			_mockDatabaseService.Verify(db => db.SaveGameState(It.Is<GameState>(gs => gs.UserGoogleId == userGoogleId)),Times.Once);
 			_mockSessionService.Verify(session => session.UpdateGameState(It.IsAny<GameState>()),Times.Once);
 		}
 
@@ -131,10 +132,10 @@ namespace PromptQuest.Tests.Services {
 			_mockDatabaseService.Setup(db => db.GetGameState(userGoogleId)).Returns(gameState);
 
 			// Act
-			_gameService.CreateCharacter(player);
+			_gameService.StartNewGame(player);
 
 			// Assert
-			_mockDatabaseService.Verify(db => db.DeletePlayer(0),Times.Once);
+			_mockDatabaseService.Verify(db => db.DeleteGameState("user123"),Times.Once);
 			_mockSessionService.Verify(session => session.UpdateGameState(It.Is<GameState>(gs => gs.Player == player)),Times.Once);
 		}
 	}

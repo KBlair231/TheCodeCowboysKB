@@ -10,18 +10,17 @@ namespace PromptQuest.Services {
 		GameState GetGameState();
 
 		bool DoesUserHaveSavedGame();
-		void CreateCharacter(Player player);
 		void StartCombat();
 		void RespawnPlayer();
 		PQActionResult ExecutePlayerAction(string action);
 		PQActionResult ExecuteEnemyAction();
-		PQActionResult EquipItem(string itemName, int itemATK, int itemDEF, string itemIMG);
 		PQActionResult SkipToBoss();
-		void StartNewGame();
+		void EquipItem(int itemIndex);
+		void StartNewGame(Player player);
 		public bool IsTutorial();
 		public void SetTutorialFlag(bool Flag);
 		public Map GetMap();
-		public Item GetItem();
+		 List<Item> GetDefaultItems();
 	}
 
 	public class GameService : IGameService {
@@ -40,16 +39,20 @@ namespace PromptQuest.Services {
 		#region Game State and Session Management Methods
 
 		/// <summary> Adds a new game state to the session, and if the user is logged in, then it is also added to the database with nothing but the user's id. If the user already has a GameState it will be overwritten.</summary>
-		public void StartNewGame() {
-			GameState gameState = new GameState();
-			if(_databaseService.IsAuthenticatedUser()) {
-				//User is logged in. store their id in the gamestate and add it to the database.
-				//This will overwrite their last game with the new blank one because updates are done on the basis of Google Id.
-				gameState.UserGoogleId = _databaseService.GetUserGoogleId();
-				_databaseService.AddOrUpdateGameState(gameState);
+		public void StartNewGame(Player player) {
+			GameState gameState = GetGameState();
+			if(DoesUserHaveSavedGame()) {
+				//They do. Delete it.
+				string userGoogleId = _databaseService.GetUserGoogleId();
+				_databaseService.DeleteGameState(userGoogleId); //All other deletes should cascade from this.
 			}
-			//User isn't logged in. Only add the new GameState to the session.
-			_sessionService.UpdateGameState(gameState);
+			//Create fresh game state
+			gameState = new GameState();
+			gameState.Player = player;
+			gameState.Enemy = new Enemy(); // Avoids null references later.
+			//Store their id in the gamestate (blank if user isn't authenticated).
+			gameState.UserGoogleId = _databaseService.GetUserGoogleId();
+			UpdateGameState(gameState);
 		}
 
 		/// <summary> Gets the current game state from the database for logged in users, and from the session for not logged in users.</summary>
@@ -66,6 +69,10 @@ namespace PromptQuest.Services {
 				// UnAuthenticated users get their data from the current session.
 				gameState = _sessionService.GetGameState();
 			}
+			//Add default Items if they have none
+			if(gameState != null && gameState.Player.Items.Count == 0) {
+				gameState.Player.Items.AddRange(GetDefaultItems());
+			}
 			return gameState;
 		}
 		public bool IsTutorial() {
@@ -79,7 +86,7 @@ namespace PromptQuest.Services {
 		private void UpdateGameState(GameState gameState) {
 			if(_databaseService.IsAuthenticatedUser()) {
 				// User is logged in, so update the current gamestate in the database.
-				_databaseService.AddOrUpdateGameState(gameState);
+				_databaseService.SaveGameState(gameState);
 			}
 			// User is not logged in, so only update the current gamestate in the session.
 			_sessionService.UpdateGameState(gameState);
@@ -98,33 +105,10 @@ namespace PromptQuest.Services {
 
 		#endregion Game State and Session Management Methods - End
 
-		#region Update Methods
-		/// <summary>Saves the player character to the game state. overwrites the current player character if called multiple times.</summary>
-		public void CreateCharacter(Player player) {
-			// Get current gamestate
-			GameState gameState = GetGameState();
-			if(_databaseService.IsAuthenticatedUser()) {
-				// Check if user already has a character.
-				if(gameState.Player != null) {
-					// Delete old character.
-					_databaseService.DeletePlayer(gameState.Player.PlayerId);
-				}
-			}
-			// Add new character to the game state.
-			gameState.Player = player;
-			// Update current gamesate
-			UpdateGameState(gameState);
-		}
-		#endregion Update Methods - End
-
 		#region Get Methods
 
 		public Map GetMap() {
 			return _mapService.GetMap();
-		}
-		public Item GetItem(){
-			GameState gameState = GetGameState();
-			return gameState.Player.item;
 		}
 		#endregion Get Methods - End
 
@@ -196,23 +180,33 @@ namespace PromptQuest.Services {
 			pQActionResult.Message = message;
 			return pQActionResult;
 		}
-		/// <summary>
-		/// equips an item to the player, altering their stats
-		/// </summary>
-		/// <returns></returns>
-		public PQActionResult EquipItem(string itemName, int itemATK, int itemDEF, string itemIMG)
+
+		#region Inventory functions (could be placed in its own service at some point when there is more of them)
+		/// <summary> equips the item with the given itemId </summary>
+		public void EquipItem(int itemIndex)
 		{
 			GameState gameState = GetGameState();
-			gameState.Player.item.name = itemName;
-			gameState.Player.item.ATK = itemATK;
-			gameState.Player.item.DEF = itemDEF;
-			gameState.Player.item.IMG = itemIMG;
+			//Mark currently equipped item as unequipped if there is one.
+			Item item=gameState.Player.Items.FirstOrDefault(i => i.Equipped);
+			if(item!=null) {
+				item.Equipped=false;
+			}
+			//Mark new item as equipped.
+			item=gameState.Player.Items[itemIndex];
+			item.Equipped=true;
 			UpdateGameState(gameState);
-			PQActionResult pQActionResult = gameState.ToPQActionResult();
-			pQActionResult.Message = "Equipped the "+itemName;
-			return pQActionResult;
-
 		}
+
+		public List<Item> GetDefaultItems() {
+			return new List<Item> { //Default items
+				new Item { Name = "Jeweled Helmet", Attack = 0, Defense = 2, ImageSrc = "/images/PlaceholderItem1.png", },
+				new Item { Name = "Fiery Sword", Attack = 4, Defense = 0, ImageSrc = "/images/PlaceholderItem2.png", },
+				new Item { Name = "Frozen Shield", Attack = 1, Defense = 3, ImageSrc = "/images/PlaceholderItem3.png", },
+				new Item { Name = "Warded Sword", Attack = 3, Defense = 2, ImageSrc = "/images/PlaceholderItem4.png", }
+			};
+		}
+
+		#endregion
 
 		/// <summary>Execute an enemy action.  Does not take an action string because the enemy's action is determined server side. </summary>
 		public PQActionResult ExecuteEnemyAction() {
@@ -220,7 +214,7 @@ namespace PromptQuest.Services {
 			GameState gameState = GetGameState();
 			// Execute the action and return a PQActionResult
 			string message = _combatService.EnemyAttack(gameState); // Enemy only attacks for now.
-																																					 // Update current gamesate
+			// Update current gamesate
 			UpdateGameState(gameState);
 		  PQActionResult pQActionResult = gameState.ToPQActionResult();
 			pQActionResult.Message = message;
@@ -232,6 +226,7 @@ namespace PromptQuest.Services {
 			GameState gameState = GetGameState();
 			// Move the player to the room before the boss.
 			_mapService.MovePlayer(gameState, 9);
+			_combatService.StartCombat(gameState);//Make sure combat starts when they get there or you could get stuck their.
 			// Update current gamesate
 			UpdateGameState(gameState);
 			PQActionResult pQActionResult = gameState.ToPQActionResult();

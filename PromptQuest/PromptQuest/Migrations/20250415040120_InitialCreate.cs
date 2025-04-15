@@ -39,7 +39,8 @@ namespace PromptQuest.Migrations
                     MaxHealth = table.Column<int>(type: "int", nullable: false),
                     CurrentHealth = table.Column<int>(type: "int", nullable: false),
                     Defense = table.Column<int>(type: "int", nullable: false),
-                    Attack = table.Column<int>(type: "int", nullable: false)
+                    Attack = table.Column<int>(type: "int", nullable: false),
+                    Class = table.Column<string>(type: "nvarchar(max)", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -54,7 +55,9 @@ namespace PromptQuest.Migrations
                     PlayerId = table.Column<int>(type: "int", nullable: true),
                     EnemyId = table.Column<int>(type: "int", nullable: true),
                     InCombat = table.Column<bool>(type: "bit", nullable: false),
-                    IsPlayersTurn = table.Column<bool>(type: "bit", nullable: false)
+                    IsPlayersTurn = table.Column<bool>(type: "bit", nullable: false),
+                    PlayerLocation = table.Column<int>(type: "int", nullable: false),
+                    IsLocationComplete = table.Column<bool>(type: "bit", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -63,22 +66,57 @@ namespace PromptQuest.Migrations
                         name: "FK_GameStates_Enemies_EnemyId",
                         column: x => x.EnemyId,
                         principalTable: "Enemies",
-                        principalColumn: "EnemyId");
+                        principalColumn: "EnemyId",
+                        onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK_GameStates_Players_PlayerId",
                         column: x => x.PlayerId,
                         principalTable: "Players",
-                        principalColumn: "PlayerId");
+                        principalColumn: "PlayerId",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Items",
+                columns: table => new
+                {
+                    ItemId = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    PlayerId = table.Column<int>(type: "int", nullable: false),
+                    Equipped = table.Column<bool>(type: "bit", nullable: false),
+                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Attack = table.Column<int>(type: "int", nullable: false),
+                    Defense = table.Column<int>(type: "int", nullable: false),
+                    ImageSrc = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Items", x => x.ItemId);
+                    table.ForeignKey(
+                        name: "FK_Items_Players_PlayerId",
+                        column: x => x.PlayerId,
+                        principalTable: "Players",
+                        principalColumn: "PlayerId",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateIndex(
                 name: "IX_GameStates_EnemyId",
                 table: "GameStates",
-                column: "EnemyId");
+                column: "EnemyId",
+                unique: true,
+                filter: "[EnemyId] IS NOT NULL");
 
             migrationBuilder.CreateIndex(
                 name: "IX_GameStates_PlayerId",
                 table: "GameStates",
+                column: "PlayerId",
+                unique: true,
+                filter: "[PlayerId] IS NOT NULL");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Items_PlayerId",
+                table: "Items",
                 column: "PlayerId");
         }
 
@@ -87,6 +125,9 @@ namespace PromptQuest.Migrations
         {
             migrationBuilder.DropTable(
                 name: "GameStates");
+
+            migrationBuilder.DropTable(
+                name: "Items");
 
             migrationBuilder.DropTable(
                 name: "Enemies");

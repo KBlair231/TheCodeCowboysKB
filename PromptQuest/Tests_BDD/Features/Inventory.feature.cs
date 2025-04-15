@@ -104,10 +104,83 @@ this.ScenarioInitialize(scenarioInfo);
  await testRunner.GivenAsync("I am on the inventory tab", ((string)(null)), ((global::Reqnroll.Table)(null)), "Given ");
 #line hidden
 #line 6
- await testRunner.WhenAsync("I click on an item in the inventory", ((string)(null)), ((global::Reqnroll.Table)(null)), "When ");
+ await testRunner.WhenAsync("I click on an item", ((string)(null)), ((global::Reqnroll.Table)(null)), "When ");
 #line hidden
 #line 7
  await testRunner.ThenAsync("I should see a window with that item\'s title, image, and stats", ((string)(null)), ((global::Reqnroll.Table)(null)), "Then ");
+#line hidden
+            }
+            await this.ScenarioCleanupAsync();
+        }
+        
+        [NUnit.Framework.TestAttribute()]
+        [NUnit.Framework.DescriptionAttribute("Equiping items")]
+        [NUnit.Framework.CategoryAttribute("scrum-99")]
+        public async System.Threading.Tasks.Task EquipingItems()
+        {
+            string[] tagsOfScenario = new string[] {
+                    "scrum-99"};
+            System.Collections.Specialized.OrderedDictionary argumentsOfScenario = new System.Collections.Specialized.OrderedDictionary();
+            global::Reqnroll.ScenarioInfo scenarioInfo = new global::Reqnroll.ScenarioInfo("Equiping items", null, tagsOfScenario, argumentsOfScenario, featureTags);
+#line 10
+this.ScenarioInitialize(scenarioInfo);
+#line hidden
+            if ((global::Reqnroll.TagHelper.ContainsIgnoreTag(scenarioInfo.CombinedTags) || global::Reqnroll.TagHelper.ContainsIgnoreTag(featureTags)))
+            {
+                testRunner.SkipScenario();
+            }
+            else
+            {
+                await this.ScenarioStartAsync();
+#line 11
+ await testRunner.GivenAsync("I am on the inventory tab", ((string)(null)), ((global::Reqnroll.Table)(null)), "Given ");
+#line hidden
+#line 12
+ await testRunner.WhenAsync("I click on an item", ((string)(null)), ((global::Reqnroll.Table)(null)), "When ");
+#line hidden
+#line 13
+ await testRunner.AndAsync("I click the equip button", ((string)(null)), ((global::Reqnroll.Table)(null)), "And ");
+#line hidden
+#line 14
+ await testRunner.ThenAsync("that item will leave the list of items", ((string)(null)), ((global::Reqnroll.Table)(null)), "Then ");
+#line hidden
+#line 15
+ await testRunner.AndAsync("that item will move to the equipped item slot", ((string)(null)), ((global::Reqnroll.Table)(null)), "And ");
+#line hidden
+            }
+            await this.ScenarioCleanupAsync();
+        }
+        
+        [NUnit.Framework.TestAttribute()]
+        [NUnit.Framework.DescriptionAttribute("Trying to equip no item")]
+        [NUnit.Framework.CategoryAttribute("scrum-99")]
+        public async System.Threading.Tasks.Task TryingToEquipNoItem()
+        {
+            string[] tagsOfScenario = new string[] {
+                    "scrum-99"};
+            System.Collections.Specialized.OrderedDictionary argumentsOfScenario = new System.Collections.Specialized.OrderedDictionary();
+            global::Reqnroll.ScenarioInfo scenarioInfo = new global::Reqnroll.ScenarioInfo("Trying to equip no item", null, tagsOfScenario, argumentsOfScenario, featureTags);
+#line 18
+this.ScenarioInitialize(scenarioInfo);
+#line hidden
+            if ((global::Reqnroll.TagHelper.ContainsIgnoreTag(scenarioInfo.CombinedTags) || global::Reqnroll.TagHelper.ContainsIgnoreTag(featureTags)))
+            {
+                testRunner.SkipScenario();
+            }
+            else
+            {
+                await this.ScenarioStartAsync();
+#line 19
+ await testRunner.GivenAsync("I am on the inventory tab", ((string)(null)), ((global::Reqnroll.Table)(null)), "Given ");
+#line hidden
+#line 20
+ await testRunner.WhenAsync("I don\'t have an item selected", ((string)(null)), ((global::Reqnroll.Table)(null)), "When ");
+#line hidden
+#line 21
+ await testRunner.AndAsync("I click the equip button", ((string)(null)), ((global::Reqnroll.Table)(null)), "And ");
+#line hidden
+#line 22
+ await testRunner.ThenAsync("nothing should happen", ((string)(null)), ((global::Reqnroll.Table)(null)), "Then ");
 #line hidden
             }
             await this.ScenarioCleanupAsync();

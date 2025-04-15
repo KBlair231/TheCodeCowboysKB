@@ -6,7 +6,7 @@
 		/// <summary> Foreign Key </summary>
 		public int? PlayerId { get; set; }
 		///<summary> The current user's player character. </summary>
-		public Player Player { get; set; }
+		public Player Player { get; set; } = new Player();
 		/// <summary> Foreign Key </summary>
 		public int? EnemyId { get; set; }
 		///<summary> The current enemy that the player is fighting. </summary>
@@ -57,8 +57,6 @@
 			actionResult.IsPlayersTurn = gameState.IsPlayersTurn;
 			actionResult.PlayerLocation = gameState.PlayerLocation;
 			actionResult.IsLocationComplete = gameState.IsLocationComplete;
-			actionResult.PlayerItemATK = gameState.Player.item.ATK;
-			actionResult.PlayerItemDEF = gameState.Player.item.DEF;
 			return actionResult;
 		}
 	}
