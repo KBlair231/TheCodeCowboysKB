@@ -28,6 +28,20 @@ function updateMap() {
 		nodeElement.className = "map-node";
 		nodeElement.setAttribute("data-node-id", map.listMapNodes[i].mapNodeId);
 		mapContainer.appendChild(nodeElement);
+		// Check for NodeType and add image if it is "Boss"
+		if (map.listMapNodes[i].nodeType === "Boss") {
+			const imgElement = document.createElement("img");
+			imgElement.src = "/images/boss.png";
+			imgElement.className = "map-image";
+			nodeElement.appendChild(imgElement);
+		}
+		// Check for NodeType and add image if it is "Campsite"
+		if (map.listMapNodes[i].nodeType === "Campsite") {
+			const imgElement = document.createElement("img");
+			imgElement.src = "/images/campsite.png";
+			imgElement.className = "map-image";
+			nodeElement.appendChild(imgElement);
+		}
 		// Show player which node they are on
 		if (map.listMapNodes[i].mapNodeId == gameState.playerLocation) {
 			nodeElement.classList.add("map-node-current");
@@ -58,5 +72,7 @@ function updateMap() {
 async function movePlayerToNode() {
 	await executePlayerAction('move');
 	updateMap();
-	spawnNewEnemy();
+	if (map.listMapNodes[gameState.playerLocation - 1].nodeType == "Enemy" || map.listMapNodes[gameState.playerLocation - 1].nodeType == "Boss") {
+		spawnNewEnemy();
+	}
 }

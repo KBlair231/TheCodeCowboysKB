@@ -99,36 +99,31 @@ namespace PromptQuest.Controllers {
 		}
 
 		[HttpPost]
-		public IActionResult EndTutorial()
-		{
+		public IActionResult EndTutorial() {
 			_gameService.SetTutorialFlag(false);
 			return Ok();
 		}
 
 		[HttpPost]
-		public IActionResult Respawn()
-		{
+		public IActionResult Respawn() {
 			_gameService.RespawnPlayer();
 			return Ok();
 		}
 
 		[HttpPost]
-		public IActionResult MovePlayerToNextLocation()
-		{
+		public IActionResult MovePlayerToNextLocation() {
 			PQActionResult ActionResult = _gameService.ExecutePlayerAction("move");
 			return Json(ActionResult);
 		}
 
 		[HttpGet]
-		public IActionResult GetMap()
-		{
+		public IActionResult GetMap() {
 			Map map = _gameService.GetMap();
 			return Json(map);
 		}
 
 		[HttpGet]
-		public IActionResult SkipToBoss()
-		{
+		public IActionResult SkipToBoss() {
 			_gameService.SkipToBoss();
 			return RedirectToAction("Game");
 		}

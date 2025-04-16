@@ -7,7 +7,9 @@
 	// Update display
 	updateDisplay();
 	// Gets rid of last combat's messages;
-	clearDialogBox()
+	clearDialogBox();
+	// Hide the campsite UI
+	hideCampsiteUI();
 }
 
 // Function to disable the combat buttons and remove their event handlers.  
@@ -26,7 +28,7 @@ function disableCombatButtons() {
 
 // Function to enable the combat buttons and add their event handlers.  
 function enableCombatButtons() {
-	// Enable Attack button.  
+	// Enable Attack button.
 	const attackButton = document.getElementById("attack-btn");
 	attackButton.addEventListener("click", handleAttackClick);
 	attackButton.disabled = false;
@@ -48,16 +50,6 @@ async function handleHealClick() {
 	await executePlayerAction('heal');
 }
 
-function enableNextFightTrigger() {
-	document.addEventListener("keydown", handleSpacePress);
-}
-
-function handleSpacePress(event) {
-	if (event.code === "Space") {
-		document.removeEventListener("keydown", handleSpacePress);
-		spawnNewEnemy();
-	}
-}
 // Function to hide the Combat UI.  
 function hideCombatUI() {
 	// Just in case.

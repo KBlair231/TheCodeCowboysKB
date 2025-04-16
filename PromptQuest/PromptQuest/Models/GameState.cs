@@ -13,8 +13,10 @@
 		public Enemy Enemy { get; set; }
 		///<summary> Whether or not the player is in combat. </summary>
 		public bool InCombat { get; set; } = false;
+		///<summary> Whether or not the player is in a campsite. </summary>
+		public bool InCampsite { get; set; } = false;
 		///<summary> Whether or not it is the player's turn. </summary>
-		public bool IsPlayersTurn {get; set;} = false;
+		public bool IsPlayersTurn { get; set; } = false;
 		///<summary> The mapNodeId of the mapNode the player is currently at. </summary>
 		public int PlayerLocation { get; set; } = 1;
 		///<summary> Whether or not the player has completed the current area </summary>
@@ -35,8 +37,10 @@
 		public int EnemyHealth { get; set; } = 0;
 		///<summary> Whether or not the player is in combat. </summary>
 		public bool InCombat { get; set; } = false;
+		///<summary> Whether or not the player is in a campsite. </summary>
+		public bool InCampsite { get; set; } = false;
 		///<summary> Whether or not it is the player's turn. </summary>
-		public bool IsPlayersTurn {get; set;} = false;
+		public bool IsPlayersTurn { get; set; } = false;
 		///<summary> The mapNodeId of the mapNode the player is currently at. </summary>
 		public int PlayerLocation { get; set; } = 1;
 		///<summary> Whether or not the player has completed the current area </summary>
@@ -55,6 +59,7 @@
 			actionResult.PlayerHealthPotions = gameState.Player.HealthPotions;
 			actionResult.EnemyHealth = gameState.Enemy.CurrentHealth;
 			actionResult.InCombat = gameState.InCombat;
+			actionResult.InCampsite = gameState.InCampsite;
 			actionResult.IsPlayersTurn = gameState.IsPlayersTurn;
 			actionResult.PlayerLocation = gameState.PlayerLocation;
 			actionResult.IsLocationComplete = gameState.IsLocationComplete;

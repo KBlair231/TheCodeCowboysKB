@@ -6,6 +6,8 @@ namespace PromptQuest.Services {
 		string StartCombat(GameState gameState);
 		string PlayerAttack(GameState gameState);
 		string PlayerUseHealthPotion(GameState gameState);
+		string PlayerRest(GameState gameState);
+		string PlayerSkipRest(GameState gameState);
 		string EnemyAttack(GameState gameState);
 		void RespawnPlayer(GameState gameState);
 		Enemy GetEnemy(GameState gameState);
@@ -17,12 +19,12 @@ namespace PromptQuest.Services {
 		public string StartCombat(GameState gameState) {
 			gameState.InCombat = true;
 			gameState.IsPlayersTurn = true; // Player always goes first, for now.
-			gameState.Player.HealthPotions = 2; // Set player's health potions to 2 when combat starts (Temporary)
 			if (gameState.PlayerLocation != 10) {
 				gameState.Enemy = GetEnemy(gameState);
 				string message = $"The {gameState.Enemy.Name} attacked!"; // Let the user know that combat started.
 				return message;
-			} else {
+			}
+			else {
 				// If the player is in the boss room, spawn a boss.
 				gameState.Enemy = GetBoss(gameState);
 				string message = $"You have encounterd the {gameState.Enemy.Name}! Defeat the boss! "; // Let the user know that combat started.
@@ -52,9 +54,9 @@ namespace PromptQuest.Services {
 			// Return the result to the user.
 			string message = $"You attacked the {gameState.Enemy.Name} for {damage} damage";
 			// Check if enemy died.
-			if (gameState.Enemy.CurrentHealth <= 0) {
+			if(gameState.Enemy.CurrentHealth <= 0) {
 				gameState.InCombat = false; // Enemy is dead, combat has ended.
-				gameState.IsPlayersTurn = true; // Zero this field out because combat is over.
+				gameState.IsPlayersTurn = false; // Zero this field out because combat is over.
 				gameState.IsLocationComplete = true; // Player has completed the current area.
 				message += $", you have defeated the {gameState.Enemy.Name}."; // Let them know in the same message.
 				if (gameState.PlayerLocation == 10) {
@@ -98,12 +100,12 @@ namespace PromptQuest.Services {
 		public string PlayerUseHealthPotion(GameState gameState) {
 			string message;
 			// If player has no potions, don't let them heal.
-			if (gameState.Player.HealthPotions <= 0) {
+			if(gameState.Player.HealthPotions <= 0) {
 				message = "You have no Health Potions!";
 				return message;
 			}
 			// If player is already at max health, don't let them heal.
-			if (gameState.Player.CurrentHealth == gameState.Player.MaxHealth) {
+			if(gameState.Player.CurrentHealth == gameState.Player.MaxHealth) {
 				message = "You are already at max health!";
 				return message;
 			}
@@ -112,12 +114,43 @@ namespace PromptQuest.Services {
 			gameState.Player.CurrentHealth += 5;
 			message = $"You healed to {gameState.Player.CurrentHealth} HP!";
 			// If the potion put the player's health above maximum, set it to maximum.
-			if (gameState.Player.CurrentHealth >= gameState.Player.MaxHealth) {
+			if(gameState.Player.CurrentHealth >= gameState.Player.MaxHealth) {
 				gameState.Player.CurrentHealth = gameState.Player.MaxHealth;
 				message = $"You healed to max HP!"; // Overwrite current message.
 			}
 			// Healing cannot possibly end combat, so no reason to check if combat has ended.
 			// Healing does not end the player's turn.
+			return message;
+		}
+
+		/// <summary>Calculates the amount healed by Resting, updates the game state, then returns a message.</summary>
+		public string PlayerRest(GameState gameState) {
+			string message;
+			// Set potions to 2 (for now)
+			gameState.Player.HealthPotions = 2;
+			// If player is already at max health, don't let them rest.
+			if(gameState.Player.CurrentHealth == gameState.Player.MaxHealth) {
+				message = "You are already at max health!";
+				return message;
+			}
+			// Update player health (+30% of max health)
+			gameState.Player.CurrentHealth += gameState.Player.MaxHealth / 3;
+			message = $"You healed to {gameState.Player.CurrentHealth} HP!";
+			// If the potion put the player's health above maximum, set it to maximum.
+			if(gameState.Player.CurrentHealth >= gameState.Player.MaxHealth) {
+				gameState.Player.CurrentHealth = gameState.Player.MaxHealth;
+				message = $"You healed to max HP!"; // Overwrite current message.
+			}
+			// Ensure player can leave
+			gameState.IsLocationComplete = true;
+			return message;
+		}
+
+		/// <summary>Doesn't rest, updates the game state, then returns a message.</summary>
+		public string PlayerSkipRest(GameState gameState) {
+			string message;
+			message = "You have guts...";
+			gameState.IsLocationComplete = true;
 			return message;
 		}
 

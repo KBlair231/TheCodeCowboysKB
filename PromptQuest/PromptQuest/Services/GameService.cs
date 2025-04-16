@@ -168,6 +168,12 @@ namespace PromptQuest.Services {
 				case "heal":
 					message += _combatService.PlayerUseHealthPotion(gameState);
 					break;
+				case "rest":
+					message += _combatService.PlayerRest(gameState); // Currently in _combatService, may change later
+					break;
+				case "skip-rest":
+					message += _combatService.PlayerSkipRest(gameState); // Currently in _combatService, may change later
+					break;
 				case "move":
 					_mapService.MovePlayer(gameState);
 					break;
@@ -216,13 +222,13 @@ namespace PromptQuest.Services {
 			string message = _combatService.EnemyAttack(gameState); // Enemy only attacks for now.
 			// Update current gamesate
 			UpdateGameState(gameState);
-		  PQActionResult pQActionResult = gameState.ToPQActionResult();
+			PQActionResult pQActionResult = gameState.ToPQActionResult();
 			pQActionResult.Message = message;
 			return pQActionResult;
 		}
 
-		public PQActionResult SkipToBoss() {				// This is a skip to the boss for testing purposes
-			// Get current gamestate
+		public PQActionResult SkipToBoss() {        // This is a skip to the boss for testing purposes
+																								// Get current gamestate
 			GameState gameState = GetGameState();
 			// Move the player to the room before the boss.
 			_mapService.MovePlayer(gameState, 9);

@@ -6,6 +6,7 @@ namespace PromptQuest.Models {
 	public class MapNode {
 		public int MapNodeId { get; set; }
 		public bool IsLocked { get; set; } = true;
+		public string NodeType { get; set; } = "Enemy";
 	}
 	public class MapEdge {
 		public int MapNodeIdStart { get; set; }
