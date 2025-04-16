@@ -266,7 +266,7 @@ namespace PromptQuest.Tests.Services {
 
 			// Act
 			for (int i = 0; i < 10; i++) {
-				Enemy enemy = _combatService.GetEnemy();
+				Enemy enemy = _combatService.GetEnemy(_gameState);
 				enemyNames.Add(enemy.Name);
 			}
 

@@ -132,5 +132,6 @@ namespace PromptQuest.Controllers {
 			_gameService.SkipToBoss();
 			return RedirectToAction("Game");
 		}
+
 	}
 }

@@ -144,7 +144,7 @@ namespace PromptQuest.Services {
 				}
 			}
 			// Restart the player at the first location.
-			_mapService.MovePlayer(gameState, 1);
+			gameState.PlayerLocation = 1;
 			// Start a new fight.
 			_combatService.StartCombat(gameState);
 			// Update current gamesate in the session

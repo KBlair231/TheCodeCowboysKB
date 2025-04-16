@@ -37,19 +37,19 @@ namespace PromptQuest.Services {
 		public void MovePlayer(GameState gameState, int mapNodeId = 0) {
 			// Check if the player has reached the end of the map.
 			int mapNodeIdFinal = _mapNodes.Max(x => x.MapNodeId);
-			if(gameState.PlayerLocation == mapNodeIdFinal) {
+			gameState.IsLocationComplete = false;
+			if (gameState.PlayerLocation == mapNodeIdFinal) {
+				gameState.PlayerLocation = 1; // Reset the player location to the first room.
+				gameState.Floor++; // Increment the floor number.
 				return;
 			}
 			if(mapNodeId == 0) {
 				//Move forward one location. Only works for now because map is linear.
 				gameState.PlayerLocation++;
+				return;
 			}
-			else {
-				// Set player's location to the selected mapNode
-				gameState.PlayerLocation = mapNodeId;
-			}
-			gameState.IsLocationComplete = false;
-			return;
+			// Set player's location to the selected mapNode
+			gameState.PlayerLocation = mapNodeId;
 		}
 
 		public Map GetMap() {

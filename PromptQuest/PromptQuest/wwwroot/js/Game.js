@@ -91,6 +91,8 @@ function updateLocalGameState(actionResult) {
 	gameState.enemy.currentHealth = actionResult.enemyHealth;
 	// Update player location
 	gameState.playerLocation = actionResult.playerLocation;
+	// Update floor
+	gameState.floor = actionResult.floor;
 	// Update isLocationComplete
 	gameState.isLocationComplete = actionResult.isLocationComplete;
 	// Log the updated gameState for debugging.

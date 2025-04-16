@@ -11,6 +11,17 @@ document.addEventListener("DOMContentLoaded", async function () {
 function updateMap() {
 	const mapContainer = document.getElementById("map-container");
 	mapContainer.innerHTML = ""; // Clear previous map
+	// Updates the floor counter
+	const floorTracker = document.getElementById("floor-tracker");
+	floorTracker.textContent = "Floor " + gameState.floor;
+	// Adds a check for if the player has defeated the boss to show next floor button
+	if (gameState.playerLocation == 10 && gameState.isLocationComplete) {
+		nextFloorButton.style.visibility = "visible";
+		nextFloorButton.addEventListener("click", movePlayerToNode)
+	} else {
+		nextFloorButton.style.visibility = "hidden";
+	}
+	// Draw the map nodes and edges
 	for (let i = 0; i < map.listMapNodes.length; i++) {
 		// node.removeEventListener("click", movePlayerToNode());
 		const nodeElement = document.createElement("div");

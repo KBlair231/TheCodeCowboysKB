@@ -8,7 +8,7 @@ namespace PromptQuest.Services {
 		string PlayerUseHealthPotion(GameState gameState);
 		string EnemyAttack(GameState gameState);
 		void RespawnPlayer(GameState gameState);
-		Enemy GetEnemy();
+		Enemy GetEnemy(GameState gameState);
 	}
 
 	public class CombatService : ICombatService {
@@ -19,12 +19,12 @@ namespace PromptQuest.Services {
 			gameState.IsPlayersTurn = true; // Player always goes first, for now.
 			gameState.Player.HealthPotions = 2; // Set player's health potions to 2 when combat starts (Temporary)
 			if (gameState.PlayerLocation != 10) {
-				gameState.Enemy = GetEnemy();
+				gameState.Enemy = GetEnemy(gameState);
 				string message = $"The {gameState.Enemy.Name} attacked!"; // Let the user know that combat started.
 				return message;
 			} else {
 				// If the player is in the boss room, spawn a boss.
-				gameState.Enemy = GetBoss();
+				gameState.Enemy = GetBoss(gameState);
 				string message = $"You have encounterd the {gameState.Enemy.Name}! Defeat the boss! "; // Let the user know that combat started.
 				return message;
 			}
@@ -59,12 +59,33 @@ namespace PromptQuest.Services {
 				message += $", you have defeated the {gameState.Enemy.Name}."; // Let them know in the same message.
 				if (gameState.PlayerLocation == 10) {
 					// Generate a boss item for the player
-					Item bossItem = new Item();
-					bossItem.Name = "Orc Warlock's Staff";		//TODO    This item should go to inventory and not auto-equip but it works
-					bossItem.Attack = 5;
-					bossItem.Defense = 4;
-					bossItem.ImageSrc = "/images/DarkStaff.png";
-					gameState.Player.Items.Add(bossItem);
+					if (gameState.Floor ==1) {
+						// If the player is on the first floor, give them a boss specific item.
+						Item bossItem = new Item();
+						bossItem.Name = "Orc Warlock's Staff";
+						bossItem.Attack = 5;
+						bossItem.Defense = 4;
+						bossItem.ImageSrc = "/images/DarkStaff.png";
+						gameState.Player.Items.Add(bossItem);
+					}
+					else if (gameState.Floor == 2) {
+						// If the player is on the second floor, give them a boss specific item.
+						Item bossItem = new Item();
+						bossItem.Name = "Dark Elvish Sword";
+						bossItem.Attack = 8;
+						bossItem.Defense = 3;
+						bossItem.ImageSrc = "/images/DarkElvenSword.png";
+						gameState.Player.Items.Add(bossItem);
+					}
+					else {
+						// If the player is on the third floor, give them a boss specific item.
+						Item bossItem = new Item();
+						bossItem.Name = "Shadow Spear";
+						bossItem.Attack = 12;
+						bossItem.Defense = 6;
+						bossItem.ImageSrc = "/images/DarkSpear.png";
+						gameState.Player.Items.Add(bossItem);
+					}
 				}
 				return message;
 			}
@@ -133,50 +154,129 @@ namespace PromptQuest.Services {
 		#region Helper Methods
 
 		/// <summary>Generatees an Enemy, updates the game state, then returns the Enemy.</summary>
-		public Enemy GetEnemy() {
+		public Enemy GetEnemy(GameState gameState) {
 			Enemy enemy = new Enemy();
 			Random random = new Random();
 			int enemyType = random.Next(1, 4); // Generates a number between 1 and 3
-			switch (enemyType) {
-				case 1:
-					enemy.Name = "Ancient Orc";
-					enemy.ImageUrl = "/images/PlaceholderAncientOrc.png";
-					enemy.MaxHealth = 10;
-					enemy.CurrentHealth = 10;
-					enemy.Attack = 2;
-					enemy.Defense = 1;
-					break;
-				case 2:
-					enemy.Name = "Decrepit Centaur";
-					enemy.ImageUrl = "/images/PlaceholderDecrepitCentaur.png";
-					enemy.MaxHealth = 10;
-					enemy.CurrentHealth = 10;
-					enemy.Attack = 3;
-					enemy.Defense = 0;
-					break;
-				case 3:
-					enemy.Name = "Rotting Zombie";
-					enemy.ImageUrl = "/images/PlaceholderRottingZombie.png";
-					enemy.MaxHealth = 8;
-					enemy.CurrentHealth = 8;
-					enemy.Attack = 2;
-					enemy.Defense = 2;
-					break;
+			if (gameState.Floor == 1) {
+				switch (enemyType) {
+					case 1:
+						enemy.Name = "Ancient Orc";
+						enemy.ImageUrl = "/images/PlaceholderAncientOrc.png";
+						enemy.MaxHealth = 10;
+						enemy.CurrentHealth = 10;
+						enemy.Attack = 2;
+						enemy.Defense = 1;
+						break;
+					case 2:
+						enemy.Name = "Decrepit Centaur";
+						enemy.ImageUrl = "/images/PlaceholderDecrepitCentaur.png";
+						enemy.MaxHealth = 10;
+						enemy.CurrentHealth = 10;
+						enemy.Attack = 3;
+						enemy.Defense = 0;
+						break;
+					case 3:
+						enemy.Name = "Rotting Zombie";
+						enemy.ImageUrl = "/images/PlaceholderRottingZombie.png";
+						enemy.MaxHealth = 8;
+						enemy.CurrentHealth = 8;
+						enemy.Attack = 2;
+						enemy.Defense = 2;
+						break;
+				}
+			}
+			else if (gameState.Floor == 2) {
+				switch (enemyType) {
+					case 1:
+						enemy.Name = "Evil Elven Mage";
+						enemy.ImageUrl = "/images/EvilElvenMage.png";
+						enemy.MaxHealth = 15;
+						enemy.CurrentHealth = 15;
+						enemy.Attack = 6;
+						enemy.Defense = 1;
+						break;
+					case 2:
+						enemy.Name = "Treant Guard";
+						enemy.ImageUrl = "/images/TreantGuard.png";
+						enemy.MaxHealth = 20;
+						enemy.CurrentHealth = 20;
+						enemy.Attack = 3;
+						enemy.Defense = 5;
+						break;
+					case 3:
+						enemy.Name = "Forest Wisp";
+						enemy.ImageUrl = "/images/MysticalWisp.png";
+						enemy.MaxHealth = 25;
+						enemy.CurrentHealth = 25;
+						enemy.Attack = 2;
+						enemy.Defense = 0;
+						break;
+				}
+			}
+			else {
+				// Floor 3
+				switch (enemyType) {
+					case 1:
+						enemy.Name = "Goblin Archer";
+						enemy.ImageUrl = "/images/GobArcher.png";
+						enemy.MaxHealth = 30;
+						enemy.CurrentHealth = 30;
+						enemy.Attack = 8;
+						enemy.Defense = 3;
+						break;
+					case 2:
+						enemy.Name = "Goblin Assassin";
+						enemy.ImageUrl = "/images/GobAssassin.png";
+						enemy.MaxHealth = 25;
+						enemy.CurrentHealth = 25;
+						enemy.Attack = 7;
+						enemy.Defense = 2;
+						break;
+					case 3:
+						enemy.Name = "Drunk Orc";
+						enemy.ImageUrl = "/images/LazyDrunkOrc.png";
+						enemy.MaxHealth = 35;
+						enemy.CurrentHealth = 35;
+						enemy.Attack = 10;
+						enemy.Defense = 5;
+						break;
+				}
 			}
 			return enemy;
 		}
 
 		/// <summary>Generatees an Enemy, updates the game state, then returns the Enemy.</summary>
-		public Enemy GetBoss() {
-			Enemy boss = new Enemy();
-			boss.Name = "Dark Orc Warlock";
-			boss.ImageUrl = "/images/OrcWarlock.png";
-			boss.MaxHealth = 20;
-			boss.CurrentHealth = 20;
-			boss.Attack = 5;
-			boss.Defense = 4;
-			return boss;
+		public Enemy GetBoss(GameState gameState) {
+			if (gameState.Floor == 1) {
+				Enemy boss = new Enemy();
+				boss.Name = "Dark Orc Warlock";
+				boss.ImageUrl = "/images/OrcWarlock.png";
+				boss.MaxHealth = 20;
+				boss.CurrentHealth = 20;
+				boss.Attack = 5;
+				boss.Defense = 4;
+				return boss;
+			} else if (gameState.Floor == 2) {
+				Enemy boss = new Enemy();
+				boss.Name = "Dark Elven King";
+				boss.ImageUrl = "/images/DarkElfWarrior.png";
+				boss.MaxHealth = 25;
+				boss.CurrentHealth = 25;
+				boss.Attack = 6;
+				boss.Defense = 6;
+				return boss;
+			} else {
+				Enemy boss = new Enemy();
+				boss.Name = "Eldritch Horror";
+				boss.ImageUrl = "/images/EldritchHorror.png";
+				boss.MaxHealth = 50;
+				boss.CurrentHealth = 50;
+				boss.Attack = 8;
+				boss.Defense = 8;
+				return boss;
+			}
 		}
-		#endregion Helper Methods - End
-	}
+			#endregion Helper Methods - End
+		}
 }
