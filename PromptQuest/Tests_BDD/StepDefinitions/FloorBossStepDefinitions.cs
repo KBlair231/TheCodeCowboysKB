@@ -14,6 +14,7 @@ namespace Tests_BDD.StepDefinitions {
 		public void Setup() {
 			// Initialize WebDriver before each scenario
 			webDriver = new ChromeDriver();
+			webDriver.Manage().Window.Maximize();
 			// Start a new game
 			PromptQuestTestMethods.StartNewGame(webDriver, skipTutorial: true);
 		}

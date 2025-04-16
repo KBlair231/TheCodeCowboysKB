@@ -1,4 +1,5 @@
-﻿function enableCampsiteButtons() {
+﻿// Function to enable the campsite buttons and add their event handlers.
+function enableCampsiteButtons() {
 	// Enable Rest button.
 	const restButton = document.getElementById("rest-btn");
 	restButton.addEventListener("click", handleRestClick);
@@ -60,8 +61,3 @@ function hideCampsiteUI() {
 	const campsiteButtonsDisplay = document.getElementById("campsite-button-display");
 	campsiteButtonsDisplay.style.visibility = "hidden";
 }
-
-// Call clearUIState and restoreVisibilityState when the page loads.
-document.addEventListener("DOMContentLoaded", () => {
-	
-});

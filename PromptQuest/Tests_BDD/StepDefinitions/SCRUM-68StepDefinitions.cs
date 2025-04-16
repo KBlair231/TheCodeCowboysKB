@@ -60,7 +60,7 @@ namespace Tests_BDD {
 		public void WhenICloseTheMenu() {
 			IWebElement closeButton = webDriver.FindElement(By.Id("pq-modal-close"));
 			closeButton.Click();
-			PromptQuestTestMethods.WaitForElementToLoad(webDriver, "pq-modal");
+			// PromptQuestTestMethods.WaitForElementToLoad(webDriver, "pq-modal");
 		}
 
 		[Then(@"I should see the map with the current location highlighted")]

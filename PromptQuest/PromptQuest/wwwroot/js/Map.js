@@ -42,6 +42,13 @@ function updateMap() {
 			imgElement.className = "map-image";
 			nodeElement.appendChild(imgElement);
 		}
+		// Check for NodeType and add image if it is "Event"
+		if (map.listMapNodes[i].nodeType === "Event") {
+			const imgElement = document.createElement("img");
+			imgElement.src = "/images/event.png";
+			imgElement.className = "map-image";
+			nodeElement.appendChild(imgElement);
+		}
 		// Show player which node they are on
 		if (map.listMapNodes[i].mapNodeId == gameState.playerLocation) {
 			nodeElement.classList.add("map-node-current");

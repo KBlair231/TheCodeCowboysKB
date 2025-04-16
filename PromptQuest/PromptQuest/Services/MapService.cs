@@ -10,8 +10,8 @@ namespace PromptQuest.Services {
 		private static readonly List<MapNode> _mapNodes = new List<MapNode>
 			{
 					new MapNode { MapNodeId = 1 },
-					new MapNode { MapNodeId = 2,},
-					new MapNode { MapNodeId = 3 },
+					new MapNode { MapNodeId = 2 },
+					new MapNode { MapNodeId = 3, NodeType = "Event" },
 					new MapNode { MapNodeId = 4 },
 					new MapNode { MapNodeId = 5, NodeType = "Campsite" },
 					new MapNode { MapNodeId = 6 },
@@ -38,7 +38,7 @@ namespace PromptQuest.Services {
 			// Check if the player has reached the end of the map.
 			int mapNodeIdFinal = _mapNodes.Max(x => x.MapNodeId);
 			gameState.IsLocationComplete = false;
-			if (gameState.PlayerLocation == mapNodeIdFinal) {
+			if(gameState.PlayerLocation == mapNodeIdFinal) {
 				gameState.PlayerLocation = 1; // Reset the player location to the first room.
 				gameState.Floor++; // Increment the floor number.
 			}
@@ -51,13 +51,19 @@ namespace PromptQuest.Services {
 				gameState.PlayerLocation = mapNodeId;
 			}
 			gameState.IsLocationComplete = false;
-			// Check if the player is on a campsite node
+			// Check if the player is on a campsite or event node
 			var currentNode = _mapNodes.FirstOrDefault(node => node.MapNodeId == gameState.PlayerLocation);
-			if(currentNode != null && currentNode.NodeType == "Campsite") {
+			if (currentNode != null && currentNode.NodeType == "Campsite") {
 				gameState.InCampsite = true;
 				return;
 			}
+			else if (currentNode != null && currentNode.NodeType == "Event") {
+				gameState.InEvent = true;
+				return;
+			}
+			// Just in case
 			gameState.InCampsite = false;
+			gameState.InEvent = false;
 		}
 
 		public Map GetMap() {

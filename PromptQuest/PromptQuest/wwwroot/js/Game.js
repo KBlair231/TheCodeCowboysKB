@@ -85,6 +85,8 @@ function updateLocalGameState(actionResult) {
 	gameState.inCombat = actionResult.inCombat;
 	// Update inCampsite state.
 	gameState.inCampsite = actionResult.inCampsite;
+	// Update inEvent state.
+	gameState.inEvent = actionResult.inEvent;
 	// Update isPlayersTurn state.
 	gameState.isPlayersTurn = actionResult.isPlayersTurn;
 	// Update player health.
@@ -118,6 +120,7 @@ function updateDisplay() {
 	if (gameState.inCombat) {
 		showCombatUI();
 		hideCampsiteUI();
+		hideEventUI();
 		// Update Enemy display.
 		document.getElementById("enemy-name").textContent = gameState.enemy.name;
 		document.getElementById("enemy-image").src = gameState.enemy.imageUrl;
@@ -128,6 +131,7 @@ function updateDisplay() {
 	}
 	else if (gameState.inCampsite) {
 		hideCombatUI();
+		hideEventUI();
 		showCampsiteUI();
 		if (gameState.isLocationComplete) {
 			disableCampsiteButtons();
@@ -139,9 +143,25 @@ function updateDisplay() {
 		// Inform the player about the campsite
 		addLogEntry("Rest at the campsite to heal 30% of your maximum HP and refill Health Potions");
 	}
+	else if (gameState.inEvent)
+	{
+		hideCombatUI();
+		hideCampsiteUI();
+		showEventUI();
+		if (gameState.isLocationComplete) {
+			disableEventButtons();
+		}
+		// Gets rid of last combat's messages;
+		clearDialogBox();
+		// Update Map
+		updateMap();
+		// Inform the player about the event
+		addLogEntry("A prickly bush lies in your path. A few red objects shimmer from fairly deep inside. Reach in and grab them?");
+	}
 	else {
 		hideCombatUI();
 		hideCampsiteUI();
+		hideEventUI();
 	}
 	if (gameState.isPlayersTurn) {
 		enableCombatButtons();
