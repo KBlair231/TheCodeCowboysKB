@@ -26,7 +26,7 @@ namespace Tests_BDD {
 			// Navigate to the inventory screen in the application
 			IWebElement menuButton = webDriver.FindElement(By.XPath("//button[normalize-space(text()='Menu')]"));
 			menuButton.Click();
-			PromptQuestTestMethods.WaitForModalToOpen(webDriver, "pq-modal");
+			PromptQuestTestMethods.WaitForElementToLoad(webDriver, "pq-modal");
 		}
 
 		[Given("I have defeated the enemy")]
@@ -45,7 +45,7 @@ namespace Tests_BDD {
 			// Click the map button to change to the map tab
 			IWebElement mapButton = webDriver.FindElement(By.Id("map-button"));
 			mapButton.Click();
-			PromptQuestTestMethods.WaitForModalToOpen(webDriver, "map-tab");
+			PromptQuestTestMethods.WaitForElementToLoad(webDriver, "map-tab");
 		}
 
 		[When("I move to the next node")]
@@ -60,7 +60,7 @@ namespace Tests_BDD {
 		public void WhenICloseTheMenu() {
 			IWebElement closeButton = webDriver.FindElement(By.Id("pq-modal-close"));
 			closeButton.Click();
-			PromptQuestTestMethods.WaitForModalToClose(webDriver, "pq-modal");
+			PromptQuestTestMethods.WaitForElementToLoad(webDriver, "pq-modal");
 		}
 
 		[Then(@"I should see the map with the current location highlighted")]

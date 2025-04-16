@@ -32,12 +32,12 @@ namespace Tests_BDD.StepDefinitions {
 			IWebElement menuButton = webDriver.FindElement(By.XPath("//button[normalize-space(text()='Menu')]"));
 			menuButton.Click();
 			// Wait for the menu modal to show
-			PromptQuestTestMethods.WaitForModalToOpen(webDriver, "pq-modal");
+			PromptQuestTestMethods.WaitForElementToLoad(webDriver, "pq-modal");
 			// Click the map tab
 			IWebElement mapTab = webDriver.FindElement(By.Id("map-button"));
 			mapTab.Click();
 			// Wait for the map modal to show
-			PromptQuestTestMethods.WaitForModalToOpen(webDriver, "map-tab");
+			PromptQuestTestMethods.WaitForElementToLoad(webDriver, "map-tab");
 			// Click the tenth room with attribute data-node-id="10"
 			IWebElement tenthNode = webDriver.FindElement(By.XPath("//div[@data-node-id='10']"));
 			tenthNode.Click();
@@ -49,7 +49,7 @@ namespace Tests_BDD.StepDefinitions {
 			IWebElement closeButton = webDriver.FindElement(By.Id("pq-modal-close"));
 			closeButton.Click();
 			// Wait for the boss to spawn
-			PromptQuestTestMethods.WaitForModalToOpen(webDriver, "attack-btn");
+			PromptQuestTestMethods.WaitForElementToLoad(webDriver, "attack-btn");
 			// Search for the boss' name Dark Orc Warlock
 			IWebElement bossName = webDriver.FindElement(By.Id("enemy-name"));
 			// Assert that the boss name displayed is Dark Orc Warlock
@@ -73,7 +73,7 @@ namespace Tests_BDD.StepDefinitions {
 			IWebElement menuButton = webDriver.FindElement(By.XPath("//button[normalize-space(text()='Menu')]"));
 			menuButton.Click();
 			// Wait for the menu modal to show
-			PromptQuestTestMethods.WaitForModalToOpen(webDriver, "pq-modal");
+			PromptQuestTestMethods.WaitForElementToLoad(webDriver, "pq-modal");
 			// Check currently equipped weapon             Boss Loot Currently Auto-Equips
 			IWebElement equippedWeaponImage = webDriver.FindElement(By.CssSelector("#equipped-item img"));
 			string equippedWeaponSrc = equippedWeaponImage.GetAttribute("src");
