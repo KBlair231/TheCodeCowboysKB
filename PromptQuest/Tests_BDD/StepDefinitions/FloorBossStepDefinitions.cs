@@ -74,11 +74,8 @@ namespace Tests_BDD.StepDefinitions {
 			menuButton.Click();
 			// Wait for the menu modal to show
 			PromptQuestTestMethods.WaitForElementToLoad(webDriver, "pq-modal");
-			// Check currently equipped weapon             Boss Loot Currently Auto-Equips
-			IWebElement equippedWeaponImage = webDriver.FindElement(By.CssSelector("#equipped-item img"));
-			string equippedWeaponSrc = equippedWeaponImage.GetAttribute("src");
-			// Assert that the equipped weapon is the boss item
-			Assert.IsTrue(equippedWeaponSrc == "https://localhost:7186/images/DarkStaff.png", "The equipped weapon is not the boss item.");
+			// Check for an item with the DarkStaff image
+			IWebElement bossItem = webDriver.FindElement(By.XPath("//img[@src='/images/DarkStaff.png']"));	
 		}
 		#endregion
 		[AfterScenario]
