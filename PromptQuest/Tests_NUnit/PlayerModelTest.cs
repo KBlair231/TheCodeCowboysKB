@@ -43,7 +43,7 @@ namespace PlayerModelTest.Tests {
 		[TestCase("Warrior", true)]
 		[TestCase("Mage", true)]
 		[TestCase("Archer", true)]
-		[TestCase(null, false)]
+		[TestCase("", false)]
 		public void PlayerModel_ClassValidation(string className, bool expectedIsValid) {
 			// Arrange
 			_player.Class = className;

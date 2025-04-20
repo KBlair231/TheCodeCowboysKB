@@ -11,7 +11,7 @@ using PromptQuest.Models;
 namespace PromptQuest.Migrations
 {
     [DbContext(typeof(GameStateDbContext))]
-    [Migration("20250415040120_InitialCreate")]
+    [Migration("20250419235551_InitialCreate")]
     partial class InitialCreate
     {
         /// <inheritdoc />
@@ -65,7 +65,16 @@ namespace PromptQuest.Migrations
                     b.Property<int?>("EnemyId")
                         .HasColumnType("int");
 
+                    b.Property<int>("Floor")
+                        .HasColumnType("int");
+
+                    b.Property<bool>("InCampsite")
+                        .HasColumnType("bit");
+
                     b.Property<bool>("InCombat")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("InEvent")
                         .HasColumnType("bit");
 
                     b.Property<bool>("IsLocationComplete")
@@ -79,6 +88,10 @@ namespace PromptQuest.Migrations
 
                     b.Property<int>("PlayerLocation")
                         .HasColumnType("int");
+
+                    b.Property<string>("StoredMessages")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("UserGoogleId");
 

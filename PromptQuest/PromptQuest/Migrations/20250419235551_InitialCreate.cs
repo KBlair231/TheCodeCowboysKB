@@ -54,10 +54,14 @@ namespace PromptQuest.Migrations
                     UserGoogleId = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     PlayerId = table.Column<int>(type: "int", nullable: true),
                     EnemyId = table.Column<int>(type: "int", nullable: true),
+                    StoredMessages = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     InCombat = table.Column<bool>(type: "bit", nullable: false),
+                    InCampsite = table.Column<bool>(type: "bit", nullable: false),
+                    InEvent = table.Column<bool>(type: "bit", nullable: false),
                     IsPlayersTurn = table.Column<bool>(type: "bit", nullable: false),
                     PlayerLocation = table.Column<int>(type: "int", nullable: false),
-                    IsLocationComplete = table.Column<bool>(type: "bit", nullable: false)
+                    IsLocationComplete = table.Column<bool>(type: "bit", nullable: false),
+                    Floor = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {

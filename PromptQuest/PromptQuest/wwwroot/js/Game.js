@@ -1,189 +1,163 @@
-﻿// "Global" Variable to keep track of the game state locally so that functions don't have to be passed parameters all the time.
-let gameState;
-let tutorialflag;
+﻿//----------- CACHED ELEMENTS ---------------------------------------------------------------------------------------
+//Commonly hidden/shown UI elements
+let playerDisplay;
+let enemyDisplay;
+let actionButtonDisplay;
+let backgroundImage;
+let campsiteButtonDisplay;
+let eventButtonDisplay;
+let dialogBox;
+//Player action buttons
+let attackBtn;
+let healBtn;
+let restBtn;
+let skipRestBtn;
+let acceptBtn;
+let denyBtn;
 
-document.addEventListener("DOMContentLoaded", function () {
-	// Page loaded, get current game state and store it locally.  
-	loadGame();
+//----------- LOAD UI ELEMENTS AND ADD EVENT LISTENERS ---------------------------------------------------------------------------------------
+
+document.addEventListener("DOMContentLoaded", () => {
+	//Grab the commonly used UI elements on load.
+	playerDisplay = document.getElementById("player-display");
+	enemyDisplay = document.getElementById("enemy-display");
+	actionButtonDisplay = document.getElementById("action-button-display");
+	backgroundImage = document.getElementById("bg-image");
+	campsiteButtonDisplay = document.getElementById("campsite-button-display");
+	eventButtonDisplay = document.getElementById("event-button-display");
+	dialogBox = document.getElementById("dialog-box");
+	//Grab all the player action buttons from the DOM on load.
+	attackBtn = document.getElementById("attack-btn");
+	healBtn = document.getElementById("health-potion-btn");
+	restBtn = document.getElementById("rest-btn");
+	skipRestBtn = document.getElementById("skip-rest-btn");
+	acceptBtn = document.getElementById("accept-btn");
+	denyBtn = document.getElementById("deny-btn");
+	//Add all player action button event listeners on load
+	attackBtn.attachPlayerAction('attack');
+	healBtn.attachPlayerAction('heal');
+	restBtn.attachPlayerAction('rest');
+	skipRestBtn.attachPlayerAction('skip-rest');
+	acceptBtn.attachPlayerAction('accept');
+	denyBtn.attachPlayerAction('deny');
 });
 
-async function loadGame() {
-	let response = await fetch("/Game/GetGameState");
-	gameState = await response.json();
-	// Check if the user doesn't have a character
-	if (gameState.player == null) {// new player or session expired
-		window.location.href = "/"; // boot them to the Main Menu.
-	}
-	let flagresponse = await fetch("/Game/IsTutorial"); // get the tutorial flag
-	tutorialflag = await flagresponse.json()//if in the tutorial: start the tutorial
-	if (tutorialflag) {
-		startTutorial()
-	}
-	// Update display with loaded data.  
-	updateDisplay();
-	if (gameState.isPlayersTurn == false) {
-		executeEnemyAction();
+//----------- REFRESH DISPLAY ---------------------------------------------------------------------------------------
+
+function refreshDisplay() {
+	// Refresh all dynamic displays
+	refreshPlayerDisplay();
+	refreshEnemyDisplay();
+	refreshDialogBox();
+	refreshMenu();
+	//Sync button states (disabled/enabled).
+	attackBtn.syncButtonState(gameState.inCombat && gameState.isPlayersTurn && !gameState.isLocationComplete && gameState.player.currentHealth > 0);
+	healBtn.syncButtonState(gameState.inCombat && gameState.isPlayersTurn && !gameState.isLocationComplete && gameState.player.currentHealth > 0);
+	restBtn.syncButtonState(gameState.inCampsite && !gameState.isLocationComplete);
+	skipRestBtn.syncButtonState(gameState.inCampsite && !gameState.isLocationComplete);
+	acceptBtn.syncButtonState(gameState.inEvent && !gameState.isLocationComplete);
+	denyBtn.syncButtonState(gameState.inEvent && !gameState.isLocationComplete);
+	//Sync UI visibility (visible/hidden).
+	playerDisplay.syncVisibility(gameState.player.currentHealth > 0);
+	enemyDisplay.syncVisibility(gameState.inCombat && gameState.enemy.currentHealth > 0);
+	actionButtonDisplay.syncVisibility(gameState.inCombat && !gameState.isLocationComplete && gameState.player.currentHealth > 0);
+	backgroundImage.syncVisibility(gameState.inCampsite && !gameState.isLocationComplete);
+	campsiteButtonDisplay.syncVisibility(gameState.inCampsite);
+	eventButtonDisplay.syncVisibility(gameState.inEvent);
+	//This will be merged into the sync pattern above at some point.
+	hideRespawnModal();
+	if (gameState.player.currentHealth <= 0) { 
+		showRespawnModal();
 	}
 }
 
-// Function that makes an ajax call telling the game engine to process the player's action, then updates the local gameState variable with the response.  
-async function executePlayerAction(action) {
-	await $.ajax({
-		url: '/Game/PlayerAction',
-		type: 'POST',
-		data: { action: action },
-		success: function (response) {
-			let actionResult = response;
-			console.log('Player action (' + action + ') executed successfully:', actionResult);
-			updateLocalGameState(actionResult); // Update local gameState variable with whatever the action changed.  
-			addLogEntry(actionResult.message);
-			updateDisplay() // Update screen to show whatever the action changed.
-		},
-		error: function (xhr, status, error) {
-			console.error('Error executing player action (' + action + '):', error);
-		}
+// This respawn modal code will be refactored soon to fit into the above patterns.
+
+// Function to show the respawn modal
+function showRespawnModal() {
+	const respawnModal = new bootstrap.Modal(document.getElementById('respawnModal'));
+	const respawnButton = document.getElementById("respawn-btn");
+	respawnButton.attachPlayerAction('respawn');
+	respawnModal.show();
+}
+
+// Function to hide the respawn modal
+function hideRespawnModal() {
+	const respawnModalElement = document.getElementById('respawnModal');
+	const modalInstance = bootstrap.Modal.getInstance(respawnModalElement);
+	if (modalInstance) {
+		modalInstance.hide();
+	}
+}
+
+// ------------------------ REFRESH DISPLAY HELPER METHODS ------------------------------------------------------------------------------------------------------
+
+function refreshDialogBox() {
+	//Clear old messages and load in the new list
+	dialogBox.innerHTML = "";
+	gameState.listMessages.forEach((message) => {
+		const logDiv = document.createElement("div");
+		logDiv.textContent = message;
+		dialogBox.appendChild(logDiv);
+		//logDiv.scrollIntoView({ behavior: "smooth" });
 	});
-	if (gameState.inCombat == false) {
-		return;
-	}
-	if (gameState.isPlayersTurn == false) {
-		disableCombatButtons(); // They are, but it's not the player's turn anymore
-		// Add a small delay so that the enemy's turn takes time.  
-		setTimeout(async () => {
-			await executeEnemyAction(); // The enemy action is determined server side.
-		}, 1000);
-		return;
-	}
-	// No need to enable combat buttons here because they are already enabled to allow the player to make this action.
+	//Scroll to bottom to show new messages
+	dialogBox.scrollTop = dialogBox.scrollHeight;
 }
 
-// Function that makes an ajax call telling the game engine to process the enemy's action, then updates the local gameState variable with the response.  
-async function executeEnemyAction() {
-	await $.ajax({
-		url: '/Game/EnemyAction',
-		type: 'POST',
-		success: function (response) {
-			let actionResult = response;
-			console.log('Enemy action executed successfully:', actionResult);
-			updateLocalGameState(actionResult); // Update local gameState variable with whatever the action changed.  
-			addLogEntry(actionResult.message);
-			updateDisplay(); // Update screen to show whatever the action changed.
-		},
-		error: function (xhr, status, error) {
-			console.error('Error executing enemy action:', error);
-		}
-	});
-	if (gameState.isPlayersTurn == false && gameState.inCombat) {
-		executeEnemyAction(); // Enemy continues its turn.
-		return;
-	}
-}
-
-// Helper function to update the gameState variable with the results from a PQActionResult.  
-function updateLocalGameState(actionResult) {
-	// Update inCombat state.
-	gameState.inCombat = actionResult.inCombat;
-	// Update inCampsite state.
-	gameState.inCampsite = actionResult.inCampsite;
-	// Update inEvent state.
-	gameState.inEvent = actionResult.inEvent;
-	// Update isPlayersTurn state.
-	gameState.isPlayersTurn = actionResult.isPlayersTurn;
-	// Update player health.
-	gameState.player.currentHealth = actionResult.playerHealth;
-	// Update player health potions.
-	gameState.player.healthPotions = actionResult.playerHealthPotions;
-	// Update enemy health.
-	gameState.enemy.currentHealth = actionResult.enemyHealth;
-	// Update player location
-	gameState.playerLocation = actionResult.playerLocation;
-	// Update floor
-	gameState.floor = actionResult.floor;
-	// Update isLocationComplete
-	gameState.isLocationComplete = actionResult.isLocationComplete;
-	// Log the updated gameState for debugging.
-	console.log('Updated local gameState:', gameState);
-
-}
-
-// Function to update the player's display  
-function updateDisplay() {
-	// Update Player display.
+function refreshPlayerDisplay() {
 	document.querySelectorAll(".player-name").forEach(el => { el.textContent = gameState.player.name; });
 	document.querySelectorAll(".player-image").forEach(el => { el.src = "/images/" + gameState.player.class + ".png"; }); // Placeholder image for now.
 	document.querySelectorAll(".player-image").forEach(el => { el.alt = gameState.player.name; });
 	const equippedItem = gameState.player.itemEquipped
-	document.querySelectorAll(".player-attack").forEach(el => { el.textContent = gameState.player.attack + equippedItem?.attack??0; });
-	document.querySelectorAll(".player-defense").forEach(el => { el.textContent = gameState.player.defense + equippedItem?.defense??0; });
+	document.querySelectorAll(".player-attack").forEach(el => { el.textContent = gameState.player.attack + equippedItem?.attack ?? 0; });
+	document.querySelectorAll(".player-defense").forEach(el => { el.textContent = gameState.player.defense + equippedItem?.defense ?? 0; });
 	document.querySelectorAll(".player-hp").forEach(el => { el.textContent = gameState.player.currentHealth + "/" + gameState.player.maxHealth + " HP"; });
 	document.getElementById("player-health-potions").textContent = gameState.player.healthPotions;
-	if (gameState.inCombat) {
-		showCombatUI();
-		hideCampsiteUI();
-		hideEventUI();
-		// Update Enemy display.
-		document.getElementById("enemy-name").textContent = gameState.enemy.name;
-		document.getElementById("enemy-image").src = gameState.enemy.imageUrl;
-		document.getElementById("enemy-image").alt = gameState.enemy.name;
-		document.getElementById("enemy-attack").textContent = gameState.enemy.attack;
-		document.getElementById("enemy-defense").textContent = gameState.enemy.defense;
-		document.getElementById("enemy-hp").textContent = gameState.enemy.currentHealth + "/" + gameState.enemy.maxHealth + " HP";
-	}
-	else if (gameState.inCampsite) {
-		hideCombatUI();
-		hideEventUI();
-		showCampsiteUI();
-		if (gameState.isLocationComplete) {
-			disableCampsiteButtons();
-		}
-		// Gets rid of last combat's messages;
-		clearDialogBox();
-		// Update Map
-		updateMap();
-		// Inform the player about the campsite
-		addLogEntry("Rest at the campsite to heal 30% of your maximum HP and refill Health Potions");
-	}
-	else if (gameState.inEvent)
-	{
-		hideCombatUI();
-		hideCampsiteUI();
-		showEventUI();
-		if (gameState.isLocationComplete) {
-			disableEventButtons();
-		}
-		// Gets rid of last combat's messages;
-		clearDialogBox();
-		// Update Map
-		updateMap();
-		// Inform the player about the event
-		addLogEntry("A prickly bush lies in your path. A few red objects shimmer from fairly deep inside. Reach in and grab them?");
-	}
-	else {
-		hideCombatUI();
-		hideCampsiteUI();
-		hideEventUI();
-	}
-	if (gameState.isPlayersTurn) {
-		enableCombatButtons();
-	}
-	else {
-		disableCombatButtons();
-	}
 }
 
-// Function to add log entries to the dialog box.  
-function addLogEntry(message) {
-	const dialogBox = document.querySelector(".dialog-box");
-	const logLimit = 5;
-	if (dialogBox.childElementCount >= logLimit) {
-		dialogBox.innerHTML = "";
-	}
-	const logDiv = document.createElement("div");
-	logDiv.textContent = message;
-	dialogBox.appendChild(logDiv);
+function refreshEnemyDisplay() {
+	document.getElementById("enemy-name").textContent = gameState.enemy.name;
+	document.getElementById("enemy-image").src = gameState.enemy.imageUrl;
+	document.getElementById("enemy-image").alt = gameState.enemy.name;
+	document.getElementById("enemy-attack").textContent = gameState.enemy.attack;
+	document.getElementById("enemy-defense").textContent = gameState.enemy.defense;
+	document.getElementById("enemy-hp").textContent = gameState.enemy.currentHealth + "/" + gameState.enemy.maxHealth + " HP";
 }
 
-function clearDialogBox() {
-	const dialogBox = document.querySelector(".dialog-box");
-	dialogBox.innerHTML = "";
-}
+//------------------------ OVERLOADS --------------------------------------------------------------------------------------------------------------
+
+//Shows/Hides an html element according to the given condition. If the condition is true, the element is shown, if not, it is hidden. Only updates if necessary to avoid UI flicker.
+HTMLElement.prototype.syncVisibility = function (condition) {
+	if (condition && this.style.display === "none") {
+		//Element should be visible but is currently hidden. Show it.
+		this.style.display = "block";
+	}
+	if (!condition && this.style.display !== "none") {
+		//Element should be hidden but is currently visible. Hide it.
+		this.style.display = "none";
+	}
+};
+
+//Attaches a player action to a button as an eventlistener. Does not need to be removed because event will only fire if button is enabled.
+HTMLButtonElement.prototype.attachPlayerAction = function (action) {
+	this.addEventListener("click", async () => {
+		if (this.disabled) {
+			return; //Button is disabled, so let's bounce.
+		}
+		await executePlayerAction(action);
+	});
+};
+
+//Enables/disables a button according to the given condition. If condition is true, button is enabled, if not, it is disabled. Only updates if necessary to avoid UI flicker.
+HTMLButtonElement.prototype.syncButtonState = function (condition) {
+	if (condition && this.disabled) {
+		//Button should be enabled but is currently disabled. Enable it.
+		this.disabled = false;
+	}
+	if (!condition && this.disabled == false) {
+		//Button should not be enabled but is currently enabled. Disable it.
+		this.disabled = true;
+	}
+};
+

@@ -41,14 +41,8 @@ body {
 		user-select: none; /* Prevents text selection */
 	}
 
-/* Allows for tabs in modal to be shown and hidden */
-.tab-content {
-	display: none;
-}
-
-/* Allows for tabs in modal to be shown and hidden */
-.show-tab {
-	display: block;
+.menu * {
+	visibility:hidden;
 }
 
 /* Style for map container */
@@ -115,7 +109,6 @@ body {
 	height: 100%;
 	width: 100%; /* Defaults to Fullscreen */
 	background-color: var(--background-color-primary);
-	display: none; /* Hidden by default */
 	z-index: 1050; /* Ensure it's above other elements */
 	padding: 2vmin;
 }
@@ -155,6 +148,10 @@ body {
 		object-fit: contain; /* Ensures the image maintains aspect ratio */
 		border-radius: 10px;
 	}
+
+.pq-inventory-slot-selected {
+	border-color: #ffdc4a;
+}
 
 /*---- Reusable Player Displays ------------------------------------------------------------------*/
 
@@ -256,6 +253,13 @@ body {
 
 /*--------------------- Buttons ---------------------------*/
 
+/*Automatically applies to buttons that are have disabled=true*/
+button:disabled {
+	background-color: var(--background-color-highlight);
+	cursor: not-allowed;
+	opacity: 0.2;
+}
+
 .pq-button {
 	padding: 10px;
 	background-color: var(--background-color-primary);
@@ -293,12 +297,6 @@ body {
 
 .modal-header .btn-close {
 	filter: invert(1); /* Invert the color to make it white */
-}
-
-.PQButtonDisabled {
-	background-color: grey;
-	cursor: not-allowed;
-	opacity: 0.1;
 }
 
 /*---------------------- Border ----------------------------*/

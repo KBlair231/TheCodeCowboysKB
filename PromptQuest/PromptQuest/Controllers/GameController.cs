@@ -1,13 +1,17 @@
+using Azure.Core.GeoJson;
 using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Serialization;
 using PromptQuest.Models;
 using PromptQuest.Services;
 
 namespace PromptQuest.Controllers {
 
-	public class GameController : Controller {
+	public class GameController:Controller {
 		private readonly ILogger<GameController> _logger;
 		private readonly IGameService _gameService;
-		public GameController(ILogger<GameController> logger, IGameService gameService) {
+		private readonly JsonSerializerSettings _jsonSerializerSettings=new JsonSerializerSettings { ContractResolver = new DefaultContractResolver() };
+		public GameController(ILogger<GameController> logger,IGameService gameService) {
 			_logger = logger;
 			_gameService = gameService;
 		}
@@ -57,10 +61,9 @@ namespace PromptQuest.Controllers {
 			// Return the entire game state.
 			return Json(gameState);
 		}
-		[HttpGet]
 
-		public JsonResult IsTutorial()
-		{
+		[HttpGet]
+		public JsonResult IsTutorial() {
 			bool flag = _gameService.IsTutorial();
 			// Return the entire game state.
 			return Json(flag);
@@ -76,44 +79,27 @@ namespace PromptQuest.Controllers {
 		}
 
 		[HttpPost]
-		public IActionResult PlayerAction(string action) {
-			PQActionResult ActionResult = _gameService.ExecutePlayerAction(action);
-			return Json(ActionResult);
+		public JsonResult PlayerAction(string playerAction) {
+			Action action = new Action(() => { _gameService.ExecutePlayerAction(playerAction); });
+			return ProcessRequest(action);
 		}
 
 		[HttpPost]
-		public void EquipItem(int itemIndex)
-		{
-			_gameService.EquipItem(itemIndex);
+		public JsonResult EquipItem(int itemIndex) {
+			Action action = new Action(() => { _gameService.EquipItem(itemIndex); });
+			return ProcessRequest(action);
 		}
 
 		[HttpPost]
-		public IActionResult EnemyAction() {
-			PQActionResult ActionResult = _gameService.ExecuteEnemyAction();
-			return Json(ActionResult);
+		public JsonResult EndTutorial() {
+			Action action = new Action(() => { _gameService.SetTutorialFlag(false); });
+			return ProcessRequest(action);
 		}
 
-		[HttpPost]
-		public void StartCombat() {
-			_gameService.StartCombat();
-		}
-
-		[HttpPost]
-		public IActionResult EndTutorial() {
-			_gameService.SetTutorialFlag(false);
-			return Ok();
-		}
-
-		[HttpPost]
-		public IActionResult Respawn() {
-			_gameService.RespawnPlayer();
-			return Ok();
-		}
-
-		[HttpPost]
-		public IActionResult MovePlayerToNextLocation() {
-			PQActionResult ActionResult = _gameService.ExecutePlayerAction("move");
-			return Json(ActionResult);
+		[HttpGet]
+		public JsonResult MovePlayerToNextLocation() {
+			Action action = new Action(() => { _gameService.ExecutePlayerAction("move"); });
+			return ProcessRequest(action);
 		}
 
 		[HttpGet]
@@ -127,6 +113,67 @@ namespace PromptQuest.Controllers {
 			_gameService.SkipToBoss();
 			return RedirectToAction("Game");
 		}
+
+		public JsonResult ProcessRequest(Action action) {
+			GameState gameStateBefore = _gameService.GetGameState().CreateDeepCopy(); //Take a snapshot of the current GameState before any changes. Deep copy so it doesn't respond to outside updates
+			action.Invoke(); //Perform the requested action
+			GameState gameStateAfter = _gameService.GetGameState().CreateDeepCopy(); //Take a snapshot of the current GameState after any changes. Deep copy so it doesn't respond to outside updates
+			JsonResult jsonResult = Json(GenerateDiff(gameStateBefore,gameStateAfter));//Generate a diff and convert into json
+			return jsonResult;
+		}
+
+		public Dictionary<string,object> GenerateDiff(object gameStateBefore,object GameStateAfter) {
+			Dictionary<string,object> dictionaryDiff = new Dictionary<string,object>();
+			if(gameStateBefore == null || GameStateAfter == null || gameStateBefore.GetType() != GameStateAfter.GetType()) {
+				return dictionaryDiff; // Return empty diff if types don't match
+			}
+			//Loop through each property in the GameState class
+			foreach(var prop in gameStateBefore.GetType().GetProperties()) {
+				if(prop.Name=="ListMessages") {
+					Console.WriteLine("GameState.Player.Items");
+				}
+				//Take a snapshot each property before and after changes were made
+				var oldValue = prop.GetValue(gameStateBefore);
+				var newValue = prop.GetValue(GameStateAfter);
+				// Handle collections: Always include the full list if any changed
+				if(oldValue is IEnumerable<object> oldCollection && newValue is IEnumerable<object> newCollection) {
+					//Change this later to not use serialization, instead compare objects using zip in a helper meathod.
+					string oldJson = JsonConvert.SerializeObject(oldCollection);
+					string newJson = JsonConvert.SerializeObject(newCollection);
+					if(oldJson != newJson) {
+						dictionaryDiff[prop.Name] = newCollection; // Include full list only if contents or order changed
+					}
+				}
+				// Handle complex objects (like Player, Enemy)
+				else if(oldValue != null && newValue != null && !IsPrimitiveType(prop.PropertyType)) {
+					var nestedDiff = GenerateDiff(oldValue,newValue);
+					if(nestedDiff.Any()) {
+						dictionaryDiff[prop.Name] = nestedDiff; // Only store if changes exist
+					}
+				}
+				else if(!Equals(oldValue,newValue)) {//Property doesn't derive from IEnumerable but did change so include it (if it's a complex object, it still includes all properties not just ones that changed).
+					dictionaryDiff[prop.Name] = newValue;
+				}
+			}
+			return dictionaryDiff;
+		}
+
+		// Helper function: Detect primitive types correctly
+		private static bool IsPrimitiveType(Type type) {
+			return type.IsPrimitive || type.IsEnum || type == typeof(string) || type == typeof(decimal);
+		}
+
+		/*
+			//If the property derives from IEnumerable than include any objects that were changed (includes all properties not just ones that changed).
+			if(oldValue is IEnumerable<object> oldCollection && newValue is IEnumerable<object> newCollection) {
+				var changedElements = newCollection.Where(newItem =>
+						oldCollection.Any(oldItem => !oldItem.Equals(newItem))
+				).ToList();
+				if(changedElements.Any()) {
+					dictionaryDiff[prop.Name] = changedElements;
+				}
+			}
+		*/
 
 	}
 }

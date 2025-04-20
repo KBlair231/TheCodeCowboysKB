@@ -65,7 +65,13 @@ namespace PromptQuest.Migrations
                     b.Property<int>("Floor")
                         .HasColumnType("int");
 
+                    b.Property<bool>("InCampsite")
+                        .HasColumnType("bit");
+
                     b.Property<bool>("InCombat")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("InEvent")
                         .HasColumnType("bit");
 
                     b.Property<bool>("IsLocationComplete")
@@ -79,6 +85,10 @@ namespace PromptQuest.Migrations
 
                     b.Property<int>("PlayerLocation")
                         .HasColumnType("int");
+
+                    b.Property<string>("StoredMessages")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("UserGoogleId");
 

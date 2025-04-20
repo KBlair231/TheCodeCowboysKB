@@ -36,7 +36,7 @@ namespace PromptQuest.Services {
 				//GameState hasn't been saved yet, add it to the db
 				_dbContext.GameStates.Add(gameState);
 			}
-			//GameState already exists for this user, save the changes made to it.
+			//GameState already exists or was added for this user, save these changes made to the db context.
 			_dbContext.SaveChanges();
 		}
 

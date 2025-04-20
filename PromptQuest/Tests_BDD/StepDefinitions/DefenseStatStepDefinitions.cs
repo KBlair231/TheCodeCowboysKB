@@ -30,7 +30,7 @@ namespace PromptQuest.Tests_BDD.StepDefinitions {
 
 		[When("the user is attacked by an enemy")]
 		public void WhenTheUserIsAttackedByAnEnemy() {
-			string message = _combatService.EnemyAttack(_gameState);
+			_combatService.EnemyAttack(_gameState);
 		}
 
 		[Then("the user should receive damage equal to the enemy's attack minus player defense")]
@@ -50,7 +50,7 @@ namespace PromptQuest.Tests_BDD.StepDefinitions {
 		}
 		[When("the enemy is attacked by the user")]
 		public void WhenTheEnemyIsAttackedByTheUser() {
-			_resultMessage = _combatService.PlayerAttack(_gameState);
+			_combatService.PlayerAttack(_gameState);
 		}
 		[Then("the enemy should receive damage equal to the user's attack minus enemy defense")]
 		public void ThenTheEnemyShouldReceiveDamageEqualToTheUsersAttackMinusEnemyDefense() {
