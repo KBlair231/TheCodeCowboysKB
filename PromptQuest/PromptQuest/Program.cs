@@ -74,6 +74,18 @@ builder.Services.AddHttpsRedirection(options =>
 
 var app = builder.Build();
 
+using (var scope = app.Services.CreateScope()) {
+	var services = scope.ServiceProvider;
+	try {
+		var dbContext = services.GetRequiredService<GameStateDbContext>();
+		dbContext.Database.Migrate(); // Applies pending migrations at startup
+	}
+	catch(Exception ex) {
+		// Handle errors that occur during migration
+		Console.WriteLine($"Error applying migrations: {ex.Message}");
+	}
+}
+
 // Configure the HTTP request pipeline.
 if(!app.Environment.IsDevelopment()) {
 	app.UseExceptionHandler("/Home/Error");
