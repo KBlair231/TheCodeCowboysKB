@@ -20,6 +20,12 @@ async function loadGame() {
 
 async function executePlayerAction(playerAction) {
 	await sendPostRequest(`/Game/PlayerAction?playerAction=${playerAction}`);
+	//Enemy's turn now if it isn't the players turn and they are in combat and the enemy is still alive.
+	if (gameState.isPlayersTurn == false && gameState.inCombat && gameState.enemy.currentHealth > 0) {
+		//I don't like that this doesn't happen on the server... but it's the easisest way for the UI to show the turns separately (time and UI updates in between).
+		//Maybe one day I'll find a way to move this over there.
+		await sendPostRequest('/Game/EnemyAction');
+	}
 }
 
 async function sendGetRequest(endpoint) {

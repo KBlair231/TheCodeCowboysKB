@@ -8,6 +8,7 @@ namespace PromptQuest.Services {
 		bool DoesUserHaveSavedGame();
 		void StartCombat();
 		void ExecutePlayerAction(string action);
+		void ExecuteEnemyAction();
 		void SkipToBoss();
 		void EquipItem(int itemIndex);
 		void StartNewGame(Player player);
@@ -168,6 +169,15 @@ namespace PromptQuest.Services {
 					throw new ArgumentOutOfRangeException(nameof(action), action, null);
 			}
 			// Update current gamesate
+			UpdateGameState(gameState);
+		}
+
+		public void ExecuteEnemyAction() {
+			// Get current gamestate
+			GameState gameState = GetGameState();
+			//Enemy only attacks for now.
+			_combatService.EnemyAttack(gameState);
+			// Update current gamesate.
 			UpdateGameState(gameState);
 		}
 

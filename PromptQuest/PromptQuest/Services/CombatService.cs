@@ -50,7 +50,7 @@ namespace PromptQuest.Services {
 			if(gameState.Enemy.CurrentHealth <= 0) {
 				gameState.IsPlayersTurn = true; // Zero this field out because combat is over.
 				gameState.IsLocationComplete = true; // Player has completed the current area.
-				gameState.AddMessage($"You have defeated the {gameState.Enemy.Name}.");
+				gameState.AddMessage($"You have defeated the {gameState.Enemy.Name}! Check your map to see where you're going next.");
 				if(gameState.PlayerLocation == 10) {
 					// Generate a boss item for the player
 					if(gameState.Floor == 1) {
@@ -83,9 +83,7 @@ namespace PromptQuest.Services {
 				}
 				return; 
 			}
-			// Enemy didn't die, so now it is their turn.
-			EnemyAttack(gameState); // Enemy only attacks back for now
-			//gameState.IsPlayersTurn = false;
+			gameState.IsPlayersTurn = false;
 		}
 
 		/// <summary>Calculates the amount healed by a Health Potion, updates the game state, then returns a message.</summary>

@@ -85,6 +85,16 @@ namespace PromptQuest.Controllers {
 		}
 
 		[HttpPost]
+		public JsonResult EnemyAction() {
+			Action action = new Action(() => { 
+				//Add a delay so there is some time between player and enemy actions.
+				Thread.Sleep(2000); // Waits for 2 seconds. Blocks current thread (not great, should improve later)
+				_gameService.ExecuteEnemyAction();
+			});
+			return ProcessRequest(action);
+		}
+
+		[HttpPost]
 		public JsonResult EquipItem(int itemIndex) {
 			Action action = new Action(() => { _gameService.EquipItem(itemIndex); });
 			return ProcessRequest(action);

@@ -37,7 +37,9 @@ document.addEventListener("DOMContentLoaded", async () => {
 	openMenuBtn.addEventListener("click", () => { menu.syncVisibility(true); refreshMenu(); }); 
 	closeMenuBtn.addEventListener("click", () => { menu.syncVisibility(false); });//Force menu to hide on click.
 	inventoryBtn.addEventListener("click", () => { tabCurrent = 'inventory'; refreshMenu(); });//Set tab and refresh menu
+	equipBtn.addEventListener("click", equipItem);
 	mapBtn.addEventListener("click", () => { tabCurrent = 'map'; refreshMenu(); });//Set tab and refresh menu
+	floorBtn.attachPlayerAction('move');
 	//Fetch map from server.
 	mapDef = await sendGetRequest("/Game/GetMap");
 });
@@ -106,9 +108,6 @@ function refreshInventory() {
 	}
 	//Make item details visible if an item is selected.
 	itemDetails.syncVisibility(selectedItemIndex != -1);
-	// Set up the equip button
-	equipBtn.removeEventListener("click", equipItem);
-	equipBtn.addEventListener("click", equipItem);
 }
 
 function refreshMap() {
@@ -119,7 +118,6 @@ function refreshMap() {
 	floorTracker.textContent = "Floor " + gameState.floor;
 	// Adds a check for if the player has defeated the boss to enable next floor button
 	floorBtn.syncButtonState(gameState.playerLocation == 10 && gameState.isLocationComplete);
-	floorBtn.attachPlayerAction('move');
 	// Draw the map nodes and edges
 	for (let i = 0; i < mapDef.listMapNodes.length; i++) {
 		// node.removeEventListener("click", movePlayerToNode());
@@ -178,11 +176,17 @@ function refreshMap() {
 //------------------------ MORE COMPLEX CLICK HANDLERS --------------------------------------------------------------------------------------------------------
 
 function selectItem(item, index) {
+	//Check if there was a previous slot selected.
 	const oldInventorySlot = document.getElementById("inventory-slot-" + (selectedItemIndex + 1));
-	oldInventorySlot?.classList.remove(".pq-inventory-slot-selected")//Clear old highlight
+	if (oldInventorySlot != null) {
+		oldInventorySlot.style.borderColor = "";//Clear old highlight
+	}
 	selectedItemIndex = index;
+	//Check if there a new slot selected (always is unless they click the equipped slot)
 	const newInventorySlot = document.getElementById("inventory-slot-" + (selectedItemIndex + 1));
-	newInventorySlot.classList.add(".pq-inventory-slot-selected");//Highlight newly selected slot.
+	if (newInventorySlot != null) {
+		newInventorySlot.style.borderColor = "#ffdc4a";//Highlight newly selected slot.
+	}
 	//Update item details to match selected item.
 	document.getElementById("item-name").textContent = item.name;
 	document.getElementById("item-attack").textContent = item.attack;
