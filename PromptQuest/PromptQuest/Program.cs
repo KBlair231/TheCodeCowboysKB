@@ -8,7 +8,7 @@ using Azure.Identity;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Load Azure Key Vault for production scenarios.
+// Load Azure Key Vault only when environment variable is set.
 string keyVaultUri = Environment.GetEnvironmentVariable("VaultUri");
 if(!string.IsNullOrEmpty(keyVaultUri)) {
 	var keyVaultEndpoint = new Uri(keyVaultUri);
