@@ -32,9 +32,12 @@
 				<option value="Mage">Mage</option>
 				<option value="Archer">Archer</option>
 			</select>
+			<textarea class=" pq-form-control" id="description">Describe Your Character</textarea>
 			<span asp-validation-for="Class" class="text-danger"></span>
 			<button type="submit" id="createCharacterButton" class="pq-button" style="background-color:darkgreen; margin-top:20px;">Start Adventure</button>
+			<span id="previewButton" class="pq-button pq-center-element-x" style="width: auto; bottom:1%; left: 50%; background-color:darkgreen; margin-top:20px;">Preview Icon</span>
 		</form>
+		
 	</div>
 </div>
 
@@ -57,3 +60,4 @@
 		}
 	</script>
 }
+<script src="~/js/site.js"></script>
