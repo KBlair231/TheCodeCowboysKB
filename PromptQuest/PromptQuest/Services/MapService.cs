@@ -16,9 +16,9 @@ namespace PromptQuest.Services {
 					new MapNode { MapNodeId = 4 },
 					new MapNode { MapNodeId = 5, NodeType = "Campsite" },
 					new MapNode { MapNodeId = 6 },
-					new MapNode { MapNodeId = 7 },
+					new MapNode { MapNodeId = 7 , NodeType = "Elite"},
 					new MapNode { MapNodeId = 8, NodeType = "Campsite" },
-					new MapNode { MapNodeId = 9},
+					new MapNode { MapNodeId = 9 },
 					new MapNode { MapNodeId = 10, NodeType = "Boss" }
 			};
 		private static readonly List<MapEdge> _mapEdges = new List<MapEdge>() {
@@ -69,7 +69,7 @@ namespace PromptQuest.Services {
 				gameState.InEvent = true;
 				return;
 			}
-			if (currentNode.NodeType == "Enemy" || currentNode.NodeType == "Boss") {
+			if (currentNode.NodeType == "Enemy" || currentNode.NodeType == "Boss" || currentNode.NodeType == "Elite") {
 				gameState.InCombat = true;
 			}
 		}

@@ -291,11 +291,11 @@ namespace PromptQuest.Tests.Services {
 			_gameState.IsPlayersTurn = true;
 
 			// Act
-			//_gameService.RespawnPlayer(_gameState);
+			_combatService.RespawnPlayer(_gameState);
 
 			// Assert
-			Assert.IsFalse(_gameState.InCombat, "Combat should be false after respawning.");
-			Assert.IsFalse(_gameState.IsPlayersTurn, "Player's turn should be false after respawning.");
+			Assert.IsTrue(_gameState.InCombat, "Combat should be true after respawning.");
+			Assert.IsTrue(_gameState.IsPlayersTurn, "Player's turn should be true after respawning.");
 			Assert.That(_gameState.Player.CurrentHealth, Is.EqualTo(_gameState.Player.MaxHealth), "Player should be at max health after respawning.");
 		}
 		#endregion Respawn Player Tests - End

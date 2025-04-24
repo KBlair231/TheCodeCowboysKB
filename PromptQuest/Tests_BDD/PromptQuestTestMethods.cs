@@ -31,12 +31,12 @@ namespace Tests_BDD {
 
 				if(skipTutorial) {
 					//Wait for tutorial modal window to show
-					WaitForElementToLoad(webDriver, "tutorialModal");
+					WaitForElementToLoad(webDriver, "tutorial-popup");
 					//Click on the "Skip Tutorial" button.
 					IWebElement skipTutorialButton = webDriver.FindElement(By.XPath("//button[normalize-space(text())='Skip Tutorial']"));
 					skipTutorialButton.Click();
 					//Wait for tutorial modal window to hide
-					WaitForElementToLoad(webDriver, "tutorialModal");
+					WaitForElementToLoad(webDriver, "tutorial-popup");
 				}
 			}
 			catch(NoSuchElementException ex) {
@@ -59,18 +59,18 @@ namespace Tests_BDD {
 			IWebElement menuButton = webDriver.FindElement(By.XPath("//button[normalize-space(text()='Menu')]"));
 			menuButton.Click();
 			// Wait for the menu modal to show
-			WaitForElementToLoad(webDriver, "pq-modal");
+			WaitForElementToLoad(webDriver, "menu");
 			// Make sure the inventory tab is selected
-			IWebElement inventoryTab = webDriver.FindElement(By.Id("inventory-button"));
+			IWebElement inventoryTab = webDriver.FindElement(By.Id("inventory-btn"));
 			inventoryTab.Click();
 			// Click weapon
 			IWebElement weaponSlot = webDriver.FindElement(By.Id("inventory-slot-4"));
 			weaponSlot.Click();
 			// Click Equip Item
-			IWebElement equipButton = webDriver.FindElement(By.Id("equip-button"));
+			IWebElement equipButton = webDriver.FindElement(By.Id("equip-btn"));
 			equipButton.Click();
 			// Close the menu
-			IWebElement closeButton = webDriver.FindElement(By.Id("pq-modal-close"));
+			IWebElement closeButton = webDriver.FindElement(By.Id("menu-close"));
 			closeButton.Click();
 			// Click on the attack button until the enemy is dead.
 			while (webDriver.FindElement(By.Id("enemy-display")).Displayed && webDriver.FindElement(By.Id("action-button-display")).Displayed) {
@@ -93,20 +93,26 @@ namespace Tests_BDD {
 			IWebElement menuButton = webDriver.FindElement(By.XPath("//button[normalize-space(text()='Menu')]"));
 			menuButton.Click();
 			// Wait for the menu modal to show
-			WaitForElementToLoad(webDriver, "pq-modal");
+			WaitForElementToLoad(webDriver, "menu");
 			// Click the map tab
-			IWebElement mapTab = webDriver.FindElement(By.Id("map-button"));
+			IWebElement mapTab = webDriver.FindElement(By.Id("map-btn"));
 			mapTab.Click();
 			// Wait for the map modal to show
-			WaitForElementToLoad(webDriver, "map-tab");
+			WaitForElementToLoad(webDriver, "map");
 			// Click the tenth room with attribute data-node-id="10"
-			IWebElement tenthNode = webDriver.FindElement(By.XPath("//div[@data-node-id='10']"));
+			IWebElement tenthNode = webDriver.FindElement(By.XPath("//button[@data-node-id='10']"));
 			tenthNode.Click();
 			// Close the menu
-			IWebElement closeButton = webDriver.FindElement(By.Id("pq-modal-close"));
+			IWebElement closeButton = webDriver.FindElement(By.Id("menu-close"));
 			closeButton.Click();
 			// Wait for the boss to spawn
 			WaitForElementToLoad(webDriver, "attack-btn");
+		}
+
+		/// <summary> Moves user to the specified roomNumber. </summary>
+		public static void MoveToRoom(IWebDriver webDriver, int targetRoom) {
+			// Navigate to the game page
+			webDriver.Navigate().GoToUrl($"https://localhost:7186/Game/SkipToRoom?targetRoom={targetRoom}");
 		}
 	}
 }

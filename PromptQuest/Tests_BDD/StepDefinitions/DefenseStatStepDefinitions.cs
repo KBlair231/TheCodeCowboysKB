@@ -24,7 +24,6 @@ namespace PromptQuest.Tests_BDD.StepDefinitions {
 		#region User Attacked By Enemy
 		[Given("the user is on the game page")]
 		public void GivenTheUserIsOnTheGamePage() {
-			DefenseStatSteps steps = new DefenseStatSteps();
 			_combatService.StartCombat(_gameState);
 		}
 

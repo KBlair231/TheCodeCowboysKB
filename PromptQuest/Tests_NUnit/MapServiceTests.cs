@@ -37,7 +37,7 @@ namespace Tests_NUnit {
 		}
 
 		[Test]
-		public void MovePlayer_ShouldNotIncrementPlayerLocation_WhenAtEndOfMap() {
+		public void MovePlayer_Should_Reset_Location_To_1_At_End_Of_The_Map() {
 			// Arrange
 			var gameState = new GameState { PlayerLocation = 10 };
 
@@ -45,7 +45,7 @@ namespace Tests_NUnit {
 			_mapService.MovePlayer(gameState);
 
 			// Assert
-			Assert.That(gameState.PlayerLocation, Is.EqualTo(10));
+			Assert.That(gameState.PlayerLocation, Is.EqualTo(1));
 		}
 
 	}

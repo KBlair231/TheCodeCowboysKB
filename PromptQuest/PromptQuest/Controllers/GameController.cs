@@ -124,6 +124,12 @@ namespace PromptQuest.Controllers {
 			return RedirectToAction("Game");
 		}
 
+		[HttpGet]
+		public IActionResult SkipToRoom(int targetRoom) {
+			_gameService.SkipToRoom(targetRoom);
+			return RedirectToAction("Game");
+		}
+
 		public JsonResult ProcessRequest(Action action) {
 			GameState gameStateBefore = _gameService.GetGameState().CreateDeepCopy(); //Take a snapshot of the current GameState before any changes. Deep copy so it doesn't respond to outside updates
 			action.Invoke(); //Perform the requested action

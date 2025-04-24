@@ -6,6 +6,7 @@ using OpenQA.Selenium.Chrome;
 using PromptQuest.Models;
 using Reqnroll;
 using System.Collections.Generic;
+using Tests_BDD.StepDefinitions;
 using static System.Net.Mime.MediaTypeNames;
 
 namespace Tests_BDD {
@@ -17,10 +18,8 @@ namespace Tests_BDD {
 
 		[BeforeScenario]
 		public void Setup() {
-			// Initialize WebDriver before each scenario
-			webDriver = new ChromeDriver();
-			// Start a new game
-			PromptQuestTestMethods.StartNewGame(webDriver,skipTutorial: true);
+			// Initialize the web driver before each scenario
+			webDriver = TestSetup.GetWebDriver();
 		}
 
 		[Given(@"I am on the inventory tab")]
@@ -29,7 +28,7 @@ namespace Tests_BDD {
 			IWebElement menuButton = webDriver.FindElement(By.XPath("//button[normalize-space(text()='Menu')]"));
 			menuButton.Click();
 			//Wait for menu modal to show before continuing
-			PromptQuestTestMethods.WaitForElementToLoad(webDriver,"pq-modal");
+			PromptQuestTestMethods.WaitForElementToLoad(webDriver,"menu");
 		}
 
 		[Then(@"I should see a window with that item's title, image, and stats")]
@@ -75,7 +74,7 @@ namespace Tests_BDD {
 
 		[When("I click the equip button")]
 		public void WhenIClickTheEquipButton() {
-			IWebElement equipButton = webDriver.FindElement(By.Id("equip-button"));
+			IWebElement equipButton = webDriver.FindElement(By.Id("equip-btn"));
 			equipButton.Click();
 		}
 
@@ -101,14 +100,5 @@ namespace Tests_BDD {
 			IWebElement equippedSlot = webDriver.FindElement(By.Id("equipped-item"));
 			Assert.IsTrue(string.IsNullOrEmpty(equippedSlot.Text));
 		}
-
-		[AfterScenario]
-		public void TearDown() {
-			if(webDriver != null) {
-				webDriver.Quit(); // Ensure the browser is closed
-				webDriver?.Dispose(); // Clean up unmanaged resources
-			}
-		}
-
 	}
 }

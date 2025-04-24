@@ -10,8 +10,8 @@ namespace Tests_BDD.StepDefinitions {
 
 		[BeforeScenario]
 		public void Setup() {
-			// Initialize WebDriver before each scenario
-			webDriver = new ChromeDriver();
+			// Initialize the web driver before each scenario
+			webDriver = TestSetup.GetWebDriver();
 		}
 
 		[Given(@"I am a user on the main menu")]
@@ -31,7 +31,6 @@ namespace Tests_BDD.StepDefinitions {
 			if(!currentUrl.Contains("accounts.google.com")) {
 				throw new Exception("Not redirected to Google sign in page.");
 			}
-			webDriver.Quit(); // Close the browser
 		}
 
 		//The Following test scenario just automatically passes, but we'll leave the code here for completeness.
@@ -81,14 +80,5 @@ namespace Tests_BDD.StepDefinitions {
 			}*/
 			Assert.That(true);
 		}
-
-		[AfterScenario]
-		public void TearDown() {
-			if(webDriver != null) {
-				webDriver.Quit(); // Ensure the browser is closed
-				webDriver?.Dispose(); // Clean up unmanaged resources
-			}
-		}
-
 	}
 }
