@@ -107,7 +107,7 @@ function refreshDialogBox() {
 
 function refreshPlayerDisplay() {
 	document.querySelectorAll(".player-name").forEach(el => { el.textContent = gameState.player.name; });
-	document.querySelectorAll(".player-image").forEach(el => { el.src = "/images/" + gameState.player.class + ".png"; }); // Placeholder image for now.
+	document.querySelectorAll(".player-image").forEach(el => { el.src = `data:image/png;base64,${gameState.player.image}`; }); // Placeholder image for now.
 	document.querySelectorAll(".player-image").forEach(el => { el.alt = gameState.player.name; });
 	const equippedItem = gameState.player.itemEquipped
 	document.querySelectorAll(".player-attack").forEach(el => { el.textContent = gameState.player.attack + equippedItem?.attack ?? 0; });

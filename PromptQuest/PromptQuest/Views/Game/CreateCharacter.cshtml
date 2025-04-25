@@ -16,48 +16,35 @@
 	<div class="login-display" style="top: 0; left: 0; height: 8vmin; width: 20vmin;">
 		@if(isUserLoggedIn) {
 			<img src="@userProfileImage"/>
-			<a class="pq-link" href="/Account/SignOutFromGoogleLogin">Logout</a>
+		<a class="pq-link" href="/Account/SignOutFromGoogleLogin">Logout</a>
 		}
 		else {
 			<a class="pq-link" href="/Account/GoogleLogin">Login with Google</a>
 		}
 	</div>
-	<div class="pq-container pq-center-element-x" style="height: 100%; width: 50%; top: 0; left: 50%; border: .1vmin solid white; border-radius: 50px;">
-		<img src="~/images/Warrior.png" alt="Default Player Portrait" id="player-image" class="pq-center-element-x" style="height: 50%; width: auto; top:5%; left: 50%; border: .1vmin solid white; max-width: 100%;">
-		<form asp-controller="Game" asp-action="CreateCharacter" method="post" class="pq-form pq-center-element-x" style="height: 45%; width: 70%; bottom:0; left: 50%;">
+	<div class="pq-container pq-center-element-x" style="height: 100%; width: 60%; top: 0; left: 50%; border: .1vmin solid white; border-radius: 50px;">
+		<div class="pq-container pq-center-element-x" style="height: 60%; width: 95%; top: 5%; left: 50%;">
+			<div id="player-image-loader" class="loader pq-center-element-x" style="display:none; top: 40%; left: 22%;"></div>
+			<img alt="Image of your character" id="player-image" style="display: none; height: auto; width: 50%; top:0; left: 0%; border: .1vmin solid white; max-height: 100%;">
+			<textarea class="pq-form-control" id="description" placeholder="What does your character look like?" style="height: 85%; width: 45%; top:0; left: 52%; resize: none; border: .1vmin solid white; max-height: 100%; margin-top:0;"></textarea>
+			<button id="preview-btn" class="pq-button" style="width: auto; bottom:0; left: 52%; background-color:darkgreen;">Take a look</button>
+		</div>
+		<form asp-controller="Game" asp-action="CreateCharacter" method="post" class="pq-form" style="height: 35%; width: 70%; bottom:0; left: 1%;">
 			<input asp-for="Name" type="text" minlength="1" maxlength="25" class="pq-form-control" id="name" name="name" placeholder="Enter Character's Name" />
 			<span asp-validation-for="Name" class="pq-validation-text"></span>
-			<select asp-for="Class" class="pq-form-control" id="class-select" onchange="updatePlayerImage()">
+			<select asp-for="Class" id="class-select" class="pq-form-control">
 				<option value="Warrior">Warrior</option>
 				<option value="Mage">Mage</option>
 				<option value="Archer">Archer</option>
 			</select>
-			<textarea class=" pq-form-control" id="description">Describe Your Character</textarea>
 			<span asp-validation-for="Class" class="text-danger"></span>
-			<button type="submit" id="createCharacterButton" class="pq-button" style="background-color:darkgreen; margin-top:20px;">Start Adventure</button>
-			<span id="previewButton" class="pq-button pq-center-element-x" style="width: auto; bottom:1%; left: 50%; background-color:darkgreen; margin-top:20px;">Preview Icon</span>
+			<!-- Dummy field that is invisible. Used to pass the base 64 string of the player's image up with the form. -->
+			<input asp-for="Image" id="player-image-data" style="display:none;"/>
+			<span asp-validation-for="Image" class="text-danger"></span>
+			<button type="submit" id="create-character-btn" class="pq-button" style="background-color:darkgreen; margin-top:20px;">Start Adventure</button>
 		</form>
 		
 	</div>
 </div>
 
-@section Scripts {
-	<script>
-		function updatePlayerImage() {
-			var classSelect = document.getElementById("class-select");
-			var playerImage = document.getElementById("player-image");
-			switch (classSelect.value) {
-				case "Warrior":
-					playerImage.src = "/images/Warrior.png";
-					break;
-				case "Mage":
-					playerImage.src = "/images/Mage.png";
-					break;
-				case "Archer":
-					playerImage.src = "/images/Archer.png";
-					break;
-			}
-		}
-	</script>
-}
-<script src="~/js/site.js"></script>
+<script src="~/js/CreateCharacter.js"></script>

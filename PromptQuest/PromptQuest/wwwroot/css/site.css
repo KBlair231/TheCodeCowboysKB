@@ -317,6 +317,26 @@ button:disabled {
 	border: var(--pq-border);
 }
 
+.loader {
+	border: 8px solid darkgrey;
+	border-top: 8px solid darkgreen;
+	border-radius: 50%;
+	width: 50px;
+	height: 50px;
+	z-index: 999; /*Make sure this element is on top.*/
+	animation: spin 2s linear infinite;
+}
+
+@keyframes spin {
+	0% {
+		transform: rotate(0deg);
+	}
+
+	100% {
+		transform: rotate(360deg);
+	}
+}
+
 .pq-validation-text {
 	display: block;
 	margin-top: 5px;

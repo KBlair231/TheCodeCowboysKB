@@ -10,10 +10,12 @@ namespace PromptQuest.Controllers {
 	public class GameController:Controller {
 		private readonly ILogger<GameController> _logger;
 		private readonly IGameService _gameService;
+		private readonly IDallEApiService _dallEApiService;
 		private readonly JsonSerializerSettings _jsonSerializerSettings=new JsonSerializerSettings { ContractResolver = new DefaultContractResolver() };
-		public GameController(ILogger<GameController> logger,IGameService gameService) {
+		public GameController(ILogger<GameController> logger,IGameService gameService,IDallEApiService dallEApiService) {
 			_logger = logger;
 			_gameService = gameService;
+			_dallEApiService = dallEApiService;
 		}
 		public IActionResult About() {
 			return View();
@@ -41,6 +43,11 @@ namespace PromptQuest.Controllers {
 			else {
 				return View();
 			}
+		}
+
+		public async Task<JsonResult> CreateCharacterImage(string prompt) {
+			string image = await _dallEApiService.GenerateImageAsync(prompt);
+			return Json(image);
 		}
 
 		[HttpGet]

@@ -24,22 +24,14 @@ builder.Services.AddSession(options =>// Add session services
 	// To match up the session to the user a unique session ID is created with each session
 	// and stored in a session cookie (a small text file) and sent to the client's browser.
 	options.IdleTimeout = TimeSpan.FromMinutes(10); // Session timeout
-																									// Cookie can only be accessed via HTTP requests, not by client-side scripts (for enhanced security).
-	options.Cookie.HttpOnly = true;
+	options.Cookie.HttpOnly = true;// Cookie can only be accessed via HTTP requests, not by client-side scripts (for enhanced security).
 	options.Cookie.SecurePolicy = CookieSecurePolicy.Always; // Ensures the cookie is sent only over HTTPS
 	options.Cookie.SameSite = SameSiteMode.Strict; // Prevents the browser from sending the cookie with cross-site requests
-																								 // Indicates that the cookie is required for the basic functionality of the site and will be stored even if the user has not consented to non-essential cookies.
-																								 // This is important for compliance with regulations like GDPR.
-	options.Cookie.IsEssential = true;
+	options.Cookie.IsEssential = true;// Indicates that the cookie is required for the basic functionality of the site and will be stored even if the user has not consented to non-essential cookies.
+																		// This is important for compliance with regulations like GDPR.
 });
 builder.Services.AddHttpContextAccessor(); // Add HttpContextAccessor for accessing session
 
-// Register GameService with the dependency injection container
-builder.Services.AddScoped<IGameService,GameService>();
-builder.Services.AddScoped<ICombatService,CombatService>();
-builder.Services.AddScoped<ISessionService,SessionService>();
-builder.Services.AddScoped<IDatabaseService,DatabaseService>();
-builder.Services.AddScoped<IMapService,MapService>();
 // Add Google authentication services
 builder.Services.AddAuthentication(options => {
 	options.DefaultAuthenticateScheme = "Application";
@@ -62,19 +54,35 @@ builder.Services.AddAuthentication(options => {
 });
 
 builder.Services.AddDbContext<GameStateDbContext>(options => {
-	string connectionString = builder.Configuration["ConnectionString-GameStateDb"]; // Get Connection-String from either usre secrets or AzureKeyVault
+	string connectionString = builder.Configuration["ConnectionString-GameStateDb"]; // Get Connection-String from either user secrets or AzureKeyVault
 	options.UseSqlServer(connectionString);
 });
 
+// Register GameService with the dependency injection container
+builder.Services.AddScoped<IGameService,GameService>();
+builder.Services.AddScoped<ICombatService,CombatService>();
+builder.Services.AddScoped<ISessionService,SessionService>();
+builder.Services.AddScoped<IDatabaseService,DatabaseService>();
+builder.Services.AddScoped<IMapService,MapService>();
+
+// Retrieve the API key from user secrets or azure Key vault
+var apiKey = builder.Configuration["DallEApiKey"];
+
+// Register the service with dependency injection
+builder.Services.AddHttpClient<IDallEApiService,DallEApiService>(client => {
+	client.BaseAddress = new Uri("https://api.openai.com/v1/");
+	client.DefaultRequestHeaders.Add("Authorization",$"Bearer {apiKey}");
+});
+
+
 // Add middleware to enforce HTTPS redirection
-builder.Services.AddHttpsRedirection(options =>
-{
-    options.HttpsPort = 7186; // Ensure this matches your SSL port
+builder.Services.AddHttpsRedirection(options => {
+	options.HttpsPort = 7186; // Ensure this matches your SSL port
 });
 
 var app = builder.Build();
 
-using (var scope = app.Services.CreateScope()) {
+using(var scope = app.Services.CreateScope()) {
 	var services = scope.ServiceProvider;
 	try {
 		var dbContext = services.GetRequiredService<GameStateDbContext>();
