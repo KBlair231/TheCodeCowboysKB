@@ -23,4 +23,20 @@
     <ProjectReference Include="..\PromptQuest\PromptQuest.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Compile Update="Features\PlayerAbility.feature.cs">
+      <Visible>true</Visible>
+      <DependentUpon>PlayerAbility.feature</DependentUpon>
+      <DesignTime>true</DesignTime>
+      <AutoGen>true</AutoGen>
+    </Compile>
+  </ItemGroup>
+
+  <ItemGroup>
+    <ReqnrollFeatureFiles Update="Features\PlayerAbility.feature">
+      <Visible>$(UsingMicrosoftNETSdk)</Visible>
+      <CodeBehindFile>%(RelativeDir)%(Filename).feature$(DefaultLanguageSourceExtension)</CodeBehindFile>
+    </ReqnrollFeatureFiles>
+  </ItemGroup>
+
 </Project>

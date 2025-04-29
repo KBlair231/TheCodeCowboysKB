@@ -16,6 +16,7 @@ namespace PromptQuest.Models {
 		public int CurrentHealth { get; set; }
 		public int Defense { get; set; }
 		public int Attack { get; set; }
+		public int AbilityCooldown { get; set; }
 		[Required]
 		public string Class { get; set; } = "";
 		/// <summary>The Player's equipped item. Readonly</summary>

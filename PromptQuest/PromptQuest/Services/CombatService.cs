@@ -4,12 +4,13 @@ namespace PromptQuest.Services {
 
 	public interface ICombatService {
 		void StartCombat(GameState gameState);
-		void PlayerAttack(GameState gameState);
+		void PlayerAttack(GameState gameState, int attackMult = 1, bool decrementAbility=true);
 		void PlayerUseHealthPotion(GameState gameState);
 		void PlayerRest(GameState gameState);
 		void PlayerSkipRest(GameState gameState);
 		void PlayerAccept(GameState gameState);
 		void PlayerDeny(GameState gameState);
+		void PlayerAbility(GameState gameState);
 		void PlayerOpenTreasure(GameState gameState);
 		void PlayerSkipTreasure(GameState gameState);
 		void RespawnPlayer(GameState gameState);
@@ -23,6 +24,7 @@ namespace PromptQuest.Services {
 		public void StartCombat(GameState gameState) {
 			gameState.InCombat = true;
 			gameState.IsPlayersTurn = true; // Player always goes first, for now.
+			gameState.Player.AbilityCooldown = 0; //reset player ability, may be removed down the line
 			if(gameState.PlayerLocation == 2 || gameState.PlayerLocation == 7) {
 				gameState.Enemy = GetElite(gameState);
 				gameState.AddMessage($"You have been attacked by the {gameState.Enemy.Name}!"); // Let the user know that combat started.
@@ -41,16 +43,21 @@ namespace PromptQuest.Services {
 		#region Player Action Methods
 
 		/// <summary> Calculates the damage that the player does to the enemy, updates the game state, then returns a message.</summary>
-		public void PlayerAttack(GameState gameState) {
+		public void PlayerAttack(GameState gameState, int attackMult = 1, bool decrementAbility = true) {
 			// Get the player's equipped item
 			Item item = gameState.Player.ItemEquipped;
 			// Calculate damage as attack - defense.
-			int damage = gameState.Player.Attack + item.Attack - gameState.Enemy.Defense;
+			int damage = (int)Math.Floor((double)(gameState.Player.Attack + item.Attack)*attackMult) - gameState.Enemy.Defense;
 			// If attack is less than one make it one.
 			if(damage < 1)
 				damage = 1;
 			// Update enemy health.
 			gameState.Enemy.CurrentHealth -= damage;
+			//decrement ability cooldown if ability was not used
+			if (decrementAbility && gameState.Player.AbilityCooldown>0)
+			{
+				gameState.Player.AbilityCooldown -= 1;
+			}
 			// Return the result to the user.
 			gameState.AddMessage($"You attacked the {gameState.Enemy.Name} for {damage} damage");
 			// Check if enemy died.
@@ -71,7 +78,21 @@ namespace PromptQuest.Services {
 			}
 			gameState.IsPlayersTurn = false;
 		}
-
+		/// <summary>activates the player's ability</summary>
+		public void PlayerAbility(GameState gameState)
+		{
+			switch (gameState.Player.Class.ToLower())
+			{
+				case "warrior"://attack for double power, uses the attack function
+					gameState.AddMessage($"You used your ability! You power up and perform a strong attack!");
+					PlayerAttack(gameState, 2, false);
+					gameState.Player.AbilityCooldown = 3;
+					break;
+				default:
+					gameState.AddMessage("Your class has no ability.");
+					break;
+			}
+		}
 		/// <summary>Calculates the amount healed by a Health Potion, updates the game state, then returns a message.</summary>
 		public void PlayerUseHealthPotion(GameState gameState) {
 			// If player has no potions, don't let them heal.
