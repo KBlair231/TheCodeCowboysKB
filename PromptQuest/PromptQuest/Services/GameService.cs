@@ -157,6 +157,12 @@ namespace PromptQuest.Services {
 				case "deny":
 					_combatService.PlayerDeny(gameState); // Currently in _combatService, may change later
 					break;
+				case "open-treasure":
+					_combatService.PlayerOpenTreasure(gameState); // Currently in _combatService, may change later
+					break;
+				case "skip-treasure":
+					_combatService.PlayerSkipTreasure(gameState); // Currently in _combatService, may change later
+					break;
 				case "move":
 					_mapService.MovePlayer(gameState);
 					if(gameState.InCombat) {//Moving the player could put the player in combat
@@ -223,7 +229,7 @@ namespace PromptQuest.Services {
 		}
 
 		public void SkipToBoss() {        // This is a skip to the boss for testing purposes
-																								// Get current gamestate
+																			// Get current gamestate
 			GameState gameState = GetGameState();
 			// Move the player to the room before the boss.
 			_mapService.MovePlayer(gameState, 9);

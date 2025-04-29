@@ -32,12 +32,7 @@ namespace Tests_BDD {
 		[Given("I have defeated the enemy")]
 		public void GivenIHaveDefeatedTheEnemy() {
 			// Click the attack button until the enemy is defeated
-			while(webDriver.FindElement(By.Id("enemy-display")).Displayed && webDriver.FindElement(By.Id("action-button-display")).Displayed) {
-				// This method is needed as apparently the attack button is otherwise unable to be clicked due to overlapping elements
-				IWebElement attackButton = webDriver.FindElement(By.Id("attack-btn"));
-				IJavaScriptExecutor js = (IJavaScriptExecutor)webDriver;
-				js.ExecuteScript("arguments[0].click();", attackButton);
-			}
+			PromptQuestTestMethods.ClearRoom(webDriver);
 		}
 
 		[When(@"I click the map button")]
@@ -100,14 +95,15 @@ namespace Tests_BDD {
 		[Then("I should be able to move to the next node")]
 		public void ThenIShouldBeAbleToMoveToTheNextNode() {
 			// Get the next node
-			IWebElement nextNode = webDriver.FindElement(By.XPath("//button[contains(@class, 'map-node') and @data-node-id='2']"));
+			IWebElement nextNode = webDriver.FindElement(By.XPath("//button[contains(@class, 'map-node-enabled') and @data-node-id='2']"));
 			// Attempt to click the next node
 			nextNode.Click();
+			PromptQuestTestMethods.WaitForElementToLoad(webDriver, "map");
 			// Re-locate the next node to avoid StaleElementReferenceException
 			IWebElement updatedNode = webDriver.FindElement(By.XPath("//button[contains(@class, 'map-node') and @data-node-id='2']"));
 			// Assert that node 2 is now the current node (We have successfully moved to the next node)
 			string nodeClass = updatedNode.GetAttribute("class");
-			Assert.IsTrue(nodeClass.Contains("map-node-current"), "The node with data-node-id='2' does not have the 'map-node-current' class.");
+			Assert.IsTrue(nodeClass.Contains("map-node-current"), $"The node with data-node-id='2' does not have the 'map-node-current' class. Actual class: {nodeClass}");
 		}
 
 		[Then("I should see a new enemy")]

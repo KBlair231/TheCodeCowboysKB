@@ -10,6 +10,8 @@ namespace PromptQuest.Services {
 		void PlayerSkipRest(GameState gameState);
 		void PlayerAccept(GameState gameState);
 		void PlayerDeny(GameState gameState);
+		void PlayerOpenTreasure(GameState gameState);
+		void PlayerSkipTreasure(GameState gameState);
 		void RespawnPlayer(GameState gameState);
 		void EnemyAttack(GameState gameState);
 		Enemy GetEnemy(GameState gameState);
@@ -21,7 +23,7 @@ namespace PromptQuest.Services {
 		public void StartCombat(GameState gameState) {
 			gameState.InCombat = true;
 			gameState.IsPlayersTurn = true; // Player always goes first, for now.
-			if(gameState.PlayerLocation == 7) {
+			if(gameState.PlayerLocation == 2 || gameState.PlayerLocation == 7) {
 				gameState.Enemy = GetElite(gameState);
 				gameState.AddMessage($"You have been attacked by the {gameState.Enemy.Name}!"); // Let the user know that combat started.
 				return;
@@ -98,8 +100,7 @@ namespace PromptQuest.Services {
 		/// <summary>Calculates the amount healed by Resting, updates the game state, then returns a message.</summary>
 		public void PlayerRest(GameState gameState) {
 			// Set potions to 2 if they are less than 2.
-			if (gameState.Player.HealthPotions < 2)
-			{
+			if(gameState.Player.HealthPotions < 2) {
 				gameState.Player.HealthPotions = 2;
 			}
 			// If player is already at max health, don't let them rest.
@@ -132,7 +133,7 @@ namespace PromptQuest.Services {
 			gameState.Player.HealthPotions += 3;
 			// Damage the player
 			gameState.Player.CurrentHealth -= 7;
-			if (gameState.Player.CurrentHealth <= 0) {
+			if(gameState.Player.CurrentHealth <= 0) {
 				gameState.Player.CurrentHealth = 1;
 			}
 			// Tell player what happened
@@ -147,11 +148,62 @@ namespace PromptQuest.Services {
 			gameState.IsLocationComplete = true;
 		}
 
+		/// <summary>Player opens treasure chest, updates the game state, then returns a message.</summary>
+		public void PlayerOpenTreasure(GameState gameState) {
+			int randPotions = new Random().Next(1, 4); // Randomly give 1 to 3 potions
+			gameState.Player.HealthPotions += randPotions;
+			int randItem = new Random().Next(1, 5); // Randomly give an item from the list below
+			Item treasureItem = new Item();
+			if(randItem == 1) {
+				// If 1, give them a treasure specific item.
+				treasureItem.Name = "Banana Crown";
+				treasureItem.Attack = 2;
+				treasureItem.Defense = 10;
+				treasureItem.ImageSrc = "/images/BananaCrown.png";
+				gameState.Player.Items.Add(treasureItem);
+			}
+			else if(randItem == 2) {
+				// If 2, give them a treasure specific item.
+				treasureItem.Name = "Gothic T-Shirt";
+				treasureItem.Attack = 7;
+				treasureItem.Defense = 2;
+				treasureItem.ImageSrc = "/images/GothicTShirt.png";
+				gameState.Player.Items.Add(treasureItem);
+			}
+			else if(randItem == 3) {
+				// If 3, give them a treasure specific item.
+				treasureItem.Name = "Gilded Boots";
+				treasureItem.Attack = 5;
+				treasureItem.Defense = 5;
+				treasureItem.ImageSrc = "/images/GildedBoots.png";
+				gameState.Player.Items.Add(treasureItem);
+			}
+			else {
+				// Else, give them a treasure specific item.
+				treasureItem.Name = "Elf Hat";
+				treasureItem.Attack = 0;
+				treasureItem.Defense = 12;
+				treasureItem.ImageSrc = "/images/ElfHat.png";
+				gameState.Player.Items.Add(treasureItem);
+			}
+
+			// Tell player what happened
+			gameState.AddMessage("You gained: " + randPotions + " Health Potion(s) and " + treasureItem.Name + "!");
+			// Ensure player can leave
+			gameState.IsLocationComplete = true;
+		}
+
+		/// <summary>Player skips treasure chest, updates the game state, then returns a message.</summary>
+		public void PlayerSkipTreasure(GameState gameState) {
+			gameState.AddMessage("Better safe than sorry...");
+			gameState.IsLocationComplete = true;
+		}
+
 		public void RespawnPlayer(GameState gameState) {
 			// Reset player health and potions back to max
-			gameState.Player.CurrentHealth=gameState.Player.MaxHealth;
+			gameState.Player.CurrentHealth = gameState.Player.MaxHealth;
 			// Reset player's potions to 2
-			gameState.Player.HealthPotions=2;
+			gameState.Player.HealthPotions = 2;
 			// Clear messages from previous life.
 			gameState.ClearMessages();
 			// Restart the player at the first location.

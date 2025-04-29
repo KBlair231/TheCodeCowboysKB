@@ -6,6 +6,7 @@ let actionButtonDisplay;
 let backgroundImage;
 let campsiteButtonDisplay;
 let eventButtonDisplay;
+let treasureButtonDisplay;
 let dialogBox;
 //Player action buttons
 let attackBtn;
@@ -14,6 +15,8 @@ let restBtn;
 let skipRestBtn;
 let acceptBtn;
 let denyBtn;
+let openTreasureBtn;
+let skipTreasureBtn;
 
 //----------- LOAD UI ELEMENTS AND ADD EVENT LISTENERS ---------------------------------------------------------------------------------------
 
@@ -25,6 +28,7 @@ document.addEventListener("DOMContentLoaded", () => {
 	backgroundImage = document.getElementById("bg-image");
 	campsiteButtonDisplay = document.getElementById("campsite-button-display");
 	eventButtonDisplay = document.getElementById("event-button-display");
+	treasureButtonDisplay = document.getElementById("treasure-button-display");
 	dialogBox = document.getElementById("dialog-box");
 	//Grab all the player action buttons from the DOM on load.
 	attackBtn = document.getElementById("attack-btn");
@@ -33,6 +37,8 @@ document.addEventListener("DOMContentLoaded", () => {
 	skipRestBtn = document.getElementById("skip-rest-btn");
 	acceptBtn = document.getElementById("accept-btn");
 	denyBtn = document.getElementById("deny-btn");
+	openTreasureBtn = document.getElementById("open-treasure-btn");
+	skipTreasureBtn = document.getElementById("skip-treasure-btn");
 	//Add all player action button event listeners on load
 	attackBtn.attachPlayerAction('attack');
 	healBtn.attachPlayerAction('heal');
@@ -40,6 +46,8 @@ document.addEventListener("DOMContentLoaded", () => {
 	skipRestBtn.attachPlayerAction('skip-rest');
 	acceptBtn.attachPlayerAction('accept');
 	denyBtn.attachPlayerAction('deny');
+	openTreasureBtn.attachPlayerAction('open-treasure');
+	skipTreasureBtn.attachPlayerAction('skip-treasure');
 });
 
 //----------- REFRESH DISPLAY ---------------------------------------------------------------------------------------
@@ -57,6 +65,8 @@ function refreshDisplay() {
 	skipRestBtn.syncButtonState(gameState.inCampsite && !gameState.isLocationComplete);
 	acceptBtn.syncButtonState(gameState.inEvent && !gameState.isLocationComplete);
 	denyBtn.syncButtonState(gameState.inEvent && !gameState.isLocationComplete);
+	openTreasureBtn.syncButtonState(gameState.inTreasure && !gameState.isLocationComplete);
+	skipTreasureBtn.syncButtonState(gameState.inTreasure && !gameState.isLocationComplete);
 	//Sync UI visibility (visible/hidden).
 	playerDisplay.syncVisibility(gameState.player.currentHealth > 0);
 	enemyDisplay.syncVisibility(gameState.inCombat && gameState.enemy.currentHealth > 0);
@@ -64,6 +74,7 @@ function refreshDisplay() {
 	backgroundImage.syncVisibility(gameState.inCampsite && !gameState.isLocationComplete);
 	campsiteButtonDisplay.syncVisibility(gameState.inCampsite);
 	eventButtonDisplay.syncVisibility(gameState.inEvent);
+	treasureButtonDisplay.syncVisibility(gameState.inTreasure);
 	//This will be merged into the sync pattern above at some point.
 	hideRespawnModal();
 	if (gameState.player.currentHealth <= 0) { 

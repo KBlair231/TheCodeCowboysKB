@@ -11,12 +11,12 @@ namespace PromptQuest.Services {
 		private static readonly List<MapNode> _mapNodes = new List<MapNode>
 			{
 					new MapNode { MapNodeId = 1 },
-					new MapNode { MapNodeId = 2 },
+					new MapNode { MapNodeId = 2, NodeType = "Elite"},
 					new MapNode { MapNodeId = 3, NodeType = "Event" },
 					new MapNode { MapNodeId = 4 },
 					new MapNode { MapNodeId = 5, NodeType = "Campsite" },
-					new MapNode { MapNodeId = 6 },
-					new MapNode { MapNodeId = 7 , NodeType = "Elite"},
+					new MapNode { MapNodeId = 6, NodeType = "Treasure"},
+					new MapNode { MapNodeId = 7, NodeType = "Elite" },
 					new MapNode { MapNodeId = 8, NodeType = "Campsite" },
 					new MapNode { MapNodeId = 9 },
 					new MapNode { MapNodeId = 10, NodeType = "Boss" }
@@ -56,20 +56,27 @@ namespace PromptQuest.Services {
 			gameState.InCombat = false;
 			gameState.InCampsite = false;
 			gameState.InEvent = false;
+			gameState.InTreasure = false;
 			// Check if the player is on a campsite or event node
 			var currentNode = _mapNodes.FirstOrDefault(node => node.MapNodeId == gameState.PlayerLocation);
-			if (currentNode != null && currentNode.NodeType == "Campsite") {
+			if(currentNode != null && currentNode.NodeType == "Campsite") {
 				gameState.AddMessage("You have found a campsite. Rest here to heal 30% of your maximum HP and refill your health potions.");
 				gameState.InCampsite = true;
 				return;
 			}
-			if (currentNode != null && currentNode.NodeType == "Event") {
+			if(currentNode != null && currentNode.NodeType == "Event") {
 				gameState.AddMessage("A prickly bush lies in your path. A few red objects shimmer from fairly deep inside.");
 				gameState.AddMessage("Reach in and grab them?");
 				gameState.InEvent = true;
 				return;
 			}
-			if (currentNode.NodeType == "Enemy" || currentNode.NodeType == "Boss" || currentNode.NodeType == "Elite") {
+			if(currentNode != null && currentNode.NodeType == "Treasure") {
+				gameState.AddMessage("You find a chest during your travels!");
+				gameState.AddMessage("Open the chest?");
+				gameState.InTreasure = true;
+				return;
+			}
+			if(currentNode.NodeType == "Enemy" || currentNode.NodeType == "Boss" || currentNode.NodeType == "Elite") {
 				gameState.InCombat = true;
 			}
 		}

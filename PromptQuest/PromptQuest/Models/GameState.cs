@@ -32,6 +32,8 @@ namespace PromptQuest.Models {
 		public bool InCampsite { get; set; } = false;
 		///<summary> Whether or not the player is in an event. </summary>
 		public bool InEvent { get; set; } = false;
+		///<summary> Whether or not the player is in a treasure node. </summary>
+		public bool InTreasure { get; set; } = false;
 		///<summary> Whether or not it is the player's turn. </summary>
 		public bool IsPlayersTurn { get; set; } = false;
 		///<summary> The mapNodeId of the mapNode the player is currently at. </summary>
@@ -45,7 +47,7 @@ namespace PromptQuest.Models {
 	/// <summary> Extension methods for the GameState model. </summary>
 	public static class GameStateExtensionMethods {
 		/// <summary> Adds a new message that will be show to the user. Max number is 50 for now.</summary>
-		public static void AddMessage(this GameState gameState,string message) {
+		public static void AddMessage(this GameState gameState, string message) {
 			List<string> listMessages = gameState.ListMessages.TakeLast(10).ToList(); //Keep last 10 messages only
 			listMessages.Add(message); //Add the new one.
 			gameState.StoredMessages = JsonConvert.SerializeObject(listMessages); //Serialize the list of messages into json so they can be stored in the db.
