@@ -9,6 +9,8 @@ let eventButtonDisplay;
 let treasureButtonDisplay;
 let dialogBox;
 let abilityCooldownIcon;
+let bleedingIndicator;
+let burningIndicator;
 //Player action buttons
 let attackBtn;
 let healBtn;
@@ -32,6 +34,8 @@ document.addEventListener("DOMContentLoaded", () => {
 	eventButtonDisplay = document.getElementById("event-button-display");
 	treasureButtonDisplay = document.getElementById("treasure-button-display");
 	dialogBox = document.getElementById("dialog-box");
+	bleedingIndicator = document.getElementById("bleeding-indicator");
+	burningIndicator = document.getElementById("burning-indicator");
 	abilityCooldownIcon = document.getElementById("ability-cooldown-icon");
 	//Grab all the player action buttons from the DOM on load.
 	attackBtn = document.getElementById("attack-btn");
@@ -81,6 +85,9 @@ function refreshDisplay() {
 	campsiteButtonDisplay.syncVisibility(gameState.inCampsite);
 	eventButtonDisplay.syncVisibility(gameState.inEvent);
 	treasureButtonDisplay.syncVisibility(gameState.inTreasure);
+	// Check for status effects and update their visibility from the enum
+	bleedingIndicator.syncVisibility(gameState.enemy.statusEffects > 0 && (gameState.enemy.statusEffects == 1 || gameState.enemy.statusEffects == 3));
+	burningIndicator.syncVisibility(gameState.enemy.statusEffects > 0 && (gameState.enemy.statusEffects == 2 || gameState.enemy.statusEffects == 3));
 	//This will be merged into the sync pattern above at some point.
 	hideRespawnModal();
 	if (gameState.player.currentHealth <= 0) { 

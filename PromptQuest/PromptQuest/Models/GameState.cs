@@ -66,4 +66,10 @@ namespace PromptQuest.Models {
 			return JsonConvert.DeserializeObject<GameState>(json);
 		}
 	}
+	/// <summary> Bitwise Enum for Status Effects. </summary>
+	public enum StatusEffect {
+		None = 0,
+		Bleeding = 1,
+		Burning = 2
+	}
 }

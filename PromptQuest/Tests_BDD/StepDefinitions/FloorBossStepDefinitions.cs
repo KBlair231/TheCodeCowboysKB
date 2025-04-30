@@ -55,6 +55,9 @@ namespace Tests_BDD.StepDefinitions {
 			// Open Inventory
 			IWebElement menuButton = webDriver.FindElement(By.XPath("//button[normalize-space(text()='Menu')]"));
 			menuButton.Click();
+			// Click the inventory tab
+			IWebElement inventoryTab = webDriver.FindElement(By.Id("inventory-btn"));
+			inventoryTab.Click();
 			// Wait for the menu modal to show
 			PromptQuestTestMethods.WaitForElementToLoad(webDriver, "menu");
 			// Check for an item with the DarkStaff image

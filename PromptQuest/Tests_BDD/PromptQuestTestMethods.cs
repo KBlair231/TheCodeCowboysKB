@@ -55,6 +55,18 @@ namespace Tests_BDD {
 		}
 		/// <summary> Repeatedly clicks attack until the enemy is defeated. </summary>
 		public static void ClearRoom(IWebDriver webDriver) {
+			EquipItem(webDriver, 4);
+			// Click on the attack button until the enemy is dead.
+			while (webDriver.FindElement(By.Id("enemy-display")).Displayed && webDriver.FindElement(By.Id("action-button-display")).Displayed) {
+				if (int.Parse(webDriver.FindElement(By.Id("player-hp")).Text.Split("/")[0]) <= 10) {
+					IWebElement healthPotionButton = webDriver.FindElement(By.Id("health-potion-btn"));
+					healthPotionButton.Click();
+				}
+				AttackEnemy(webDriver);
+			}
+		}
+		/// <summary> Equip item in slot X. </summary>
+		public static void EquipItem(IWebDriver webDriver, int slot) {
 			// Equip better weapon from inventory
 			IWebElement menuButton = webDriver.FindElement(By.XPath("//button[normalize-space(text()='Menu')]"));
 			menuButton.Click();
@@ -72,47 +84,37 @@ namespace Tests_BDD {
 			// Close the menu
 			IWebElement closeButton = webDriver.FindElement(By.Id("menu-close"));
 			closeButton.Click();
-			// Click on the attack button until the enemy is dead.
-			while (webDriver.FindElement(By.Id("enemy-display")).Displayed && webDriver.FindElement(By.Id("action-button-display")).Displayed) {
-				IWebElement attackButton = webDriver.FindElement(By.Id("attack-btn"));
-				if (int.Parse(webDriver.FindElement(By.Id("player-hp")).Text.Split("/")[0]) <= 10) {
-					IWebElement healthPotionButton = webDriver.FindElement(By.Id("health-potion-btn"));
-					healthPotionButton.Click();
-				}
-				attackButton.Click();
-			}
+		}
+		/// <summary> Attack Enemy</summary>
+		public static void AttackEnemy(IWebDriver webDriver) {
+			IWebElement attackButton = webDriver.FindElement(By.Id("attack-btn"));
+			attackButton.Click();
 		}
 
 		/// <summary> Gets you to the boss room with full health/potions. </summary>
 		public static void SkipToBoss(IWebDriver webDriver) {
-			// Navigate to the game page
-			webDriver.Navigate().GoToUrl("https://localhost:7186/Game/SkipToBoss");
-			// Defeat the room's enemy
-			ClearRoom(webDriver);
-			// Click the menu button
-			IWebElement menuButton = webDriver.FindElement(By.XPath("//button[normalize-space(text()='Menu')]"));
-			menuButton.Click();
-			// Wait for the menu modal to show
-			WaitForElementToLoad(webDriver, "menu");
-			// Click the map tab
-			IWebElement mapTab = webDriver.FindElement(By.Id("map-btn"));
-			mapTab.Click();
-			// Wait for the map modal to show
-			WaitForElementToLoad(webDriver, "map");
-			// Click the tenth room with attribute data-node-id="10"
-			IWebElement tenthNode = webDriver.FindElement(By.XPath("//button[@data-node-id='10']"));
-			tenthNode.Click();
-			// Close the menu
-			IWebElement closeButton = webDriver.FindElement(By.Id("menu-close"));
-			closeButton.Click();
-			// Wait for the boss to spawn
-			WaitForElementToLoad(webDriver, "attack-btn");
+			MoveToRoom(webDriver, 10);
 		}
 
 		/// <summary> Moves user to the specified roomNumber. </summary>
 		public static void MoveToRoom(IWebDriver webDriver, int targetRoom) {
 			// Navigate to the game page
 			webDriver.Navigate().GoToUrl($"https://localhost:7186/Game/SkipToRoom?targetRoom={targetRoom}");
+		}
+
+		/// <summary> Runs the test X times before failing. </summary>
+		public static void Retry(Action action, int maxRetries) {
+			int retryCount = 0;
+			while (retryCount < maxRetries) {
+				try {
+					action.Invoke();
+					return;
+				}
+				catch (Exception) {
+					retryCount++;
+				}
+			}
+			throw new Exception($"Action failed after {maxRetries} retries.");
 		}
 	}
 }

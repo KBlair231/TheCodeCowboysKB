@@ -1,4 +1,5 @@
-﻿using PromptQuest.Models;
+﻿using Microsoft.AspNetCore.Authorization.Infrastructure;
+using PromptQuest.Models;
 
 namespace PromptQuest.Services {
 
@@ -49,8 +50,9 @@ namespace PromptQuest.Services {
 			// Calculate damage as attack - defense.
 			int damage = (int)Math.Floor((double)(gameState.Player.Attack + item.Attack)*attackMult) - gameState.Enemy.Defense;
 			// If attack is less than one make it one.
-			if(damage < 1)
+			if (damage < 1) {
 				damage = 1;
+			}
 			// Update enemy health.
 			gameState.Enemy.CurrentHealth -= damage;
 			//decrement ability cooldown if ability was not used
@@ -60,6 +62,16 @@ namespace PromptQuest.Services {
 			}
 			// Return the result to the user.
 			gameState.AddMessage($"You attacked the {gameState.Enemy.Name} for {damage} damage");
+			if (item.StatusEffects != StatusEffect.None) {
+				Random random = new Random();
+				int statusEffectChance = random.Next(0, 5); // 25% chance to apply status effect
+				if (statusEffectChance == 1) {
+					if (!gameState.Enemy.StatusEffects.HasFlag(item.StatusEffects)) {
+						gameState.AddMessage($"The {gameState.Enemy.Name} is now affected by {item.StatusEffects.ToString()}!");
+						gameState.Enemy.StatusEffects = item.StatusEffects;
+					}
+				}
+			}
 			// Check if enemy died.
 			
 			if (gameState.Enemy.CurrentHealth <= 0) {
@@ -70,12 +82,16 @@ namespace PromptQuest.Services {
 					Item bossItem = GetBossItem(gameState); // Get the boss item.
 					gameState.AddMessage($"You picked up the {gameState.Enemy.Name}'s {bossItem.Name}!");
 					gameState.Player.Items.Add(bossItem);
-				} else if(gameState.PlayerLocation == 7) {
+					return;
+				} 
+				if(gameState.PlayerLocation == 7) {
 					Item eliteItem = GetEliteItem(gameState); // Get the elite's item.
 					gameState.AddMessage($"You picked up the {gameState.Enemy.Name}'s {eliteItem.Name}!");
 					gameState.Player.Items.Add(eliteItem);
+					return;
 				}
 			}
+			
 			gameState.IsPlayersTurn = false;
 		}
 		/// <summary>activates the player's ability</summary>
@@ -255,8 +271,35 @@ namespace PromptQuest.Services {
 				gameState.IsPlayersTurn = true; // Zero this field out because combat is over.
 				gameState.AddMessage("You have been defeated.");
 			}
+			// Apply status effect damage to the enemy
+			if (gameState.Enemy.StatusEffects.HasFlag(StatusEffect.Burning)) { 
+				gameState.Enemy.CurrentHealth -= 2;
+				gameState.Enemy.StatusEffects &= ~StatusEffect.Burning; // Remove the burning effect
+				gameState.AddMessage($"The {gameState.Enemy.Name} took 2 damage from burning and the flame extinguished.");
+			}
+			if (gameState.Enemy.StatusEffects.HasFlag(StatusEffect.Bleeding)) {
+				gameState.Enemy.CurrentHealth -= 1;
+				gameState.AddMessage($"The {gameState.Enemy.Name} took 1 damage from their untreated wound.");
+			}
 			// Player didn't die, so now it is their turn.
 			gameState.IsPlayersTurn = true;
+			// Check if enemy died.
+			if(gameState.Enemy.CurrentHealth <= 0) {
+				gameState.IsLocationComplete = true; // Player has completed the current area.
+				gameState.AddMessage($"You have defeated the {gameState.Enemy.Name}! Check your map to see where you're going next.");
+				if (gameState.PlayerLocation == 10) {
+					Item bossItem = GetBossItem(gameState); // Get the boss item.
+					gameState.AddMessage($"You picked up the {gameState.Enemy.Name}'s {bossItem.Name}!");
+					gameState.Player.Items.Add(bossItem);
+					return;
+				}
+				if (gameState.PlayerLocation == 7) {
+					Item eliteItem = GetEliteItem(gameState); // Get the elite's item.
+					gameState.AddMessage($"You picked up the {gameState.Enemy.Name}'s {eliteItem.Name}!");
+					gameState.Player.Items.Add(eliteItem);
+					return;
+				}
+			}
 		}
 
 		#endregion Enemy Action Methods - end
@@ -372,13 +415,15 @@ namespace PromptQuest.Services {
 				bossItem.Attack = 8;
 				bossItem.Defense = 3;
 				bossItem.ImageSrc = "/images/DarkElvenSword.png";
+				bossItem.StatusEffects = StatusEffect.Bleeding;
 			}
 			else {
 				// If the player is on the third floor, give them a boss specific item.
 				bossItem.Name = "Shadow Spear";
 				bossItem.Attack = 12;
 				bossItem.Defense = 6;
-				bossItem.ImageSrc = "/images/DarkSpear.png"; 
+				bossItem.ImageSrc = "/images/DarkSpear.png";
+				bossItem.StatusEffects = StatusEffect.Bleeding;
 			}
 			return bossItem;
 		}
@@ -391,6 +436,7 @@ namespace PromptQuest.Services {
 				eliteItem.Attack = 5;
 				eliteItem.Defense = 1;
 				eliteItem.ImageSrc = "/images/BerserkerAxe.png";
+				eliteItem.StatusEffects = StatusEffect.Bleeding;
 			}
 			else if (gameState.Floor == 2) {
 				// If the player is on the second floor, give them an elite specific item.
@@ -405,6 +451,7 @@ namespace PromptQuest.Services {
 				eliteItem.Attack = 10;
 				eliteItem.Defense = 5;
 				eliteItem.ImageSrc = "/images/DemonCleaver.png";
+				eliteItem.StatusEffects = StatusEffect.Bleeding;
 			}
 			return eliteItem;
 		}

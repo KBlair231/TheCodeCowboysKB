@@ -199,10 +199,18 @@ function selectItem(item, index) {
 	document.getElementById("item-attack").textContent = item.attack;
 	document.getElementById("item-defense").textContent = item.defense;
 	document.getElementById("item-image").src = item.imageSrc;
+	document.getElementById("item-status-effects").textContent = statusEffectCheck(item.statusEffects);
 	//Show item details
 	itemDetails.syncVisibility(selectedItemIndex != -1);
 }
-
+function statusEffectCheck(item) {
+	textReturn = 'Chance on Hit: ';
+	if (item == 1) {
+		return textReturn + 'Bleeding';	// Can't have 'Chance on Hit: ' + on line 202 because items without a status effect will
+	} else if (item == 2) {					// display 'Chance on Hit: undefined'
+		return textReturn + 'Burning';
+	}
+}
 async function equipItem() {
 	// If there is no selected item then do nothing.
 	if (selectedItemIndex == -1) {
