@@ -33,6 +33,10 @@ namespace PromptQuest.Services {
 
 		// Moves the player to the mapNode with the given mapNodeId, if mapNodeId isn't provided, the player's location (mapNodeId) increases by 1.
 		public void MovePlayer(GameState gameState, int mapNodeId = 0) {
+			MapNode mapNodeCur = _mapNodes.Find(mn => mn.MapNodeId == gameState.PlayerLocation);
+			if(!mapNodeCur.ConnectedNodes.Contains(mapNodeId)) {
+				return;
+			}
 			// Just for now to keep track of visited nodes.
 			gameState.AddMapNodeIdVisited(gameState.PlayerLocation);
 			// Check if the player has reached the end of the map.

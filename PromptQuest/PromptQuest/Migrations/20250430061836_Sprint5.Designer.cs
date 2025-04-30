@@ -11,8 +11,8 @@ using PromptQuest.Models;
 namespace PromptQuest.Migrations
 {
     [DbContext(typeof(GameStateDbContext))]
-    [Migration("20250425055215_AddPlayerImage")]
-    partial class AddPlayerImage
+    [Migration("20250430061836_Sprint5")]
+    partial class Sprint5
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -52,6 +52,9 @@ namespace PromptQuest.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<int>("StatusEffects")
+                        .HasColumnType("int");
+
                     b.HasKey("EnemyId");
 
                     b.ToTable("Enemies");
@@ -77,6 +80,9 @@ namespace PromptQuest.Migrations
                     b.Property<bool>("InEvent")
                         .HasColumnType("bit");
 
+                    b.Property<bool>("InTreasure")
+                        .HasColumnType("bit");
+
                     b.Property<bool>("IsLocationComplete")
                         .HasColumnType("bit");
 
@@ -88,6 +94,10 @@ namespace PromptQuest.Migrations
 
                     b.Property<int>("PlayerLocation")
                         .HasColumnType("int");
+
+                    b.Property<string>("StoredMapNodeIdsVisited")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("StoredMessages")
                         .IsRequired()
@@ -134,6 +144,12 @@ namespace PromptQuest.Migrations
                     b.Property<int>("PlayerId")
                         .HasColumnType("int");
 
+                    b.Property<int>("StatusEffects")
+                        .HasColumnType("int");
+
+                    b.Property<int>("itemType")
+                        .HasColumnType("int");
+
                     b.HasKey("ItemId");
 
                     b.HasIndex("PlayerId");
@@ -149,6 +165,9 @@ namespace PromptQuest.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("PlayerId"));
 
+                    b.Property<int>("AbilityCooldown")
+                        .HasColumnType("int");
+
                     b.Property<int>("Attack")
                         .HasColumnType("int");
 
@@ -160,6 +179,9 @@ namespace PromptQuest.Migrations
                         .HasColumnType("int");
 
                     b.Property<int>("Defense")
+                        .HasColumnType("int");
+
+                    b.Property<int>("DefenseBuff")
                         .HasColumnType("int");
 
                     b.Property<int>("HealthPotions")
@@ -175,6 +197,9 @@ namespace PromptQuest.Migrations
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("StatusEffects")
+                        .HasColumnType("int");
 
                     b.HasKey("PlayerId");
 
