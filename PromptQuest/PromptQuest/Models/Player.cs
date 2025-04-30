@@ -15,6 +15,7 @@ namespace PromptQuest.Models {
 		public int MaxHealth { get; set; }
 		public int CurrentHealth { get; set; }
 		public int Defense { get; set; }
+		public int DefenseBuff { get; set; } = 0; // For temporary defense increases that last only one hit, resets each combat
 		public int Attack { get; set; }
 		public int AbilityCooldown { get; set; }
 		[Required]

@@ -21,13 +21,13 @@ namespace PromptQuest.Services {
 	}
 
 	public class CombatService : ICombatService {
-
 		/// <summary>Initiates combat between the player and an enemy and updates the game state. </summary>
 		public void StartCombat(GameState gameState) {
 			gameState.InCombat = true;
 			gameState.IsPlayersTurn = true; // Player always goes first, for now.
 			gameState.Player.AbilityCooldown = 0; //reset player ability, may be removed down the line
-			if(gameState.PlayerLocation == 2 || gameState.PlayerLocation == 7) {
+			gameState.Player.DefenseBuff = 0; //reset player defense buff
+			if (gameState.PlayerLocation == 2 || gameState.PlayerLocation == 7) {
 				gameState.Enemy = GetElite(gameState);
 				gameState.AddMessage($"You have been attacked by the {gameState.Enemy.Name}!"); // Let the user know that combat started.
 				return;
@@ -104,6 +104,11 @@ namespace PromptQuest.Services {
 					gameState.AddMessage($"You used your ability! You power up and perform a strong attack!");
 					PlayerAttack(gameState, 2, false);
 					gameState.Player.AbilityCooldown = 3;
+					break;
+				case "mage"://gain +6 defense for the next attack
+					gameState.AddMessage($"You used your ability! You cast a shield spell to gain +6 defense against the next attack!");
+					gameState.Player.DefenseBuff += 6;
+					gameState.Player.AbilityCooldown = 4;
 					break;
 				default:
 					gameState.AddMessage("Your class has no ability.");
@@ -263,7 +268,11 @@ namespace PromptQuest.Services {
 			// Get the player's equipped item
 			Item item = gameState.Player.ItemEquipped;
 			// Calculate damage as attack - defense.
-			int damage = gameState.Enemy.Attack - gameState.Player.Defense - item.Defense;
+			int damage = gameState.Enemy.Attack - gameState.Player.Defense - item.Defense - gameState.Player.DefenseBuff;
+			if(gameState.Player.DefenseBuff>0){
+				gameState.AddMessage("Your shield blocked incoming damage");
+			}
+			gameState.Player.DefenseBuff = 0;//reset the defense buff after blocking one hit
 			// If attack is less than one make it one.
 			if(damage < 1)
 				damage = 1;

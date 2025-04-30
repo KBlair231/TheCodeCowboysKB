@@ -39,6 +39,11 @@ namespace PromptQuest.Tests_BDD.StepDefinitions
 		{
 			_gameState.Player.AbilityCooldown = cooldown;
 		}
+		[Given("the user has a defense buff of {int}")]
+		public void GivenTheUserHasADefenseBuffOf(int defenseBuff)
+		{
+			_gameState.Player.DefenseBuff = defenseBuff;
+		}
 
 		[When("the user performs an {string}")]
 		public void WhenTheUserPerforms(string action)
@@ -61,6 +66,11 @@ namespace PromptQuest.Tests_BDD.StepDefinitions
 		{
 			_combatService.StartCombat(_gameState);
 		}
+		[When("the user is attacked")]
+		public void WhenTheUserIsAttacked()
+		{
+			_combatService.EnemyAttack(_gameState);
+		}
 
 		[Then("the enemy should receive damage equal to the user's attack times {int} minus enemy defense")]
 		public void ThenTheEnemyShouldReceiveDamageEqualToTheUsersAttackTimesMinusEnemyDefense(int mult)
@@ -75,6 +85,20 @@ namespace PromptQuest.Tests_BDD.StepDefinitions
 		public void ThenTheAbilityCooldownShouldBeSetTo(int cooldown)
 		{
 			Assert.AreEqual(cooldown, _gameState.Player.AbilityCooldown, _resultMessage);
+		}
+		[Then("the defense buff should be set to {int}")]
+		public void ThenTheDefenseBuffShouldBeSetTo(int defenseBuff)
+		{
+			Assert.AreEqual(defenseBuff, _gameState.Player.DefenseBuff, _resultMessage);
+		}
+		[Then("the damage received should be reduced by the defense buff")]
+		public void ThenTheUserShouldReceiveDamageEqualToTheEnemysAttackMinusPlayerDefense()
+		{
+			int expectedDamage = _gameState.Enemy.Attack - (_gameState.Player.Defense + _gameState.Player.ItemEquipped.Defense-_gameState.Player.DefenseBuff);
+			if (expectedDamage < 1) expectedDamage = 1;
+
+			int actualDamage = _gameState.Player.MaxHealth - _gameState.Player.CurrentHealth;
+			Assert.AreEqual(expectedDamage, actualDamage, _resultMessage);
 		}
 	}
 }

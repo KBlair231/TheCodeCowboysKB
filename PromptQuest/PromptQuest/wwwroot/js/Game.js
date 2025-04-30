@@ -135,7 +135,7 @@ function refreshPlayerDisplay() {
 	document.querySelectorAll(".player-image").forEach(el => { el.alt = gameState.player.name; });
 	const equippedItem = gameState.player.itemEquipped
 	document.querySelectorAll(".player-attack").forEach(el => { el.textContent = gameState.player.attack + equippedItem?.attack ?? 0; });
-	document.querySelectorAll(".player-defense").forEach(el => { el.textContent = gameState.player.defense + equippedItem?.defense ?? 0; });
+	document.querySelectorAll(".player-defense").forEach(el => { el.textContent = gameState.player.defense + gameState.player.defenseBuff + equippedItem?.defense ?? 0; });
 	document.querySelectorAll(".player-hp").forEach(el => { el.textContent = gameState.player.currentHealth + "/" + gameState.player.maxHealth + " HP"; });
 	document.getElementById("player-health-potions").textContent = gameState.player.healthPotions;
 	abilityCooldownIcon.src = "/images/" +gameState.player.abilityCooldown + "_6_Clock.png"
