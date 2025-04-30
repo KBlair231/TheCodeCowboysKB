@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations.Schema;
+﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace PromptQuest.Models {
 	public class Item {
@@ -10,5 +11,13 @@ namespace PromptQuest.Models {
 		public int Defense { get; set; } = 0;
 		public string ImageSrc { get; set; } = "/images/PromptQuestLogo.png";
 		public StatusEffect StatusEffects { get; set; } = StatusEffect.None;
+		public ItemType itemType { get; set; } = ItemType.Weapon;
+	}
+	public enum ItemType {
+		Weapon = 0,
+		Boots = 1,
+		Legs = 2,
+		Chest = 3,
+		Helm = 4
 	}
 }

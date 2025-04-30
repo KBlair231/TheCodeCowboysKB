@@ -42,10 +42,10 @@ namespace Tests_BDD {
 			//Item name
 			IWebElement itemName = inventoryDisplay.FindElement(By.Id("item-name"));
 			Assert.IsTrue(!string.IsNullOrEmpty(itemName.Text),"Item name is empty.");
-			Assert.IsTrue(itemName.Text=="Jeweled Helmet","Item name is incorrect");
+			Assert.IsTrue(itemName.Text=="Jeweled Boots","Item name is incorrect");
 			//Item image
 			IWebElement itemImage = inventoryDisplay.FindElement(By.Id("item-image"));
-			Assert.AreEqual("https://localhost:7186/images/PlaceholderItem1.png",itemImage.GetAttribute("src"),"Item image source is incorrect.");
+			Assert.AreEqual("https://localhost:7186/images/BaseBoots.png",itemImage.GetAttribute("src"),"Item image source is incorrect.");
 			//Item defense icon
 			IWebElement shieldIcon = inventoryDisplay.FindElement(By.Id("shield-icon"));
 			Assert.IsNotNull(shieldIcon,"Shield icon element is missing.");
@@ -54,7 +54,7 @@ namespace Tests_BDD {
 			IWebElement itemDefense = inventoryDisplay.FindElement(By.Id("item-defense"));
 			Assert.IsNotNull(itemDefense,"Item defense element is missing.");
 			Assert.IsTrue(!string.IsNullOrEmpty(itemDefense.Text),"Item defense value is empty.");
-			Assert.IsTrue(itemDefense.Text=="2","Item defense value is empty.");
+			Assert.IsTrue(itemDefense.Text=="1","Item defense value is empty.");
 			//Item attack icon
 			IWebElement swordIcon = inventoryDisplay.FindElement(By.Id("sword-icon"));
 			Assert.IsNotNull(swordIcon,"Sword icon element is missing.");
@@ -100,5 +100,12 @@ namespace Tests_BDD {
 			IWebElement equippedSlot = webDriver.FindElement(By.Id("equipped-item"));
 			Assert.IsTrue(string.IsNullOrEmpty(equippedSlot.Text));
 		}
+
+		[Then("the item should display its type")]
+		public void ThenTheItemShouldDisplayItsType() {
+			IWebElement itemtype = webDriver.FindElement(By.Id("item-type"));
+			Assert.IsFalse(string.IsNullOrEmpty(itemtype.ToString()), "Item type element is missing.");
+		}
+
 	}
 }

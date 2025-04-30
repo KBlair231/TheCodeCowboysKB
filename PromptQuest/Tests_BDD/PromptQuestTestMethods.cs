@@ -55,7 +55,7 @@ namespace Tests_BDD {
 		}
 		/// <summary> Repeatedly clicks attack until the enemy is defeated. </summary>
 		public static void ClearRoom(IWebDriver webDriver) {
-			EquipItem(webDriver, 4);
+			EquipItem(webDriver, 7);
 			// Click on the attack button until the enemy is dead.
 			while (webDriver.FindElement(By.Id("enemy-display")).Displayed && webDriver.FindElement(By.Id("action-button-display")).Displayed) {
 				if (int.Parse(webDriver.FindElement(By.Id("player-hp")).Text.Split("/")[0]) <= 10) {
@@ -76,7 +76,7 @@ namespace Tests_BDD {
 			IWebElement inventoryTab = webDriver.FindElement(By.Id("inventory-btn"));
 			inventoryTab.Click();
 			// Click weapon
-			IWebElement weaponSlot = webDriver.FindElement(By.Id("inventory-slot-4"));
+			IWebElement weaponSlot = webDriver.FindElement(By.Id($"inventory-slot-{slot}"));
 			weaponSlot.Click();
 			// Click Equip Item
 			IWebElement equipButton = webDriver.FindElement(By.Id("equip-btn"));

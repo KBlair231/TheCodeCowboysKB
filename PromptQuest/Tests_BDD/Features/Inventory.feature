@@ -20,3 +20,9 @@ Scenario: Trying to equip no item
 	When I don't have an item selected
 	And I click the equip button
 	Then nothing should happen
+
+	@scrum-123
+Scenario: Add slots to items
+	Given I am on the inventory tab
+	When I click on an item
+	Then the item should display its type

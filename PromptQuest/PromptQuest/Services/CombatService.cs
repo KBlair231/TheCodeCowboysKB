@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Authorization.Infrastructure;
+﻿using System.ComponentModel;
+using Microsoft.AspNetCore.Authorization.Infrastructure;
 using PromptQuest.Models;
 
 namespace PromptQuest.Services {
@@ -197,6 +198,7 @@ namespace PromptQuest.Services {
 				treasureItem.Attack = 2;
 				treasureItem.Defense = 10;
 				treasureItem.ImageSrc = "/images/BananaCrown.png";
+				treasureItem.itemType = ItemType.Helm;
 				gameState.Player.Items.Add(treasureItem);
 			}
 			else if(randItem == 2) {
@@ -205,6 +207,7 @@ namespace PromptQuest.Services {
 				treasureItem.Attack = 7;
 				treasureItem.Defense = 2;
 				treasureItem.ImageSrc = "/images/GothicTShirt.png";
+				treasureItem.itemType = ItemType.Chest;
 				gameState.Player.Items.Add(treasureItem);
 			}
 			else if(randItem == 3) {
@@ -213,6 +216,7 @@ namespace PromptQuest.Services {
 				treasureItem.Attack = 5;
 				treasureItem.Defense = 5;
 				treasureItem.ImageSrc = "/images/GildedBoots.png";
+				treasureItem.itemType = ItemType.Boots;
 				gameState.Player.Items.Add(treasureItem);
 			}
 			else {
@@ -221,6 +225,7 @@ namespace PromptQuest.Services {
 				treasureItem.Attack = 0;
 				treasureItem.Defense = 12;
 				treasureItem.ImageSrc = "/images/ElfHat.png";
+				treasureItem.itemType = ItemType.Helm;
 				gameState.Player.Items.Add(treasureItem);
 			}
 

@@ -200,6 +200,7 @@ function selectItem(item, index) {
 	document.getElementById("item-defense").textContent = item.defense;
 	document.getElementById("item-image").src = item.imageSrc;
 	document.getElementById("item-status-effects").textContent = statusEffectCheck(item.statusEffects);
+	document.getElementById("item-type").textContent = 'Type: ' + itemTypeCheck(item.itemType);
 	//Show item details
 	itemDetails.syncVisibility(selectedItemIndex != -1);
 }
@@ -209,6 +210,19 @@ function statusEffectCheck(item) {
 		return textReturn + 'Bleeding';	// Can't have 'Chance on Hit: ' + on line 202 because items without a status effect will
 	} else if (item == 2) {					// display 'Chance on Hit: undefined'
 		return textReturn + 'Burning';
+	}
+}
+function itemTypeCheck(item) {
+	if (item == 0) {
+		return 'Weapon';
+	} else if (item == 1) {
+		return 'Boots';
+	} else if (item == 2) {
+		return 'Legs';
+	} else if (item == 3) {
+		return 'Chest';
+	} else if (item == 4) {
+		return 'Helm';
 	}
 }
 async function equipItem() {
