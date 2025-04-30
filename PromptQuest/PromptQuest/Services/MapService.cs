@@ -9,39 +9,39 @@ namespace PromptQuest.Services {
 	public class MapService : IMapService {
 
 		private static readonly List<MapNode> _mapNodes = new List<MapNode>
-			{
-					new MapNode { MapNodeId = 1 },
-					new MapNode { MapNodeId = 2, NodeType = "Elite"},
-					new MapNode { MapNodeId = 3, NodeType = "Event" },
-					new MapNode { MapNodeId = 4 },
-					new MapNode { MapNodeId = 5, NodeType = "Campsite" },
-					new MapNode { MapNodeId = 6, NodeType = "Treasure"},
-					new MapNode { MapNodeId = 7, NodeType = "Elite" },
-					new MapNode { MapNodeId = 8, NodeType = "Campsite" },
-					new MapNode { MapNodeId = 9 },
-					new MapNode { MapNodeId = 10, NodeType = "Boss" }
-			};
-		private static readonly List<MapEdge> _mapEdges = new List<MapEdge>() {
-					new MapEdge { MapNodeIdStart = 1, MapNodeIdEnd = 2 },
-					new MapEdge { MapNodeIdStart = 2, MapNodeIdEnd = 3 },
-					new MapEdge { MapNodeIdStart = 3, MapNodeIdEnd = 4 },
-					new MapEdge { MapNodeIdStart = 4, MapNodeIdEnd = 5 },
-					new MapEdge { MapNodeIdStart = 5, MapNodeIdEnd = 6 },
-					new MapEdge { MapNodeIdStart = 6, MapNodeIdEnd = 7 },
-					new MapEdge { MapNodeIdStart = 7, MapNodeIdEnd = 8 },
-					new MapEdge { MapNodeIdStart = 8, MapNodeIdEnd = 9 },
-					new MapEdge { MapNodeIdStart = 9, MapNodeIdEnd = 10 }
-				};
-		private static readonly Map _map = new Map() { ListMapNodes = _mapNodes, ListMapEdges = _mapEdges };
+		{
+			new MapNode { MapNodeId = 1, NodeType = "Enemy", ConnectedNodes = {2, 3}, NodeHeight = 2, NodeDistance = 1},
+			new MapNode { MapNodeId = 2, NodeType = "Enemy", ConnectedNodes = {4, 5}, NodeHeight = 1, NodeDistance = 2},
+			new MapNode { MapNodeId = 3, NodeType = "Event", ConnectedNodes = {5, 6}, NodeHeight = 3, NodeDistance = 2},
+			new MapNode { MapNodeId = 4, NodeType = "Enemy", ConnectedNodes = {7}, NodeHeight = 1, NodeDistance = 3},
+			new MapNode { MapNodeId = 5, NodeType = "Campsite", ConnectedNodes = {7}, NodeHeight = 2, NodeDistance = 3},
+			new MapNode { MapNodeId = 6, NodeType = "Treasure", ConnectedNodes = {8}, NodeHeight = 4, NodeDistance = 3},
+			new MapNode { MapNodeId = 7, NodeType = "Enemy", ConnectedNodes = {9}, NodeHeight = 1, NodeDistance = 4},
+			new MapNode { MapNodeId = 8, NodeType = "Campsite", ConnectedNodes = {9}, NodeHeight = 3, NodeDistance = 4},
+			new MapNode { MapNodeId = 9, NodeType = "Enemy", ConnectedNodes = {10, 11}, NodeHeight = 2, NodeDistance = 5},
+			new MapNode { MapNodeId = 10, NodeType = "Enemy", ConnectedNodes = {12}, NodeHeight = 1, NodeDistance = 6},
+			new MapNode { MapNodeId = 11, NodeType = "Elite", ConnectedNodes = {12}, NodeHeight = 3, NodeDistance = 6},
+			new MapNode { MapNodeId = 12, NodeType = "Enemy", ConnectedNodes = {13, 14, 15}, NodeHeight = 2, NodeDistance = 7},
+			new MapNode { MapNodeId = 13, NodeType = "Treasure", ConnectedNodes = {16}, NodeHeight = 1, NodeDistance = 8},
+			new MapNode { MapNodeId = 14, NodeType = "Campsite", ConnectedNodes = {17}, NodeHeight = 2, NodeDistance = 8},
+			new MapNode { MapNodeId = 15, NodeType = "Event", ConnectedNodes = {17}, NodeHeight = 3, NodeDistance = 8},
+			new MapNode { MapNodeId = 16, NodeType = "Enemy", ConnectedNodes = {18}, NodeHeight = 1, NodeDistance = 9},
+			new MapNode { MapNodeId = 17, NodeType = "Treasure", ConnectedNodes = {18}, NodeHeight = 2, NodeDistance = 9},
+			new MapNode { MapNodeId = 18, NodeType = "Boss", ConnectedNodes = {}, NodeHeight = 2, NodeDistance = 10}
+		};
+		private static readonly Map _map = new Map() { ListMapNodes = _mapNodes };
 
 		// Moves the player to the mapNode with the given mapNodeId, if mapNodeId isn't provided, the player's location (mapNodeId) increases by 1.
 		public void MovePlayer(GameState gameState, int mapNodeId = 0) {
+			// Just for now to keep track of visited nodes.
+			gameState.AddMapNodeIdVisited(gameState.PlayerLocation);
 			// Check if the player has reached the end of the map.
 			int mapNodeIdFinal = _mapNodes.Max(x => x.MapNodeId);
 			gameState.IsLocationComplete = false;
 			if(gameState.PlayerLocation == mapNodeIdFinal) {
 				gameState.PlayerLocation = 1; // Reset the player location to the first room.
 				gameState.Floor++; // Increment the floor number.
+				gameState.ClearMapNodeIdsVisited();
 			}
 			else if(mapNodeId == 0) {
 				//Move forward one location. Only works for now because map is linear.

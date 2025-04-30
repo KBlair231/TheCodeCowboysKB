@@ -1,15 +1,14 @@
 namespace PromptQuest.Models {
 	public class Map {
 		public List<MapNode> ListMapNodes { get; set; } = new List<MapNode>();
-		public List<MapEdge> ListMapEdges { get; set; } = new List<MapEdge>();
+		public List<int> ListMapNodeIdsVisited { get; set; } = new List<int>();
 	}
 	public class MapNode {
 		public int MapNodeId { get; set; }
 		public bool IsLocked { get; set; } = true;
 		public string NodeType { get; set; } = "Enemy";
-	}
-	public class MapEdge {
-		public int MapNodeIdStart { get; set; }
-		public int MapNodeIdEnd { get; set; }
+		public List<int> ConnectedNodes { get; set; } = new List<int>();
+		public int NodeHeight { get; set; } = 0;
+		public int NodeDistance { get; set; } = 0;
 	}
 }

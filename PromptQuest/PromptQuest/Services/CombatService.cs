@@ -27,12 +27,12 @@ namespace PromptQuest.Services {
 			gameState.IsPlayersTurn = true; // Player always goes first, for now.
 			gameState.Player.AbilityCooldown = 0; //reset player ability, may be removed down the line
 			gameState.Player.DefenseBuff = 0; //reset player defense buff
-			if (gameState.PlayerLocation == 2 || gameState.PlayerLocation == 7) {
+			if(gameState.PlayerLocation == 11) {
 				gameState.Enemy = GetElite(gameState);
 				gameState.AddMessage($"You have been attacked by the {gameState.Enemy.Name}!"); // Let the user know that combat started.
 				return;
 			}
-			if(gameState.PlayerLocation != 10) {
+			if(gameState.PlayerLocation != 18) {
 				gameState.Enemy = GetEnemy(gameState);
 				gameState.AddMessage($"You have been attacked by the {gameState.Enemy.Name}!"); // Let the user know that combat started.
 				return;
@@ -79,13 +79,13 @@ namespace PromptQuest.Services {
 				gameState.IsPlayersTurn = true; // Zero this field out because combat is over.
 				gameState.IsLocationComplete = true; // Player has completed the current area.
 				gameState.AddMessage($"You have defeated the {gameState.Enemy.Name}! Check your map to see where you're going next.");
-				if(gameState.PlayerLocation == 10) {
+				if(gameState.PlayerLocation == 18) {
 					Item bossItem = GetBossItem(gameState); // Get the boss item.
 					gameState.AddMessage($"You picked up the {gameState.Enemy.Name}'s {bossItem.Name}!");
 					gameState.Player.Items.Add(bossItem);
 					return;
 				} 
-				if(gameState.PlayerLocation == 7) {
+				if(gameState.PlayerLocation == 11) {
 					Item eliteItem = GetEliteItem(gameState); // Get the elite's item.
 					gameState.AddMessage($"You picked up the {gameState.Enemy.Name}'s {eliteItem.Name}!");
 					gameState.Player.Items.Add(eliteItem);
@@ -290,6 +290,7 @@ namespace PromptQuest.Services {
 			if(gameState.Player.CurrentHealth < 1) {
 				gameState.IsPlayersTurn = true; // Zero this field out because combat is over.
 				gameState.AddMessage("You have been defeated.");
+				gameState.ClearMapNodeIdsVisited(); // Clear visited map nodes since the player died.
 			}
 			// Apply status effect damage to the enemy
 			if (gameState.Enemy.StatusEffects.HasFlag(StatusEffect.Burning)) { 

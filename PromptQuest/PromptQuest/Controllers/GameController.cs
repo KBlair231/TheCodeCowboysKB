@@ -86,8 +86,8 @@ namespace PromptQuest.Controllers {
 		}
 
 		[HttpPost]
-		public JsonResult PlayerAction(string playerAction) {
-			Action action = new Action(() => { _gameService.ExecutePlayerAction(playerAction); });
+		public JsonResult PlayerAction(string playerAction, int actionValue = 0) {
+			Action action = new Action(() => { _gameService.ExecutePlayerAction(playerAction, actionValue); });
 			return ProcessRequest(action);
 		}
 
@@ -98,12 +98,6 @@ namespace PromptQuest.Controllers {
 				Thread.Sleep(2000); // Waits for 2 seconds. Blocks current thread (not great, should improve later)
 				_gameService.ExecuteEnemyAction();
 			});
-			return ProcessRequest(action);
-		}
-
-		[HttpPost]
-		public JsonResult EquipItem(int itemIndex) {
-			Action action = new Action(() => { _gameService.EquipItem(itemIndex); });
 			return ProcessRequest(action);
 		}
 
@@ -152,7 +146,7 @@ namespace PromptQuest.Controllers {
 			}
 			//Loop through each property in the GameState class
 			foreach(var prop in gameStateBefore.GetType().GetProperties()) {
-				if(prop.Name=="ListMessages") {
+				if(prop.Name=="Floor") {
 					Console.WriteLine("GameState.Player.Items");
 				}
 				//Take a snapshot each property before and after changes were made

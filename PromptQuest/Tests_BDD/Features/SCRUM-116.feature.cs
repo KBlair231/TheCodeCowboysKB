@@ -104,7 +104,7 @@ namespace Tests_BDD.Features
   await testRunner.GivenAsync("I am on the game page", ((string)(null)), ((global::Reqnroll.Table)(null)), "Given ");
 #line hidden
 #line 6
-  await testRunner.WhenAsync("I move to the 7th room", ((string)(null)), ((global::Reqnroll.Table)(null)), "When ");
+  await testRunner.WhenAsync("I move to the 11th room", ((string)(null)), ((global::Reqnroll.Table)(null)), "When ");
 #line hidden
 #line 7
   await testRunner.ThenAsync("An elite should be spawned", ((string)(null)), ((global::Reqnroll.Table)(null)), "Then ");
@@ -134,7 +134,7 @@ namespace Tests_BDD.Features
   await testRunner.GivenAsync("I am on the game page", ((string)(null)), ((global::Reqnroll.Table)(null)), "Given ");
 #line hidden
 #line 11
-  await testRunner.WhenAsync("I move to the 7th room", ((string)(null)), ((global::Reqnroll.Table)(null)), "When ");
+  await testRunner.WhenAsync("I move to the 11th room", ((string)(null)), ((global::Reqnroll.Table)(null)), "When ");
 #line hidden
 #line 12
   await testRunner.AndAsync("I defeat the elite", ((string)(null)), ((global::Reqnroll.Table)(null)), "And ");

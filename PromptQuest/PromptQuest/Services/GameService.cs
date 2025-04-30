@@ -7,11 +7,11 @@ namespace PromptQuest.Services {
 
 		bool DoesUserHaveSavedGame();
 		void StartCombat();
-		void ExecutePlayerAction(string action);
+		void ExecutePlayerAction(string action, int actionValue = 0);
 		void ExecuteEnemyAction();
 		void SkipToBoss();
 		void SkipToRoom(int targetRoom);
-		void EquipItem(int itemIndex);
+		void EquipItem(GameState gameState, int itemIndex);
 		void StartNewGame(Player player);
 		public bool IsTutorial();
 		public void SetTutorialFlag(bool Flag);
@@ -134,13 +134,16 @@ namespace PromptQuest.Services {
 		#region Action Routing Methods
 
 		/// <summary>Execute a player action based on the action string.</summary>
-		public void ExecutePlayerAction(string action) {
+		public void ExecutePlayerAction(string action, int actionValue = 0) {
 			// Get current gamestate
 			GameState gameState = GetGameState();
 			// Determine which action it is and execute it, then return a PQActionResult
 			switch(action.ToLower()) {
 				case "attack":
 					_combatService.PlayerAttack(gameState);
+					break;
+				case "equip":
+					EquipItem(gameState, actionValue);
 					break;
 				case "heal":
 					_combatService.PlayerUseHealthPotion(gameState);
@@ -164,7 +167,7 @@ namespace PromptQuest.Services {
 					_combatService.PlayerSkipTreasure(gameState); // Currently in _combatService, may change later
 					break;
 				case "move":
-					_mapService.MovePlayer(gameState);
+					_mapService.MovePlayer(gameState, actionValue);
 					if(gameState.InCombat) {//Moving the player could put the player in combat
 						_combatService.StartCombat(gameState);//Server should be the one to start combat
 					}
@@ -193,8 +196,7 @@ namespace PromptQuest.Services {
 
 		#region Inventory functions (could be placed in its own service at some point when there is more of them)
 		/// <summary> equips the item with the given itemId </summary>
-		public void EquipItem(int itemIndex) {
-			GameState gameState = GetGameState();
+		public void EquipItem(GameState gameState, int itemIndex) {
 			//Mark currently equipped item as unequipped if there is one.
 			Item item = gameState.Player.ItemEquipped;
 			if(item != null) {
@@ -203,7 +205,6 @@ namespace PromptQuest.Services {
 			//Mark new item as equipped.
 			item = gameState.Player.Items[itemIndex];
 			item.Equipped = true;//Causes Player.ItemEquipped to update.
-			UpdateGameState(gameState);
 		}
 
 		public List<Item> GetDefaultItems() {
@@ -220,14 +221,13 @@ namespace PromptQuest.Services {
 
 		#endregion
 
-		public void SkipToRoom(int targetRoom)
-		{	// This is a skip to the boss for testing purposes
-			// Get current gamestate
+		public void SkipToRoom(int targetRoom) {  // This is a skip to the boss for testing purposes
+																							// Get current gamestate
 			GameState gameState = GetGameState();
 			// Move the player to the desired room
 			_mapService.MovePlayer(gameState, targetRoom);
 			// Start combat if the player isn't on an event node at location 3,5, or 8
-			if(targetRoom != 3 && targetRoom != 5 && targetRoom != 8){
+			if(targetRoom != 3 && targetRoom != 5 && targetRoom != 8) {
 				_combatService.StartCombat(gameState);
 			}
 			// Update current gamesate
@@ -240,7 +240,7 @@ namespace PromptQuest.Services {
 			// Move the player to the room before the boss.
 			_mapService.MovePlayer(gameState, 9);
 			_combatService.StartCombat(gameState);//Make sure combat starts when they get there or you could get stuck there.
-			// Update current gamesate
+																						// Update current gamesate
 			UpdateGameState(gameState);
 			//string message = "You have been teleported to the room before the boss.";
 		}

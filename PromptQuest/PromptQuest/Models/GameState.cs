@@ -42,6 +42,12 @@ namespace PromptQuest.Models {
 		public bool IsLocationComplete { get; set; } = false;
 		///<summary> The current floor the player is on. </summary>
 		public int Floor { get; set; } = 1;
+		///<summary>	Stored list of all MapNodeIds that the player has visited. </summary>
+		public string StoredMapNodeIdsVisited { get; set; } = "[]";
+		///<summary>	List of all MapNodeIds that the player has visited. </summary>
+		[NotMapped]
+		public List<string> ListMapNodeIdsVisited => JsonConvert.DeserializeObject<List<string>>(StoredMapNodeIdsVisited) ?? new List<string>();
+
 	}
 
 	/// <summary> Extension methods for the GameState model. </summary>
@@ -64,6 +70,20 @@ namespace PromptQuest.Models {
 			//Serialize the object than deserialize it to create a deep copy of it.
 			var json = JsonConvert.SerializeObject(gameState);
 			return JsonConvert.DeserializeObject<GameState>(json);
+		}
+
+		/// <summary> Adds a mapNodeId to the list of visited mapNodeIds. </summary>
+		public static void AddMapNodeIdVisited(this GameState gameState, int mapNodeId) {
+			List<string> listMapNodeIdsVisited = gameState.ListMapNodeIdsVisited; //Get the list of visited mapNodeIds 
+			if(!listMapNodeIdsVisited.Contains(mapNodeId.ToString())) { //If the mapNodeId is not already in the list
+				listMapNodeIdsVisited.Add(mapNodeId.ToString()); //Add it to the list
+			}
+			gameState.StoredMapNodeIdsVisited = JsonConvert.SerializeObject(listMapNodeIdsVisited); //Serialize the list of visited mapNodeIds into json so they can be stored in the db.
+		}
+
+		public static void ClearMapNodeIdsVisited(this GameState gameState) {
+			List<string> listMapNodeIdsVisited = new List<string>(); //Overwrite stored mapNodeIds by passing in a blank list
+			gameState.StoredMapNodeIdsVisited = JsonConvert.SerializeObject(listMapNodeIdsVisited); //Serialize the list of mapNodeIds into json so they can be stored in the db.
 		}
 	}
 	/// <summary> Bitwise Enum for Status Effects. </summary>

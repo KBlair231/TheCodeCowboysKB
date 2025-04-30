@@ -37,11 +37,9 @@ document.addEventListener("DOMContentLoaded", async () => {
 	openMenuBtn.addEventListener("click", () => { menu.syncVisibility(true); refreshMenu(); }); 
 	closeMenuBtn.addEventListener("click", () => { menu.syncVisibility(false); });//Force menu to hide on click.
 	inventoryBtn.addEventListener("click", () => { tabCurrent = 'inventory'; refreshMenu(); });//Set tab and refresh menu
-	equipBtn.addEventListener("click", equipItem);
+	equipBtn.attachPlayerAction('equip', () => selectedItemIndex);
 	mapBtn.addEventListener("click", () => { tabCurrent = 'map'; refreshMenu(); });//Set tab and refresh menu
-	floorBtn.attachPlayerAction('move');
-	//Fetch map from server.
-	mapDef = await sendGetRequest("/Game/GetMap");
+	floorBtn.attachPlayerAction('move', () => 1);
 });
 
 //------------------------ REFRESH DISPLAY --------------------------------------------------------------------------------------------------------
@@ -110,20 +108,30 @@ function refreshInventory() {
 	itemDetails.syncVisibility(selectedItemIndex != -1);
 }
 
-function refreshMap() {
+async function refreshMap() {
+	//Fetch map from server.
+	mapDef = await sendGetRequest("/Game/GetMap");
 	const mapContainer = document.getElementById("map-container");
 	mapContainer.innerHTML = ""; // Clear previous map
 	// Updates the floor counter
 	const floorTracker = document.getElementById("floor-tracker");
 	floorTracker.textContent = "Floor " + gameState.floor;
 	// Adds a check for if the player has defeated the boss to enable next floor button
-	floorBtn.syncButtonState(gameState.playerLocation == 10 && gameState.isLocationComplete);
+	floorBtn.syncButtonState(gameState.playerLocation == 18 && gameState.isLocationComplete);
 	// Draw the map nodes and edges
 	for (let i = 0; i < mapDef.listMapNodes.length; i++) {
 		// node.removeEventListener("click", movePlayerToNode());
 		const nodeElement = document.createElement("button");
 		nodeElement.className = "map-node";
 		nodeElement.setAttribute("data-node-id", mapDef.listMapNodes[i].mapNodeId);
+		// Adjust the position of the node based on the nodeHeight value
+		if (mapDef.listMapNodes[i].nodeHeight) {
+			nodeElement.style.position = "absolute"; // Ensure the node is positioned absolutely
+			nodeElement.style.top = `${mapDef.listMapNodes[i].nodeHeight * -100 + 200}px`; // Adjust the vertical position
+		}
+		if (mapDef.listMapNodes[i].nodeDistance) {
+			nodeElement.style.left = `${mapDef.listMapNodes[i].nodeDistance * 100}px`; // Adjust the horizontal position
+		}
 		mapContainer.appendChild(nodeElement);
 		// Check for NodeType and add image if it is "Boss"
 		if (mapDef.listMapNodes[i].nodeType === "Boss") {
@@ -154,29 +162,33 @@ function refreshMap() {
 			nodeElement.appendChild(imgElement);
 		}
 		// Show player which node they are on
-		if (mapDef.listMapNodes[i].mapNodeId == gameState.playerLocation) {
+		if ((i + 1) == gameState.playerLocation) {
 			nodeElement.classList.add("map-node-current");
 		}
-		if (mapDef.listMapNodes[i].mapNodeId < gameState.playerLocation) {
+		// gameState.isLocationComplete
+		if (gameState.listMapNodeIdsVisited.includes((i + 1).toString())) {
 			nodeElement.classList.add("map-node-completed");
 		}
-		// Enable the next node after the current node
-		if (mapDef.listMapNodes[i].mapNodeId == gameState.playerLocation + 1 && gameState.isLocationComplete) {
-			nodeElement.classList.add("map-node-enabled");
-			// Add event listener for node click on enabled nodes
-			nodeElement.attachPlayerAction('move');
+		// Enable the nodes in connectedNodes
+		if (mapDef.listMapNodes[gameState.playerLocation - 1].connectedNodes.includes(i + 1) && gameState.isLocationComplete) {
+			const connectedNode = mapContainer.querySelector(`[data-node-id="${i + 1}"]`);
+			if (connectedNode) {
+				connectedNode.classList.add("map-node-enabled");
+				// Add event listener for node click on enabled nodes
+				connectedNode.attachPlayerAction('move', () => (i + 1));
+			}
 		}
 		else {
 			nodeElement.classList.add("map-node-disabled");
 		}
 		// Don't create a map edge for the last node
-		if (i == mapDef.listMapEdges.length) {
-			continue;
-		}
+		//if (i == mapDef.listMapEdges.length) {
+		//	continue;
+		//}
 		// Create a map edge between nodes
-		const nodeEdgeElement = document.createElement("div");
-		nodeEdgeElement.className = "map-edge";
-		mapContainer.appendChild(nodeEdgeElement);
+		//const nodeEdgeElement = document.createElement("div");
+		//nodeEdgeElement.className = "map-edge";
+		//mapContainer.appendChild(nodeEdgeElement);
 	}
 }
 

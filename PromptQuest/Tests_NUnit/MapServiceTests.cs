@@ -19,8 +19,7 @@ namespace Tests_NUnit {
 
 			// Assert
 			Assert.IsNotNull(map);
-			Assert.That(map.ListMapNodes.Count, Is.EqualTo(10));
-			Assert.That(map.ListMapEdges.Count, Is.EqualTo(9));
+			Assert.That(map.ListMapNodes.Count, Is.EqualTo(18));
 		}
 
 		[Test]
@@ -39,7 +38,7 @@ namespace Tests_NUnit {
 		[Test]
 		public void MovePlayer_Should_Reset_Location_To_1_At_End_Of_The_Map() {
 			// Arrange
-			var gameState = new GameState { PlayerLocation = 10 };
+			var gameState = new GameState { PlayerLocation = 18 };
 
 			// Act
 			_mapService.MovePlayer(gameState);

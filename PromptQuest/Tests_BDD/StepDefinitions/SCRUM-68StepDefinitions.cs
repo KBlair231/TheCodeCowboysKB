@@ -24,7 +24,7 @@ namespace Tests_BDD {
 		[Given(@"I am on the inventory screen")]
 		public void GivenIAmOnTheInventoryScreen() {
 			// Navigate to the inventory screen in the application
-			IWebElement menuButton = webDriver.FindElement(By.XPath("//button[normalize-space(text()='Menu')]"));
+			IWebElement menuButton = webDriver.FindElement(By.Id("menu-open"));
 			menuButton.Click();
 			PromptQuestTestMethods.WaitForElementToLoad(webDriver, "menu");
 		}

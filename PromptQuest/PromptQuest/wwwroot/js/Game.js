@@ -165,12 +165,12 @@ HTMLElement.prototype.syncVisibility = function (condition) {
 };
 
 //Attaches a player action to a button as an eventlistener. Does not need to be removed because event will only fire if button is enabled.
-HTMLButtonElement.prototype.attachPlayerAction = function (action) {
+HTMLButtonElement.prototype.attachPlayerAction = function (action, getActionValue = () => 0) {
 	this.addEventListener("click", async () => {
 		if (this.disabled) {
 			return; //Button is disabled, so let's bounce.
 		}
-		await executePlayerAction(action);
+		await executePlayerAction(action, getActionValue());
 	});
 };
 
