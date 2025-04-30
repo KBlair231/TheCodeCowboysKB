@@ -71,3 +71,29 @@ Scenario: Defense Buff applies to enemy attack
 	And the user has a defense buff of 6
 	When the user is attacked
 	Then the defense buff should be set to 0
+@scrum-105
+Scenario: Archer Ability attacks twice
+	Given the user is in combat
+	And the user has the "Archer" class
+	When the user performs an "ability"
+	Then the enemy should receive damage equal to the user's attack minus enemy defense, twice
+@scrum-105
+Scenario: Archer Ability Cooldown
+	Given the user is in combat
+	And the user has the "Archer" class
+	When the user performs an "ability"
+	Then the ability cooldown should be set to 3
+@scrum-105
+Scenario: Archer Ability Cooldown Decrease
+	Given the user is in combat
+	And the user has the "Archer" class
+	And the ability has a cooldown of 3
+	When the user performs an "attack"
+	Then the ability cooldown should be set to 2
+@scrum-105
+Scenario: Archer Ability Cooldown Reset
+	Given the user is in combat
+	And the user has the "Archer" class
+	And the ability has a cooldown of 3
+	When the user enters combat
+	Then the ability cooldown should be set to 0

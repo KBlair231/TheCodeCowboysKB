@@ -110,6 +110,12 @@ namespace PromptQuest.Services {
 					gameState.Player.DefenseBuff += 6;
 					gameState.Player.AbilityCooldown = 4;
 					break;
+				case "archer"://perform two attacks
+					gameState.AddMessage($"You used your ability! You shoot two arrows at the enemy!");
+					PlayerAttack(gameState, 1, false);
+					PlayerAttack(gameState, 1, false);
+					gameState.Player.AbilityCooldown = 3;
+					break;
 				default:
 					gameState.AddMessage("Your class has no ability.");
 					break;

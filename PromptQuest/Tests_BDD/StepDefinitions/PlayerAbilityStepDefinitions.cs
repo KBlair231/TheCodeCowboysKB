@@ -100,5 +100,14 @@ namespace PromptQuest.Tests_BDD.StepDefinitions
 			int actualDamage = _gameState.Player.MaxHealth - _gameState.Player.CurrentHealth;
 			Assert.AreEqual(expectedDamage, actualDamage, _resultMessage);
 		}
+		[Then("the enemy should receive damage equal to the user's attack minus enemy defense, twice")]
+		public void ThenTheEnemyShouldReceiveDamageEqualToTheUsersAttackTimesMinusEnemyDefenseTwice()
+		{
+			int expectedDamage = (int)Math.Floor((double)(_gameState.Player.Attack + _gameState.Player.ItemEquipped.Attack)) - _gameState.Enemy.Defense;
+			if (expectedDamage < 1) expectedDamage = 1;
+			expectedDamage *= 2; // Double the damage for the second attack
+			int actualDamage = _gameState.Enemy.MaxHealth - _gameState.Enemy.CurrentHealth;
+			Assert.AreEqual(expectedDamage, actualDamage, _resultMessage);
+		}
 	}
 }
