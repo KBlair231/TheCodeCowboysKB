@@ -22,6 +22,11 @@ namespace Tests_BDD.StepDefinitions
         [Then("the user should gain gold")]
         public void ThenTheUserShouldGainGold()
         {
+			// Navigate to the inventory tab in the application
+			IWebElement menuButton = webDriver.FindElement(By.XPath("//button[normalize-space(text()='Menu')]"));
+			menuButton.Click();
+			//Wait for menu modal to show before continuing
+			PromptQuestTestMethods.WaitForElementToLoad(webDriver, "menu");
 			// Get the gold display element's text
 			IWebElement goldDisplay = webDriver.FindElement(By.Id("gold-display"));
 			string goldText = goldDisplay.Text;
