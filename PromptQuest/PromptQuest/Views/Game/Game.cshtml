@@ -102,7 +102,11 @@
 			<button class="pq-tab" id="map-btn" style="top:-4.5vmin; left:14vmin; height: 4vmin; width: 12vmin;"> Map </button>
 			<!-- Inventory window -->
 			<div id="inventory" class="pq-container">
-				<div id="equipped-item" class="pq-inventory-slot" style="top:5%; height:15%; left:5%;"></div>
+				<div style="bottom:40%; left:0%; height:5%; width:auto;">
+					<img id="gold-image" src="~/images/GoldCoin.png" style="height:60%; width:auto;"/>
+					<span class="pq-font" id="gold-display"></span>
+				</div>
+				<div id="equipped-item" class="pq-inventory-slot" style="top:0%; height:15%; left:5%;"></div>
 				<button id="equip-btn" class="pq-inventory-slot pq-button" style="top:25%; height:10%; left:5%; color:white;">Equip Item</button>
 				<!-- Item details display -->
 				<div class="pq-border" style="top:0; right:0; height: 60%; width: 75%;">

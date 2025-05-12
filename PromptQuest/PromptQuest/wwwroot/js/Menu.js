@@ -15,6 +15,7 @@ let floorBtn;
 //Client side state tracking variables
 let tabCurrent = 'inventory'; //Set inventory as the default tab.
 let selectedItemIndex = -1; //No item selected on load.
+let gold;
 //Cached map object that is defined server side so we grab it on load and then it never needs to be updated.
 let mapDef;
 //----------- LOAD UI ELEMENTS AND ADD EVENT LISTENERS ---------------------------------------------------------------------------------------
@@ -67,6 +68,7 @@ function refreshMenu() {
 
 function refreshInventory() {
 	const items = gameState.player.items;
+	gold = document.getElementById("gold-display").textContent = gameState.player.gold;
 	//Clear all inventory slots.
 	for (let i = 1; i <= 20; i++) {
 		const slot = document.getElementById("inventory-slot-" + i);

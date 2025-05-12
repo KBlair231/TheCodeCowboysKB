@@ -79,7 +79,12 @@ namespace PromptQuest.Services {
 				gameState.IsPlayersTurn = true; // Zero this field out because combat is over.
 				gameState.IsLocationComplete = true; // Player has completed the current area.
 				gameState.AddMessage($"You have defeated the {gameState.Enemy.Name}! Check your map to see where you're going next.");
-				if(gameState.PlayerLocation == 18) {
+				// Generate a random amount of gold between 6 and 15
+				Random random = new Random();
+				int gold = random.Next(6, 16);
+				gameState.Player.Gold += gold;
+				gameState.AddMessage($"You gained {gold} gold!");
+				if (gameState.PlayerLocation == 18) {
 					Item bossItem = GetBossItem(gameState); // Get the boss item.
 					gameState.AddMessage($"You picked up the {gameState.Enemy.Name}'s {bossItem.Name}!");
 					gameState.Player.Items.Add(bossItem);
