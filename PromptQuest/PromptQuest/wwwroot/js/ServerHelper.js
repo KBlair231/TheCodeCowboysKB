@@ -1,18 +1,20 @@
 ﻿// Cached GameState. Each server request returns a diff that is merged into this. Only get completely refreshed on page relod.
 let gameState;
 
-document.addEventListener("DOMContentLoaded", function () {
+document.addEventListener("DOMContentLoaded", async function () {
 	// Page loaded, get current game state and cache it. 
-	loadGame();
+	await loadGame();
 });
 
 async function loadGame() {
 	gameState = await sendGetRequest("/Game/GetGameState");
-	// Check if the user doesn't have a character
-	if (gameState.player.maxHealth == 0) {// new player or session expired (this should be changed at some point)
-		window.location.href = "/"; // boot them to the Main Menu.
+	if (gameState == undefined) {//new player or session expired
+		window.location.href = "/"; //boot them to the Main Menu.
 	}
-	// Update display with loaded data.  
+	if (gameState.inTutorial) {
+		StartTutorial();
+	}
+	// Update display with loaded data.
 	refreshDisplay();
 }
 
@@ -28,7 +30,9 @@ async function executePlayerAction(playerAction, actionValue = 0) {
 	if (gameState.isPlayersTurn == false && gameState.inCombat && gameState.enemy.currentHealth > 0) {
 		//I don't like that this doesn't happen on the server... but it's the easisest way for the UI to show the turns separately (time and UI updates in between).
 		//Maybe one day I'll find a way to move this over there.
-		await sendPostRequest('/Game/EnemyAction');
+		setTimeout(async () => {
+			await sendPostRequest('/Game/EnemyAction');
+		}, 2000); // 2000 milliseconds = 2 seconds
 	}
 }
 

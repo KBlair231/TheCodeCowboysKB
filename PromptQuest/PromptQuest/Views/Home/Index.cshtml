@@ -11,13 +11,13 @@
 <!-- Login Display -->
 <div class="pq-container">
 	<div class="login-display" style="top: 0; left: 0; height: 8vmin; width: 20vmin;">
-			@if(isUserLoggedIn) {
-				<img src="@userProfileImage"/>
-				<a class="pq-link" href="/Account/SignOutFromGoogleLogin">Logout</a>
-			}
-			else {
-				<a class="pq-link" href="/Account/GoogleLogin">Login with Google</a>
-			}
+		@if(isUserLoggedIn) {
+			<img src="@userProfileImage"/>
+			<a class="pq-link" href="/Account/SignOutFromGoogleLogin">Logout</a>
+		}
+		else {
+			<a class="pq-link" href="/Account/GoogleLogin">Login with Google</a>
+		}
 	</div>
 	<div class="pq-container pq-center-element-x" style="width:50%; height:100%; top:0; left:50%;">
 		<!-- Logo -->
@@ -27,14 +27,21 @@
 		<!-- New Adventure button -->
 		<div class="action-button-display pq-center-element-x" style="height: 40%; width: 50%; bottom:0; left:50%;">
 			<form class="text-center">
-			<button class="pq-button" asp-controller="Game" asp-action="CreateCharacter">
+				<button class="pq-button" asp-controller="Game" asp-action="CreateCharacter">
 					New Adventure
 				</button>
 			</form>
 			<form class="text-center">
-				<button class="pq-button" id="continue-btn" asp-controller="Game" asp-action="Continue">
-					Continue
-				</button>
+				@if(ViewBag.UserHasSavedGame) { //Enable button if user has a saved game.
+					<button class="pq-button" id="continue-btn" asp-controller="Game" asp-action="Continue">
+						Continue
+					</button>
+				} 
+				else {// Disabled by default.
+					<button class="pq-button" id="continue-btn" asp-controller="Game" asp-action="Continue" disabled>
+						Continue
+					</button>
+				}
 			</form>
 			<form class="text-center">
 				<button class="pq-button" asp-controller="Game" asp-action="About">

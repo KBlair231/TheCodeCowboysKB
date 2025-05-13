@@ -1,5 +1,6 @@
 ﻿let description;//Player prompt in character creation
-let previewButton;//The button used to preview the player icon
+let previewBtn;//The button used to preview the player icon
+let createCharacterBtn;//The button used to create your character and start the game.
 let playerImage;//A picture of the player's character at the top of the screen.
 let playerImageData;//A dummy input on the form that the player's image data hitches a ride on up to the server.
 let playerImageLoader;//A loading icon that shows while openAi is generating the iamge.
@@ -10,12 +11,15 @@ document.addEventListener("DOMContentLoaded", async () => { //currently only inc
 	await fetchDefaultPlayerImage() //Load in default image and image data so that it's never blank/null.
 	playerImageLoader = document.getElementById('player-image-loader');
 	description = document.getElementById("description");
-	previewButton = document.getElementById('preview-btn')
-	previewButton.addEventListener('click', async (e) => {
+	previewBtn = document.getElementById('preview-btn');
+	createCharacterBtn = document.getElementById('create-character-btn');
+	previewBtn.addEventListener('click', async (e) => {
 		e.preventDefault();//Stops the form from being submitted.
-		previewButton.disabled = true; //This button click costs Ben money, lets make damn sure it doesn't get spammed.
+		previewBtn.disabled = true; //This button click costs Ben money, lets make damn sure it doesn't get spammed.
+		createCharacterBtn.disabled = true;
 		await generatePlayerImage(description.value);
-		previewButton.disabled = false;
+		previewBtn.disabled = false;
+		createCharacterBtn.disabled = false;
 	});
 	console.log(playerImage.src);
 });

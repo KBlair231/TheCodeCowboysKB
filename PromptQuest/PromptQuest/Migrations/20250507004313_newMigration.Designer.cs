@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using PromptQuest.Models;
 
@@ -10,9 +11,11 @@ using PromptQuest.Models;
 namespace PromptQuest.Migrations
 {
     [DbContext(typeof(GameStateDbContext))]
-    partial class GameStateDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250507004313_newMigration")]
+    partial class newMigration
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -63,9 +66,6 @@ namespace PromptQuest.Migrations
                         .HasColumnType("nvarchar(450)");
 
                     b.Property<int?>("EnemyId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("EventNum")
                         .HasColumnType("int");
 
                     b.Property<int>("Floor")
@@ -185,9 +185,6 @@ namespace PromptQuest.Migrations
                         .HasColumnType("int");
 
                     b.Property<int>("DefenseBuff")
-                        .HasColumnType("int");
-
-                    b.Property<int>("Gold")
                         .HasColumnType("int");
 
                     b.Property<int>("HealthPotions")

@@ -9,24 +9,31 @@ namespace PromptQuest.Controllers {
 
 	public class GameController:Controller {
 		private readonly ILogger<GameController> _logger;
-		private readonly IGameService _gameService;
+		private readonly IGameStateService _gameStateService;
+		private readonly ICombatService _combatService;
+		private readonly IMapService _mapService;
 		private readonly IDallEApiService _dallEApiService;
 		private readonly JsonSerializerSettings _jsonSerializerSettings=new JsonSerializerSettings { ContractResolver = new DefaultContractResolver() };
-		public GameController(ILogger<GameController> logger,IGameService gameService,IDallEApiService dallEApiService) {
+
+		public GameController(ILogger<GameController> logger, IGameStateService gameStateService, ICombatService combatService, IMapService mapService, IDallEApiService dallEApiService) {
 			_logger = logger;
-			_gameService = gameService;
+			_gameStateService = gameStateService;
+			_combatService = combatService;
+			_mapService = mapService;
 			_dallEApiService = dallEApiService;
 		}
+
 		public IActionResult About() {
 			return View();
 		}
+
 		[HttpGet]
 		public IActionResult CreateCharacter() {
 			return View();
 		}
 
 		[HttpPost]
-		public IActionResult CreateCharacter(Player player) {
+		public async Task<IActionResult> CreateCharacter(Player player) {
 			// Default stats for now.
 			player.MaxHealth = 15;
 			player.CurrentHealth = 15;
@@ -35,13 +42,14 @@ namespace PromptQuest.Controllers {
 			player.Defense = 1;
 			player.Class = player.Class;
 			if(ModelState.IsValid) { // Character created succesfully
-				_gameService.StartNewGame(player); // Start a new game. If the user already has one it will be overwritten.
-				_gameService.StartCombat(); // Start combat right away, for now.
-				_gameService.SetTutorialFlag(true); // New game, so start the tutorial.
+				GameState gameState = await _gameStateService.StartNewGame(player); // Start a new game. If the user already has one it will be overwritten.
+				_combatService.StartCombat(gameState); // Start combat right away, for now.
+				await _gameStateService.SaveGameStateAsync(gameState);//Save it to the db first so that Id's are accurate in the session.
+				_gameStateService.UpdateGameState(gameState);//Store new GameState in the session.
 				return RedirectToAction("Game");
 			}
 			else {
-				return View();
+				return View(player); //Send it back so they can try again.
 			}
 		}
 
@@ -51,10 +59,12 @@ namespace PromptQuest.Controllers {
 		}
 
 		[HttpGet]
-		public IActionResult Continue() {
-			//Assume the user has already completed the tutorial, if they haven't then sucks to suck.
-			_gameService.SetTutorialFlag(false);
-			return RedirectToAction("Game");
+		public async Task<IActionResult> Continue() {
+			bool gameStateIsLoaded = await _gameStateService.LoadGameStateAsync();
+			if(gameStateIsLoaded) {
+				return RedirectToAction("Game");
+			}
+			return RedirectToAction("Index", "Home");//Couldn't load the user's GameState into the session. Send them back to the main menu.
 		}
 
 		[HttpGet]
@@ -64,94 +74,127 @@ namespace PromptQuest.Controllers {
 
 		[HttpGet]
 		public JsonResult GetGameState() {
-			GameState gameState = _gameService.GetGameState();
+			GameState gameState = _gameStateService.GetGameState();
 			// Return the entire game state.
 			return Json(gameState);
 		}
 
-		[HttpGet]
-		public JsonResult IsTutorial() {
-			bool flag = _gameService.IsTutorial();
-			// Return the entire game state.
-			return Json(flag);
-		}
-
-		[HttpGet]
-		public JsonResult GetGameSaveStatus() {
-			// This method feels misplaced here. Just used to check if the continue button needs to be enabled or not.
-			if(_gameService.DoesUserHaveSavedGame()) {
-				return Json(true);
-			}
-			return Json(false);
+		[HttpPost]
+		public async Task<JsonResult> PlayerAction(string playerAction, int actionValue = 0) {
+			Func<GameState, Task> action = new Func<GameState, Task>(async (gameState) => { 
+				switch(playerAction.ToLower()) {
+					case "attack":
+						_combatService.PlayerAttack(gameState);
+						break;
+					case "equip":
+							Item item = gameState.Player.ItemEquipped;
+							if(item != null) {
+								item.Equipped = false;
+							}
+							//Mark new item as equipped.
+							item = gameState.Player.Items[actionValue];
+							item.Equipped = true;//Causes Player.ItemEquipped to update.
+						break;
+					case "heal":
+						_combatService.PlayerUseHealthPotion(gameState);
+						break;
+					case "rest":
+						_combatService.PlayerRest(gameState); // Currently in _combatService, may change later
+						break;
+					case "skip-rest":
+						_combatService.PlayerSkipRest(gameState); // Currently in _combatService, may change later
+						break;
+					case "accept":
+						_combatService.PlayerAccept(gameState); // Currently in _combatService, may change later
+						break;
+					case "deny":
+						_combatService.PlayerDeny(gameState); // Currently in _combatService, may change later
+						break;
+					case "open-treasure":
+						_combatService.PlayerOpenTreasure(gameState); // Currently in _combatService, may change later
+						break;
+					case "skip-treasure":
+						_combatService.PlayerSkipTreasure(gameState); // Currently in _combatService, may change later
+						break;
+					case "move":
+						_mapService.MovePlayer(gameState, actionValue);
+						if(gameState.InCombat) {//Moving the player could put the player in combat
+							_combatService.StartCombat(gameState);//Server should be the one to start combat
+						}
+						await _gameStateService.SaveGameStateAsync(gameState); //Save Player's progress when they enter a new room.
+						break;
+					case "respawn":
+						_combatService.RespawnPlayer(gameState);
+						await _gameStateService.SaveGameStateAsync(gameState); //Save Player's progress when they die so they can't abuse the last save.
+						break;
+					case "ability":
+						_combatService.PlayerAbility(gameState);
+						break;
+					default:
+						throw new ArgumentOutOfRangeException(nameof(playerAction), playerAction, null);
+				}
+				});
+			return await ProcessRequest(action);
 		}
 
 		[HttpPost]
-		public JsonResult PlayerAction(string playerAction, int actionValue = 0) {
-			Action action = new Action(() => { _gameService.ExecutePlayerAction(playerAction, actionValue); });
-			return ProcessRequest(action);
-		}
-
-		[HttpPost]
-		public JsonResult EnemyAction() {
-			Action action = new Action(() => { 
-				//Add a delay so there is some time between player and enemy actions.
-				Thread.Sleep(2000); // Waits for 2 seconds. Blocks current thread (not great, should improve later)
-				_gameService.ExecuteEnemyAction();
+		public async Task<JsonResult> EnemyAction() {
+			Func<GameState, Task> action = new Func<GameState, Task>(async (gameState) => { 
+				//There is a delay between player and enemy actions client side. Try to find a way to get it onto the server to avoid bugs.
+				//await Task.Delay(2000); // 2-second delay to simulate the enemy taking time complete their turn.
+				_combatService.EnemyAttack(gameState);//Enemy only attacks for now.
 			});
-			return ProcessRequest(action);
+			return await ProcessRequest(action);
 		}
 
 		[HttpPost]
-		public JsonResult EndTutorial() {
-			Action action = new Action(() => { _gameService.SetTutorialFlag(false); });
-			return ProcessRequest(action);
-		}
-
-		[HttpGet]
-		public JsonResult MovePlayerToNextLocation() {
-			Action action = new Action(() => { _gameService.ExecutePlayerAction("move"); });
-			return ProcessRequest(action);
+		public async Task<JsonResult> EndTutorial() {
+			Func<GameState, Task> action = new Func<GameState, Task>(async (gameState) => { 
+				gameState.InTutorial = false;
+			});
+			return await ProcessRequest(action);
 		}
 
 		[HttpGet]
 		public IActionResult GetMap() {
-			Map map = _gameService.GetMap();
+			Map map = _mapService.GetMap();
 			return Json(map);
 		}
 
 		[HttpGet]
-		public IActionResult SkipToBoss() {
-			_gameService.SkipToBoss();
-			return RedirectToAction("Game");
-		}
-
-		[HttpGet]
 		public IActionResult SkipToRoom(int targetRoom) {
-			_gameService.SkipToRoom(targetRoom);
+			GameState gameState = _gameStateService.GetGameState();
+			// Move the player to the desired room
+			_mapService.MovePlayer(gameState, targetRoom);
 			return RedirectToAction("Game");
 		}
 
-		public JsonResult ProcessRequest(Action action) {
-			GameState gameStateBefore = _gameService.GetGameState().CreateDeepCopy(); //Take a snapshot of the current GameState before any changes. Deep copy so it doesn't respond to outside updates
-			action.Invoke(); //Perform the requested action
-			GameState gameStateAfter = _gameService.GetGameState().CreateDeepCopy(); //Take a snapshot of the current GameState after any changes. Deep copy so it doesn't respond to outside updates
-			JsonResult jsonResult = Json(GenerateDiff(gameStateBefore,gameStateAfter));//Generate a diff and convert into json
+		public async Task<JsonResult> ProcessRequest(Func<GameState, Task> action) {
+			//Keep track of what the GameState looked like before the action is performed.
+			GameState gameStateBefore = _gameStateService.GetGameState();
+			//Perform the requested action.
+			GameState gameStateAfter = _gameStateService.GetGameState();
+			await action.Invoke(gameStateAfter);
+			//Update session to match what happened.
+			_gameStateService.UpdateGameState(gameStateAfter);
+			//Find the differences between the GameState before and after the action and turn it into json.
+			JsonResult jsonResult = Json(GenerateDiff(gameStateBefore,gameStateAfter));
 			return jsonResult;
 		}
 
-		public Dictionary<string,object> GenerateDiff(object gameStateBefore,object GameStateAfter) {
+		public Dictionary<string,object> GenerateDiff(object objectBefore,object objectAfter) {
 			Dictionary<string,object> dictionaryDiff = new Dictionary<string,object>();
-			if(gameStateBefore == null || GameStateAfter == null || gameStateBefore.GetType() != GameStateAfter.GetType()) {
+			if(objectBefore == null || objectAfter == null || objectBefore.GetType() != objectAfter.GetType()) {
 				return dictionaryDiff; // Return empty diff if types don't match
 			}
 			//Loop through each property in the GameState class
-			foreach(var prop in gameStateBefore.GetType().GetProperties()) {
-				if(prop.Name=="Floor") {
-					Console.WriteLine("GameState.Player.Items");
+			foreach(var prop in objectBefore.GetType().GetProperties()) {
+				if(prop.Name=="CurrentHealth") {
+					Console.WriteLine("GameState.Enemy.CurrentHealth");
 				}
 				//Take a snapshot each property before and after changes were made
-				var oldValue = prop.GetValue(gameStateBefore);
-				var newValue = prop.GetValue(GameStateAfter);
+				var oldValue = prop.GetValue(objectBefore);
+				var newValue = prop.GetValue(objectAfter);
 				// Handle collections: Always include the full list if any changed
 				if(oldValue is IEnumerable<object> oldCollection && newValue is IEnumerable<object> newCollection) {
 					//Change this later to not use serialization, instead compare objects using zip in a helper meathod.
@@ -168,7 +211,7 @@ namespace PromptQuest.Controllers {
 						dictionaryDiff[prop.Name] = nestedDiff; // Only store if changes exist
 					}
 				}
-				else if(!Equals(oldValue,newValue)) {//Property doesn't derive from IEnumerable but did change so include it (if it's a complex object, it still includes all properties not just ones that changed).
+				else if(!Equals(oldValue,newValue)) {//Property doesn't derive from IEnumerable but did change so include it.
 					dictionaryDiff[prop.Name] = newValue;
 				}
 			}
@@ -179,18 +222,5 @@ namespace PromptQuest.Controllers {
 		private static bool IsPrimitiveType(Type type) {
 			return type.IsPrimitive || type.IsEnum || type == typeof(string) || type == typeof(decimal);
 		}
-
-		/*
-			//If the property derives from IEnumerable than include any objects that were changed (includes all properties not just ones that changed).
-			if(oldValue is IEnumerable<object> oldCollection && newValue is IEnumerable<object> newCollection) {
-				var changedElements = newCollection.Where(newItem =>
-						oldCollection.Any(oldItem => !oldItem.Equals(newItem))
-				).ToList();
-				if(changedElements.Any()) {
-					dictionaryDiff[prop.Name] = changedElements;
-				}
-			}
-		*/
-
 	}
 }

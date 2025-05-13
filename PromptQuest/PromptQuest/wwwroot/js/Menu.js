@@ -108,6 +108,8 @@ function refreshInventory() {
 	}
 	//Make item details visible if an item is selected.
 	itemDetails.syncVisibility(selectedItemIndex != -1);
+	//Equip button like all other action buttons disable on click to prevent spam, so let's make sure it gets re enabled on refresh.
+	equipBtn.syncButtonState(true);
 }
 
 async function refreshMap() {

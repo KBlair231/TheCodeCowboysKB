@@ -6,7 +6,7 @@ namespace PromptQuest.Services {
 
 	public interface ICombatService {
 		void StartCombat(GameState gameState);
-		void PlayerAttack(GameState gameState, int attackMult = 1, bool decrementAbility = true);
+		void PlayerAttack(GameState gameState,int attackMult = 1,bool decrementAbility = true);
 		void PlayerUseHealthPotion(GameState gameState);
 		void PlayerRest(GameState gameState);
 		void PlayerSkipRest(GameState gameState);
@@ -20,7 +20,7 @@ namespace PromptQuest.Services {
 		Enemy GetEnemy(GameState gameState);
 	}
 
-	public class CombatService : ICombatService {
+	public class CombatService:ICombatService {
 		/// <summary>Initiates combat between the player and an enemy and updates the game state. </summary>
 		public void StartCombat(GameState gameState) {
 			gameState.InCombat = true;
@@ -45,7 +45,7 @@ namespace PromptQuest.Services {
 		#region Player Action Methods
 
 		/// <summary> Calculates the damage that the player does to the enemy, updates the game state, then returns a message.</summary>
-		public void PlayerAttack(GameState gameState, int attackMult = 1, bool decrementAbility = true) {
+		public void PlayerAttack(GameState gameState,int attackMult = 1,bool decrementAbility = true) {
 			// Get the player's equipped item
 			Item item = gameState.Player.ItemEquipped;
 			// Calculate damage as attack - defense.
@@ -57,14 +57,14 @@ namespace PromptQuest.Services {
 			// Update enemy health.
 			gameState.Enemy.CurrentHealth -= damage;
 			//decrement ability cooldown if ability was not used
-			if(decrementAbility && gameState.Player.AbilityCooldown > 0) {
+			if(decrementAbility && gameState.Player.AbilityCooldown>0) {
 				gameState.Player.AbilityCooldown -= 1;
 			}
 			// Return the result to the user.
 			gameState.AddMessage($"You attacked the {gameState.Enemy.Name} for {damage} damage");
 			if(item.StatusEffects != StatusEffect.None) {
 				Random random = new Random();
-				int statusEffectChance = random.Next(0, 5); // 25% chance to apply status effect
+				int statusEffectChance = random.Next(0,5); // 25% chance to apply status effect
 				if(statusEffectChance == 1) {
 					if(!gameState.Enemy.StatusEffects.HasFlag(item.StatusEffects)) {
 						gameState.AddMessage($"The {gameState.Enemy.Name} is now affected by {item.StatusEffects.ToString()}!");
@@ -73,7 +73,6 @@ namespace PromptQuest.Services {
 				}
 			}
 			// Check if enemy died.
-
 			if(gameState.Enemy.CurrentHealth <= 0) {
 				gameState.IsPlayersTurn = true; // Zero this field out because combat is over.
 				gameState.IsLocationComplete = true; // Player has completed the current area.
@@ -96,15 +95,15 @@ namespace PromptQuest.Services {
 					return;
 				}
 			}
-
 			gameState.IsPlayersTurn = false;
 		}
+
 		/// <summary>activates the player's ability</summary>
 		public void PlayerAbility(GameState gameState) {
 			switch(gameState.Player.Class.ToLower()) {
 				case "warrior"://attack for double power, uses the attack function
 					gameState.AddMessage($"You used your ability! You power up and perform a strong attack!");
-					PlayerAttack(gameState, 2, false);
+					PlayerAttack(gameState,2,false);
 					gameState.Player.AbilityCooldown = 3;
 					break;
 				case "mage"://gain +6 defense for the next attack
@@ -114,8 +113,8 @@ namespace PromptQuest.Services {
 					break;
 				case "archer"://perform two attacks
 					gameState.AddMessage($"You used your ability! You shoot two arrows at the enemy!");
-					PlayerAttack(gameState, 1, false);
-					PlayerAttack(gameState, 1, false);
+					PlayerAttack(gameState,1,false);
+					PlayerAttack(gameState,1,false);
 					gameState.Player.AbilityCooldown = 3;
 					break;
 				default:
@@ -123,6 +122,7 @@ namespace PromptQuest.Services {
 					break;
 			}
 		}
+
 		/// <summary>Calculates the amount healed by a Health Potion, updates the game state, then returns a message.</summary>
 		public void PlayerUseHealthPotion(GameState gameState) {
 			// If player has no potions, don't let them heal.
@@ -339,9 +339,9 @@ namespace PromptQuest.Services {
 
 		/// <summary>Player opens treasure chest, updates the game state, then returns a message.</summary>
 		public void PlayerOpenTreasure(GameState gameState) {
-			int randPotions = new Random().Next(1, 4); // Randomly give 1 to 3 potions
+			int randPotions = new Random().Next(1,4); // Randomly give 1 to 3 potions
 			gameState.Player.HealthPotions += randPotions;
-			int randItem = new Random().Next(1, 5); // Randomly give an item from the list below
+			int randItem = new Random().Next(1,5); // Randomly give an item from the list below
 			Item treasureItem = new Item();
 			if(randItem == 1) {
 				// If 1, give them a treasure specific item.
@@ -415,7 +415,7 @@ namespace PromptQuest.Services {
 			Item item = gameState.Player.ItemEquipped;
 			// Calculate damage as attack - defense.
 			int damage = gameState.Enemy.Attack - gameState.Player.Defense - item.Defense - gameState.Player.DefenseBuff;
-			if(gameState.Player.DefenseBuff > 0) {
+			if(gameState.Player.DefenseBuff>0) {
 				gameState.AddMessage("Your shield blocked incoming damage");
 			}
 			gameState.Player.DefenseBuff = 0;//reset the defense buff after blocking one hit
@@ -471,7 +471,7 @@ namespace PromptQuest.Services {
 		public Enemy GetEnemy(GameState gameState) {
 			Enemy enemy = new Enemy();
 			Random random = new Random();
-			int enemyType = random.Next(1, 4); // Generates a number between 1 and 3
+			int enemyType = random.Next(1,4); // Generates a number between 1 and 3
 			if(gameState.Floor == 1) {
 				switch(enemyType) {
 					case 1:

@@ -6,15 +6,16 @@ using System.Diagnostics;
 namespace PromptQuest.Controllers {
 	public class HomeController:Controller {
 		private readonly ILogger<HomeController> _logger;
-		private readonly IGameService _gameService;
+		private readonly IGameStateService _gameStateService;
 
-		public HomeController(ILogger<HomeController> logger, IGameService gameService) {
+		public HomeController(ILogger<HomeController> logger, IGameStateService gameStateService) {
 			_logger = logger;
-			_gameService = gameService;
+			_gameStateService = gameStateService;
 		}
 
-		public IActionResult Index() {
-			// They're a new player, show the main menu
+		public async Task<IActionResult> Index() {
+			bool userHasSavedGame=await _gameStateService.DoesUserHaveSavedGame();
+			ViewBag.UserHasSavedGame = userHasSavedGame;
 			return View();
 		}
 

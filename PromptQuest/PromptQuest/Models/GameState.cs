@@ -26,6 +26,8 @@ namespace PromptQuest.Models {
 		/// <summary> Not stored directly in the db and readonly. Changes made to this via GameState.AddMessag() are serialized and saved in the db under the StoredMessages column. </summary>
 		[NotMapped]
 		public List<string> ListMessages => JsonConvert.DeserializeObject<List<string>>(StoredMessages) ?? new List<string>(); //Deserialize messages stored in the db into a List of strings.
+		///<summary> Whether or not the player is in the tutorial. </summary>
+		public bool InTutorial { get; set; } = false;
 		///<summary> Whether or not the player is in combat. </summary>
 		public bool InCombat { get; set; } = false;
 		///<summary> Whether or not the player is in a campsite. </summary>
@@ -56,7 +58,7 @@ namespace PromptQuest.Models {
 	public static class GameStateExtensionMethods {
 		/// <summary> Adds a new message that will be show to the user. Max number is 50 for now.</summary>
 		public static void AddMessage(this GameState gameState, string message) {
-			List<string> listMessages = gameState.ListMessages.TakeLast(10).ToList(); //Keep last 10 messages only
+			List<string> listMessages = gameState.ListMessages.ToList(); //No cap for now since it doesn't really matter.
 			listMessages.Add(message); //Add the new one.
 			gameState.StoredMessages = JsonConvert.SerializeObject(listMessages); //Serialize the list of messages into json so they can be stored in the db.
 		}

@@ -117,17 +117,18 @@ function hideRespawnModal() {
 // ------------------------ REFRESH DISPLAY HELPER METHODS ------------------------------------------------------------------------------------------------------
 
 function refreshDialogBox() {
-	//Clear old messages and load in the new list
 	dialogBox.innerHTML = "";
 	gameState.listMessages.forEach((message) => {
 		const logDiv = document.createElement("div");
-		logDiv.textContent = message;
+		logDiv.textContent = message; //Instantly show cached messages
 		dialogBox.appendChild(logDiv);
-		//logDiv.scrollIntoView({ behavior: "smooth" });
 	});
+	//Update message cache
+	cachedMessages = gameState.listMessages;
 	//Scroll to bottom to show new messages
 	dialogBox.scrollTop = dialogBox.scrollHeight;
 }
+
 
 function refreshPlayerDisplay() {
 	document.querySelectorAll(".player-name").forEach(el => { el.textContent = gameState.player.name; });
@@ -167,9 +168,7 @@ HTMLElement.prototype.syncVisibility = function (condition) {
 //Attaches a player action to a button as an eventlistener. Does not need to be removed because event will only fire if button is enabled.
 HTMLButtonElement.prototype.attachPlayerAction = function (action, getActionValue = () => 0) {
 	this.addEventListener("click", async () => {
-		if (this.disabled) {
-			return; //Button is disabled, so let's bounce.
-		}
+		this.disabled = true;//Disable on click so it can't be spammed, refresh logic will enable or disable it as needed.
 		await executePlayerAction(action, getActionValue());
 	});
 };

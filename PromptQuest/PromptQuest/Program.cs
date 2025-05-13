@@ -9,7 +9,7 @@ using Azure.Identity;
 var builder = WebApplication.CreateBuilder(args);
 
 // Load Azure Key Vault only when environment variable is set.
-string keyVaultUri = Environment.GetEnvironmentVariable("VaultUri");
+string? keyVaultUri = Environment.GetEnvironmentVariable("VaultUri");
 if(!string.IsNullOrEmpty(keyVaultUri)) {
 	var keyVaultEndpoint = new Uri(keyVaultUri);
 	builder.Configuration.AddAzureKeyVault(keyVaultEndpoint,new DefaultAzureCredential());
@@ -59,10 +59,8 @@ builder.Services.AddDbContext<GameStateDbContext>(options => {
 });
 
 // Register GameService with the dependency injection container
-builder.Services.AddScoped<IGameService,GameService>();
+builder.Services.AddScoped<IGameStateService,GameStateService>();
 builder.Services.AddScoped<ICombatService,CombatService>();
-builder.Services.AddScoped<ISessionService,SessionService>();
-builder.Services.AddScoped<IDatabaseService,DatabaseService>();
 builder.Services.AddScoped<IMapService,MapService>();
 
 // Retrieve the API key from user secrets or azure Key vault

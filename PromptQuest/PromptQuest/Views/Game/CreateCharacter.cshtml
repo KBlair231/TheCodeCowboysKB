@@ -29,7 +29,7 @@
 			<textarea class="pq-form-control" id="description" placeholder="What does your character look like?" style="height: 85%; width: 45%; top:0; left: 52%; resize: none; border: .1vmin solid white; max-height: 100%; margin-top:0;"></textarea>
 			<button id="preview-btn" class="pq-button" style="width: auto; bottom:0; left: 52%; background-color:darkgreen;">Take a look</button>
 		</div>
-		<form asp-controller="Game" asp-action="CreateCharacter" method="post" class="pq-form" style="height: 35%; width: 70%; bottom:0; left: 1%;">
+		<form asp-controller="Game" asp-action="CreateCharacter" method="POST" class="pq-form" style="height: 35%; width: 70%; bottom:0; left: 1%;">
 			<input asp-for="Name" type="text" minlength="1" maxlength="25" class="pq-form-control" id="name" name="name" placeholder="Enter Character's Name" />
 			<span asp-validation-for="Name" class="pq-validation-text"></span>
 			<select asp-for="Class" id="class-select" class="pq-form-control">

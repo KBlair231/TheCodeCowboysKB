@@ -5,9 +5,8 @@ let tutorialModal;
 let skipTutorialBtn;
 let stepCur = 0;
 
-document.addEventListener("DOMContentLoaded", async () => {
-	const isTutorial = await sendGetRequest("/Game/IsTutorial"); // get the tutorial flag
-	if (isTutorial) {
+async function StartTutorial() {
+	if (gameState.inTutorial) {
 		//Setup
 		tutorialModal = new bootstrap.Modal(document.getElementById("tutorial-popup"));
 		$("#tutorial-popup").on('hidden.bs.modal', function () {
@@ -20,7 +19,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 		showMessage("Welcome to the Tutorial", "Hello and welcome to PromptQuest!");//show the tutorial
 		tutorialModal.show();
 	}
-});
+}
 
 async function SetupCurStep() {
 	switch (stepCur) {
