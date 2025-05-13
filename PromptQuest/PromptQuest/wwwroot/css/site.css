@@ -232,6 +232,7 @@ body {
 .dialog-box {
 	/* Styling */
 	font-size: var(--pq-font-normal);
+	background-color: var(--background-color-primary);
 	color: var(--pq-font-color);
 	border: var(--pq-border);
 	padding: 1vmin;
