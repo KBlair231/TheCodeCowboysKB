@@ -32,6 +32,8 @@ namespace PromptQuest.Models {
 		public bool InCampsite { get; set; } = false;
 		///<summary> Whether or not the player is in an event. </summary>
 		public bool InEvent { get; set; } = false;
+		///<summary> Number that determines what event the player will encounter. </summary>
+		public int EventNum { get; set; } = 0;
 		///<summary> Whether or not the player is in a treasure node. </summary>
 		public bool InTreasure { get; set; } = false;
 		///<summary> Whether or not it is the player's turn. </summary>

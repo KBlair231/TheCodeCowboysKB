@@ -6,7 +6,7 @@ namespace PromptQuest.Services {
 
 	public interface ICombatService {
 		void StartCombat(GameState gameState);
-		void PlayerAttack(GameState gameState, int attackMult = 1, bool decrementAbility=true);
+		void PlayerAttack(GameState gameState, int attackMult = 1, bool decrementAbility = true);
 		void PlayerUseHealthPotion(GameState gameState);
 		void PlayerRest(GameState gameState);
 		void PlayerSkipRest(GameState gameState);
@@ -49,33 +49,32 @@ namespace PromptQuest.Services {
 			// Get the player's equipped item
 			Item item = gameState.Player.ItemEquipped;
 			// Calculate damage as attack - defense.
-			int damage = (int)Math.Floor((double)(gameState.Player.Attack + item.Attack)*attackMult) - gameState.Enemy.Defense;
+			int damage = (int)Math.Floor((double)(gameState.Player.Attack + item.Attack) * attackMult) - gameState.Enemy.Defense;
 			// If attack is less than one make it one.
-			if (damage < 1) {
+			if(damage < 1) {
 				damage = 1;
 			}
 			// Update enemy health.
 			gameState.Enemy.CurrentHealth -= damage;
 			//decrement ability cooldown if ability was not used
-			if (decrementAbility && gameState.Player.AbilityCooldown>0)
-			{
+			if(decrementAbility && gameState.Player.AbilityCooldown > 0) {
 				gameState.Player.AbilityCooldown -= 1;
 			}
 			// Return the result to the user.
 			gameState.AddMessage($"You attacked the {gameState.Enemy.Name} for {damage} damage");
-			if (item.StatusEffects != StatusEffect.None) {
+			if(item.StatusEffects != StatusEffect.None) {
 				Random random = new Random();
 				int statusEffectChance = random.Next(0, 5); // 25% chance to apply status effect
-				if (statusEffectChance == 1) {
-					if (!gameState.Enemy.StatusEffects.HasFlag(item.StatusEffects)) {
+				if(statusEffectChance == 1) {
+					if(!gameState.Enemy.StatusEffects.HasFlag(item.StatusEffects)) {
 						gameState.AddMessage($"The {gameState.Enemy.Name} is now affected by {item.StatusEffects.ToString()}!");
 						gameState.Enemy.StatusEffects = item.StatusEffects;
 					}
 				}
 			}
 			// Check if enemy died.
-			
-			if (gameState.Enemy.CurrentHealth <= 0) {
+
+			if(gameState.Enemy.CurrentHealth <= 0) {
 				gameState.IsPlayersTurn = true; // Zero this field out because combat is over.
 				gameState.IsLocationComplete = true; // Player has completed the current area.
 				gameState.AddMessage($"You have defeated the {gameState.Enemy.Name}! Check your map to see where you're going next.");
@@ -84,12 +83,12 @@ namespace PromptQuest.Services {
 				int gold = random.Next(6, 16);
 				gameState.Player.Gold += gold;
 				gameState.AddMessage($"You gained {gold} gold!");
-				if (gameState.PlayerLocation == 18) {
+				if(gameState.PlayerLocation == 18) {
 					Item bossItem = GetBossItem(gameState); // Get the boss item.
 					gameState.AddMessage($"You picked up the {gameState.Enemy.Name}'s {bossItem.Name}!");
 					gameState.Player.Items.Add(bossItem);
 					return;
-				} 
+				}
 				if(gameState.PlayerLocation == 11) {
 					Item eliteItem = GetEliteItem(gameState); // Get the elite's item.
 					gameState.AddMessage($"You picked up the {gameState.Enemy.Name}'s {eliteItem.Name}!");
@@ -97,14 +96,12 @@ namespace PromptQuest.Services {
 					return;
 				}
 			}
-			
+
 			gameState.IsPlayersTurn = false;
 		}
 		/// <summary>activates the player's ability</summary>
-		public void PlayerAbility(GameState gameState)
-		{
-			switch (gameState.Player.Class.ToLower())
-			{
+		public void PlayerAbility(GameState gameState) {
+			switch(gameState.Player.Class.ToLower()) {
 				case "warrior"://attack for double power, uses the attack function
 					gameState.AddMessage($"You used your ability! You power up and perform a strong attack!");
 					PlayerAttack(gameState, 2, false);
@@ -134,8 +131,8 @@ namespace PromptQuest.Services {
 				return;
 			}
 			// If player is already at max health, don't let them heal.
-			if(gameState.Player.CurrentHealth == gameState.Player.MaxHealth) {
-				gameState.AddMessage("You are already at max health!");
+			if(gameState.Player.CurrentHealth >= gameState.Player.MaxHealth) {
+				gameState.AddMessage("You are already at or above max health!");
 				return;
 			}
 			// Update player health and number of potions.
@@ -158,8 +155,10 @@ namespace PromptQuest.Services {
 				gameState.Player.HealthPotions = 2;
 			}
 			// If player is already at max health, don't let them rest.
-			if(gameState.Player.CurrentHealth == gameState.Player.MaxHealth) {
-				gameState.AddMessage("You are already at max health!");
+			if(gameState.Player.CurrentHealth >= gameState.Player.MaxHealth) {
+				gameState.AddMessage("You are already at or above max health!");
+				gameState.IsLocationComplete = true;
+				return;
 			}
 			// Update player health (+30% of max health)
 			gameState.Player.CurrentHealth += gameState.Player.MaxHealth / 3;
@@ -183,22 +182,158 @@ namespace PromptQuest.Services {
 
 		/// <summary>Player accepts event, updates the game state, then returns a message.</summary>
 		public void PlayerAccept(GameState gameState) {
-			// Player gains 3 potions
-			gameState.Player.HealthPotions += 3;
-			// Damage the player
-			gameState.Player.CurrentHealth -= 7;
-			if(gameState.Player.CurrentHealth <= 0) {
-				gameState.Player.CurrentHealth = 1;
+			switch(gameState.EventNum) {
+				case 1:
+					// Player gains 3 potions
+					gameState.Player.HealthPotions += 3;
+					// Damage the player
+					gameState.Player.CurrentHealth -= 7;
+					if(gameState.Player.CurrentHealth <= 0) {
+						gameState.Player.CurrentHealth = 1;
+					}
+					// Tell player what happened
+					gameState.AddMessage("Your greed earned you 3 more potions, but at what cost?");
+					break;
+				case 2:
+					int randItem = new Random().Next(1, 4); // Randomly give an item from the list below
+					Item treasureItem = new Item();
+					if(randItem == 1) {
+						// If 1, give them a treasure specific item.
+						treasureItem.Name = "Fiery Pajama Pants";
+						treasureItem.Attack = 3;
+						treasureItem.Defense = 3;
+						treasureItem.ImageSrc = "/images/FieryPajamaPants.png";
+						treasureItem.itemType = ItemType.Legs;
+						treasureItem.StatusEffects = StatusEffect.Burning;
+						gameState.Player.Items.Add(treasureItem);
+					}
+					else if(randItem == 2) {
+						// If 2, give them a treasure specific item.
+						treasureItem.Name = "Inflatable Hammer";
+						treasureItem.Attack = 8;
+						treasureItem.Defense = -2;
+						treasureItem.ImageSrc = "/images/InflatableHammer.png";
+						treasureItem.itemType = ItemType.Weapon;
+						gameState.Player.Items.Add(treasureItem);
+					}
+					else {
+						// Else, give them a treasure specific item.
+						treasureItem.Name = "Rainbow Treads";
+						treasureItem.Attack = -1;
+						treasureItem.Defense = 8;
+						treasureItem.ImageSrc = "/images/RainbowTreads.png";
+						treasureItem.itemType = ItemType.Boots;
+						gameState.Player.Items.Add(treasureItem);
+					}
+					// Tell player what happened
+					gameState.AddMessage("You gained: " + treasureItem.Name + "!");
+					break;
+				case 3:
+					Item bloodThornAxe = new Item();
+					bloodThornAxe.Name = "BloodThorn Axe";
+					bloodThornAxe.Attack = 9;
+					bloodThornAxe.Defense = 8;
+					bloodThornAxe.ImageSrc = "/images/BloodThornAxe.png";
+					bloodThornAxe.itemType = ItemType.Weapon;
+					bloodThornAxe.StatusEffects = StatusEffect.Bleeding;
+					gameState.Player.Items.Add(bloodThornAxe);
+					gameState.AddMessage("You pick up the BloodThorn Axe. It's thorns poke you.");
+					gameState.Player.CurrentHealth -= 5; // Damage the player
+					if(gameState.Player.CurrentHealth <= 0) {
+						gameState.AddMessage("By some miracle, you live...");
+						gameState.Player.CurrentHealth = 1; // Prevent death
+					}
+					break;
+				case 4:
+					Item poisonChestPlate = new Item();
+					poisonChestPlate.Name = "Plate of the Poisoned";
+					poisonChestPlate.Attack = 10;
+					poisonChestPlate.Defense = 7;
+					poisonChestPlate.ImageSrc = "/images/PoisonChestplate.png";
+					poisonChestPlate.itemType = ItemType.Chest;
+					gameState.Player.Items.Add(poisonChestPlate);
+					gameState.AddMessage("You pick up the Plate of the Poisoned. It's toxins cause you to feel sick.");
+					gameState.Player.CurrentHealth -= 10; // Damage the player
+					if(gameState.Player.CurrentHealth <= 0) {
+						gameState.AddMessage("By some miracle, you live...");
+						gameState.Player.CurrentHealth = 1; // Prevent death
+					}
+					break;
+				case 5:
+					Random random = new Random();
+					int chance = random.Next(1, 101); // Generate a number between 1 and 100
+					if(chance <= 50) {
+						// 50%: Gain Love
+						gameState.AddMessage("You feel a warm sensation. You have gained Love and heal for 10HP!");
+						gameState.Player.CurrentHealth += 10; // Heal the player
+						if(gameState.Player.CurrentHealth > gameState.Player.MaxHealth) {
+							gameState.Player.CurrentHealth = gameState.Player.MaxHealth;
+						}
+					}
+					else if(chance <= 80) {
+						// 30%: Suffer Hate
+						gameState.AddMessage("A dark shadow looms over you. You suffer Hate and take 5 damage!");
+						gameState.Player.CurrentHealth -= 5; // Damage the player
+						if(gameState.Player.CurrentHealth <= 0) {
+							gameState.AddMessage("By some miracle, you live...");
+							gameState.Player.CurrentHealth = 1; // Prevent death
+						}
+					}
+					else if(chance <= 97) {
+						// 17%: New Arms
+						gameState.AddMessage("You feel a strange transformation. You have gained a new armament!");
+						Item newArms = new Item {
+							Name = "Mystic Arms",
+							Attack = 10,
+							Defense = -5,
+							ImageSrc = "/images/MysticArms.png",
+							itemType = ItemType.Weapon
+						};
+						gameState.Player.Items.Add(newArms);
+					}
+					else if(chance <= 99) {
+						// 2%: Unimaginable Wealth
+						gameState.AddMessage("Gold rains from the sky! You have gained Unimaginable Wealth!");
+						gameState.Player.Gold += 100; // Give 100 gold
+					}
+					else {
+						// 1%: Certain Death
+						gameState.AddMessage("A chilling wind passes through you. You have met Certain Death.");
+						gameState.Player.CurrentHealth = 0; // Set health to 0 to indicate death
+					}
+					break;
+				case 6:
+					gameState.AddMessage("You scoop up the small pile of gold!");
+					gameState.Player.Gold += 20; // Grant gold
+					break;
+				case 7:
+					gameState.AddMessage("You drink the red potion and feel more refreshed than ever! You gained 5 Maximum HP and healed to full!");
+					gameState.Player.MaxHealth += 5; // Increase max health by 5
+					gameState.Player.CurrentHealth = gameState.Player.MaxHealth; // Heal the player
+					break;
+				case 8:
+					gameState.AddMessage("You drink the red potion and feel... a little disgusted. You lost 1 Maximum HP, but gained an uncapped 25 HP!");
+					gameState.Player.MaxHealth -= 1; // Decrease max health by 1
+					gameState.Player.CurrentHealth += 20; // Heal the player, even if it goes over max
+					break;
+				case 9:
+					gameState.AddMessage("You drink the grey potion and feel like vomiting. Your Maximum HP is now 1, but you gained an uncapped 75 HP!");
+					gameState.Player.MaxHealth = 1; // Decrease max health to 1
+					gameState.Player.CurrentHealth += 75; // Heal the player, even if it goes over max
+					break;
+				case 10:
+					gameState.AddMessage("You feel stronger!");
+					gameState.Player.Attack += 2; // Increase attack by 2 permanently
+					break;
 			}
-			// Tell player what happened
-			gameState.AddMessage("Your greed earned you 3 more potions, but at what cost?");
+
 			// Ensure player can leave
 			gameState.IsLocationComplete = true;
 		}
 
 		/// <summary>Player denies event, updates the game state, then returns a message.</summary>
 		public void PlayerDeny(GameState gameState) {
-			gameState.AddMessage("You resist the temptation.");
+			gameState.AddMessage("You figure it's not worth the risk.");
 			gameState.IsLocationComplete = true;
 		}
 
@@ -280,11 +415,11 @@ namespace PromptQuest.Services {
 			Item item = gameState.Player.ItemEquipped;
 			// Calculate damage as attack - defense.
 			int damage = gameState.Enemy.Attack - gameState.Player.Defense - item.Defense - gameState.Player.DefenseBuff;
-			if(gameState.Player.DefenseBuff>0){
+			if(gameState.Player.DefenseBuff > 0) {
 				gameState.AddMessage("Your shield blocked incoming damage");
 			}
 			gameState.Player.DefenseBuff = 0;//reset the defense buff after blocking one hit
-			// If attack is less than one make it one.
+																			 // If attack is less than one make it one.
 			if(damage < 1)
 				damage = 1;
 			// Update player health.
@@ -298,12 +433,12 @@ namespace PromptQuest.Services {
 				gameState.ClearMapNodeIdsVisited(); // Clear visited map nodes since the player died.
 			}
 			// Apply status effect damage to the enemy
-			if (gameState.Enemy.StatusEffects.HasFlag(StatusEffect.Burning)) { 
+			if(gameState.Enemy.StatusEffects.HasFlag(StatusEffect.Burning)) {
 				gameState.Enemy.CurrentHealth -= 2;
 				gameState.Enemy.StatusEffects &= ~StatusEffect.Burning; // Remove the burning effect
 				gameState.AddMessage($"The {gameState.Enemy.Name} took 2 damage from burning and the flame extinguished.");
 			}
-			if (gameState.Enemy.StatusEffects.HasFlag(StatusEffect.Bleeding)) {
+			if(gameState.Enemy.StatusEffects.HasFlag(StatusEffect.Bleeding)) {
 				gameState.Enemy.CurrentHealth -= 1;
 				gameState.AddMessage($"The {gameState.Enemy.Name} took 1 damage from their untreated wound.");
 			}
@@ -313,13 +448,13 @@ namespace PromptQuest.Services {
 			if(gameState.Enemy.CurrentHealth <= 0) {
 				gameState.IsLocationComplete = true; // Player has completed the current area.
 				gameState.AddMessage($"You have defeated the {gameState.Enemy.Name}! Check your map to see where you're going next.");
-				if (gameState.PlayerLocation == 10) {
+				if(gameState.PlayerLocation == 10) {
 					Item bossItem = GetBossItem(gameState); // Get the boss item.
 					gameState.AddMessage($"You picked up the {gameState.Enemy.Name}'s {bossItem.Name}!");
 					gameState.Player.Items.Add(bossItem);
 					return;
 				}
-				if (gameState.PlayerLocation == 7) {
+				if(gameState.PlayerLocation == 7) {
 					Item eliteItem = GetEliteItem(gameState); // Get the elite's item.
 					gameState.AddMessage($"You picked up the {gameState.Enemy.Name}'s {eliteItem.Name}!");
 					gameState.Player.Items.Add(eliteItem);
@@ -428,14 +563,14 @@ namespace PromptQuest.Services {
 		public Item GetBossItem(GameState gameState) {
 			// Generate a boss item for the player
 			Item bossItem = new Item();
-			if (gameState.Floor == 1) {
+			if(gameState.Floor == 1) {
 				// If the player is on the first floor, give them a boss specific item.
 				bossItem.Name = "Dark Staff";
 				bossItem.Attack = 5;
 				bossItem.Defense = 4;
 				bossItem.ImageSrc = "/images/DarkStaff.png";
 			}
-			else if (gameState.Floor == 2) {
+			else if(gameState.Floor == 2) {
 				// If the player is on the second floor, give them a boss specific item.
 				bossItem.Name = "Dark Elvish Sword";
 				bossItem.Attack = 8;
@@ -456,7 +591,7 @@ namespace PromptQuest.Services {
 		public Item GetEliteItem(GameState gameState) {
 			// Generate a boss item for the player
 			Item eliteItem = new Item();
-			if (gameState.Floor == 1) {
+			if(gameState.Floor == 1) {
 				// If the player is on the first floor, give them an elite specific item.
 				eliteItem.Name = "Berserker Axe";
 				eliteItem.Attack = 5;
@@ -464,7 +599,7 @@ namespace PromptQuest.Services {
 				eliteItem.ImageSrc = "/images/BerserkerAxe.png";
 				eliteItem.StatusEffects = StatusEffect.Bleeding;
 			}
-			else if (gameState.Floor == 2) {
+			else if(gameState.Floor == 2) {
 				// If the player is on the second floor, give them an elite specific item.
 				eliteItem.Name = "Spiked Leaf";
 				eliteItem.Attack = 6;
@@ -485,7 +620,7 @@ namespace PromptQuest.Services {
 		#region Elite and Boss Enemy Generation
 		/// <summary> Generates an Elite Enemy, updates the game state, then returns the Elite Enemy.</summary>
 		public Enemy GetElite(GameState gameState) {
-			if (gameState.Floor == 1) {
+			if(gameState.Floor == 1) {
 				Enemy elite = new Enemy();
 				elite.Name = "Spectral Orc Berserker";
 				elite.ImageUrl = "/images/SpectralOrc.png";
@@ -495,7 +630,7 @@ namespace PromptQuest.Services {
 				elite.Defense = 3;
 				return elite;
 			}
-			else if (gameState.Floor == 2) {
+			else if(gameState.Floor == 2) {
 				Enemy elite = new Enemy();
 				elite.Name = "Corrupted Plant";
 				elite.ImageUrl = "/images/EvilPlant.png";

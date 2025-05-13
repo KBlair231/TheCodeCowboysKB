@@ -69,8 +69,52 @@ namespace PromptQuest.Services {
 				return;
 			}
 			if(currentNode != null && currentNode.NodeType == "Event") {
-				gameState.AddMessage("A prickly bush lies in your path. A few red objects shimmer from fairly deep inside.");
-				gameState.AddMessage("Reach in and grab them?");
+				gameState.EventNum = new Random().Next(1, 11); // Randomly select an event number
+				switch(gameState.EventNum) {
+					case 1:
+						gameState.AddMessage("A prickly bush lies in your path. A few red objects shimmer from fairly deep inside.");
+						gameState.AddMessage("Reach in and grab them?");
+						break;
+					case 2:
+						gameState.AddMessage("You find a small chest.");
+						gameState.AddMessage("Open it?");
+						break;
+					case 3:
+						gameState.AddMessage("You find an odd-looking weapon on the ground.");
+						gameState.AddMessage("Take it?");
+						break;
+					case 4:
+						gameState.AddMessage("You find a piece of armor on a decaying corpse.");
+						gameState.AddMessage("Take it off the corpse?");
+						break;
+					case 5:
+						gameState.AddMessage("A large statue of a skeletal soldier stands before you.");
+						gameState.AddMessage("It has a button and an engraving that states:");
+						gameState.AddMessage("Press the button to test your luck.");
+						gameState.AddMessage("50%: Gain Love. 30%: Suffer Hate. 17%: New Arms. 2%: Unimaginable Wealth. 1%: Certain Death.");
+						gameState.AddMessage("Press the button?");
+						break;
+					case 6:
+						gameState.AddMessage("You find a small pile of gold.");
+						gameState.AddMessage("Take it?");
+						break;
+					case 7:
+						gameState.AddMessage("You find a large red potion that looks especially tasty.");
+						gameState.AddMessage("Drink it?");
+						break;
+					case 8:
+						gameState.AddMessage("You find a large red potion that looks... peculiar.");
+						gameState.AddMessage("Drink it?");
+						break;
+					case 9:
+						gameState.AddMessage("You find an odd grey potion that looks kind of gross.");
+						gameState.AddMessage("Drink it?");
+						break;
+					case 10:
+						gameState.AddMessage("You find a shiny, magical stone on the floor.");
+						gameState.AddMessage("Crush it to absorb its power?");
+						break;
+				}
 				gameState.InEvent = true;
 				return;
 			}
