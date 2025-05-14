@@ -11,8 +11,8 @@ using PromptQuest.Models;
 namespace PromptQuest.Migrations
 {
     [DbContext(typeof(GameStateDbContext))]
-    [Migration("20250513230034_f107-passives")]
-    partial class f107passives
+    [Migration("20250514195557_InitialCreate")]
+    partial class InitialCreate
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -81,6 +81,9 @@ namespace PromptQuest.Migrations
                         .HasColumnType("bit");
 
                     b.Property<bool>("InEvent")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("InShop")
                         .HasColumnType("bit");
 
                     b.Property<bool>("InTreasure")
@@ -177,7 +180,10 @@ namespace PromptQuest.Migrations
                     b.Property<int>("AbilityCooldown")
                         .HasColumnType("int");
 
-                    b.Property<int>("Attack")
+                    b.Property<int>("BaseAttack")
+                        .HasColumnType("int");
+
+                    b.Property<int>("BaseDefense")
                         .HasColumnType("int");
 
                     b.Property<string>("Class")
@@ -185,9 +191,6 @@ namespace PromptQuest.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("CurrentHealth")
-                        .HasColumnType("int");
-
-                    b.Property<int>("Defense")
                         .HasColumnType("int");
 
                     b.Property<int>("DefenseBuff")

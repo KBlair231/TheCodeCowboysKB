@@ -21,7 +21,8 @@ namespace PromptQuest.Migrations
                     MaxHealth = table.Column<int>(type: "int", nullable: false),
                     CurrentHealth = table.Column<int>(type: "int", nullable: false),
                     Attack = table.Column<int>(type: "int", nullable: false),
-                    Defense = table.Column<int>(type: "int", nullable: false)
+                    Defense = table.Column<int>(type: "int", nullable: false),
+                    StatusEffects = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -35,12 +36,18 @@ namespace PromptQuest.Migrations
                     PlayerId = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Image = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     HealthPotions = table.Column<int>(type: "int", nullable: false),
                     MaxHealth = table.Column<int>(type: "int", nullable: false),
                     CurrentHealth = table.Column<int>(type: "int", nullable: false),
-                    Defense = table.Column<int>(type: "int", nullable: false),
-                    Attack = table.Column<int>(type: "int", nullable: false),
-                    Class = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                    BaseDefense = table.Column<int>(type: "int", nullable: false),
+                    DefenseBuff = table.Column<int>(type: "int", nullable: false),
+                    BaseAttack = table.Column<int>(type: "int", nullable: false),
+                    AbilityCooldown = table.Column<int>(type: "int", nullable: false),
+                    Class = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Gold = table.Column<int>(type: "int", nullable: false),
+                    Passive = table.Column<int>(type: "int", nullable: false),
+                    StatusEffects = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -55,13 +62,18 @@ namespace PromptQuest.Migrations
                     PlayerId = table.Column<int>(type: "int", nullable: true),
                     EnemyId = table.Column<int>(type: "int", nullable: true),
                     StoredMessages = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    InTutorial = table.Column<bool>(type: "bit", nullable: false),
                     InCombat = table.Column<bool>(type: "bit", nullable: false),
                     InCampsite = table.Column<bool>(type: "bit", nullable: false),
                     InEvent = table.Column<bool>(type: "bit", nullable: false),
+                    EventNum = table.Column<int>(type: "int", nullable: false),
+                    InTreasure = table.Column<bool>(type: "bit", nullable: false),
+                    InShop = table.Column<bool>(type: "bit", nullable: false),
                     IsPlayersTurn = table.Column<bool>(type: "bit", nullable: false),
                     PlayerLocation = table.Column<int>(type: "int", nullable: false),
                     IsLocationComplete = table.Column<bool>(type: "bit", nullable: false),
-                    Floor = table.Column<int>(type: "int", nullable: false)
+                    Floor = table.Column<int>(type: "int", nullable: false),
+                    StoredMapNodeIdsVisited = table.Column<string>(type: "nvarchar(max)", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -91,7 +103,10 @@ namespace PromptQuest.Migrations
                     Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Attack = table.Column<int>(type: "int", nullable: false),
                     Defense = table.Column<int>(type: "int", nullable: false),
-                    ImageSrc = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                    ImageSrc = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    StatusEffects = table.Column<int>(type: "int", nullable: false),
+                    Passive = table.Column<int>(type: "int", nullable: false),
+                    itemType = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {

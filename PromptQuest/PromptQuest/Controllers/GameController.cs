@@ -4,6 +4,7 @@ using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
 using PromptQuest.Models;
 using PromptQuest.Services;
+using System.Numerics;
 
 namespace PromptQuest.Controllers {
 
@@ -41,6 +42,7 @@ namespace PromptQuest.Controllers {
 			player.BaseAttack = 3;
 			player.BaseDefense = 1;
 			player.Class = player.Class;
+			player.Image=_dallEApiService.GetImageDataFromSession();//Grab the Player's generated image data. Returns "" if there is none.
 			if(ModelState.IsValid) { // Character created succesfully
 				GameState gameState = await _gameStateService.StartNewGame(player); // Start a new game. If the user already has one it will be overwritten.
 				_combatService.StartCombat(gameState); // Start combat right away, for now.
@@ -53,9 +55,32 @@ namespace PromptQuest.Controllers {
 			}
 		}
 
-		public async Task<JsonResult> CreateCharacterImage(string prompt) {
-			string image = await _dallEApiService.GenerateImageAsync(prompt);
-			return Json(image);
+		public async Task CreateCharacterImage(string prompt) {
+			string imageData = await _dallEApiService.GenerateImageAsync(prompt);
+			_dallEApiService.StoreImageDataInSession(imageData);//Store the preview image in session so that it can be retrieved when we save the character.
+		}
+
+		/// <summary> Serves up the player's image as a file instead of a base64 string. Set isPreview to true, if you want to fetch the preview image from the session instead of Player.Image the db </summary>
+		public IActionResult GetCharacterImage(bool isPreview = false) {
+			string imageData="";
+			if(isPreview) {
+				imageData = _dallEApiService.GetImageDataFromSession();//Grab the Player's generated image data.
+				if(!string.IsNullOrEmpty(imageData)) {
+					byte[] imageBytes = Convert.FromBase64String(imageData);
+					return File(imageBytes,"image/png");
+				}
+			}
+			else {
+				imageData = _gameStateService.GetGameState().Player.Image;//Grab the Player's generated image data.
+				if(!string.IsNullOrEmpty(imageData)) {
+					byte[] imageBytes = Convert.FromBase64String(imageData);
+					return File(imageBytes,"image/png");
+				}
+			}
+			// Serve default image if imageData is empty or null
+			string defaultImagePath = Path.Combine("wwwroot/images", "DefaultPlayerImage.png"); // Adjust path as needed
+			byte[] defaultImageBytes = System.IO.File.ReadAllBytes(defaultImagePath);
+			return File(defaultImageBytes, "image/png");
 		}
 
 		[HttpGet]

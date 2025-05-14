@@ -25,7 +25,7 @@
 	<div class="pq-container pq-center-element-x" style="height: 100%; width: 60%; top: 0; left: 50%; border: .1vmin solid white; border-radius: 50px;">
 		<div class="pq-container pq-center-element-x" style="height: 60%; width: 95%; top: 5%; left: 50%;">
 			<div id="player-image-loader" class="loader pq-center-element-x" style="display:none; top: 40%; left: 22%;"></div>
-			<img alt="Image of your character" id="player-image" style="display: none; height: auto; width: 50%; top:0; left: 0%; border: .1vmin solid white; max-height: 100%;">
+			<img src="/images/DefaultPlayerImage.png" alt="Image of your character" id="player-image" style="height: auto; width: 50%; top:0; left: 0%; border: .1vmin solid white; max-height: 100%;">
 			<textarea class="pq-form-control" id="description" placeholder="What does your character look like?" style="height: 85%; width: 45%; top:0; left: 52%; resize: none; border: .1vmin solid white; max-height: 100%; margin-top:0;"></textarea>
 			<button id="preview-btn" class="pq-button" style="width: auto; bottom:0; left: 52%; background-color:darkgreen;">Take a look</button>
 		</div>
@@ -48,8 +48,6 @@
 			</select>
 			<span asp-validation-for="Passive" class="text-danger"></span>
 			<div class="pq-font" id="passive-description">No Passive</div>
-			<!-- Dummy field that is invisible. Used to pass the base 64 string of the player's image up with the form. -->
-			<input asp-for="Image" id="player-image-data" style="display:none;"/>
 			<span asp-validation-for="Image" class="text-danger"></span>
 			<button type="submit" id="create-character-btn" class="pq-button" style="background-color:darkgreen; margin-top:20px;">Start Adventure</button>
 		</form>

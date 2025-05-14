@@ -165,7 +165,7 @@ function refreshDialogBox() {
 
 function refreshPlayerDisplay() {
 	document.querySelectorAll(".player-name").forEach(el => { el.textContent = gameState.player.name; });
-	document.querySelectorAll(".player-image").forEach(el => { el.src = `data:image/png;base64,${gameState.player.image}`; }); // Placeholder image for now.
+	document.querySelectorAll(".player-image").forEach(el => { el.src = `/Game/GetCharacterImage`; }); // Placeholder image for now.
 	document.querySelectorAll(".player-image").forEach(el => { el.alt = gameState.player.name; });
 	document.querySelectorAll(".player-attack").forEach(el => { el.textContent = gameState.player.attackStat ?? 0; });
 	document.querySelectorAll(".player-defense").forEach(el => { el.textContent = gameState.player.defenseStat ?? 0; });

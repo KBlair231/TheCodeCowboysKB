@@ -1,16 +1,22 @@
 ﻿using System.Text;
 using Newtonsoft.Json;
+using PromptQuest.Models;
 
 namespace PromptQuest.Services {
 	public interface IDallEApiService {
 		public Task<string> GenerateImageAsync(string prompt);
+		void StoreImageDataInSession(string imageData);
+		string GetImageDataFromSession();
 	}
 
 	public class DallEApiService:IDallEApiService {
 		private readonly HttpClient _httpClient;
+		private readonly IHttpContextAccessor _httpContextAccessor;
+		private const string ImageDataSessionKey = "ImageData";
 
-		public DallEApiService(HttpClient httpClient) {
+		public DallEApiService(HttpClient httpClient, IHttpContextAccessor httpContextAccessor) {
 			_httpClient = httpClient;
+			_httpContextAccessor = httpContextAccessor;
 		}
 
 		public async Task<string> GenerateImageAsync(string description) {
@@ -40,6 +46,23 @@ namespace PromptQuest.Services {
 			var responseObject = JsonConvert.DeserializeObject<dynamic>(responseContent);
 			//Return image as base 64 string.
 			return responseObject.data[0].b64_json;
+		}
+
+		public void StoreImageDataInSession(string imageData) {
+			if(_httpContextAccessor.HttpContext == null) {
+				throw new Exception("Error writing image data to session: _httpContextAccessor.HttpContext was null.");
+			}
+			var session = _httpContextAccessor.HttpContext.Session;
+			session.SetString(ImageDataSessionKey,imageData);
+		}
+
+		public string GetImageDataFromSession() {
+			if(_httpContextAccessor.HttpContext == null) {
+				throw new Exception("Error reading Image data from session: _httpContextAccessor.HttpContext was null.");
+			}
+			var session = _httpContextAccessor.HttpContext.Session;
+			var ImageData = session.GetString(ImageDataSessionKey);
+			return ImageData ?? "";
 		}
 	}
 }
