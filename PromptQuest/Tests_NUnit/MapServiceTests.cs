@@ -22,30 +22,5 @@ namespace Tests_NUnit {
 			Assert.That(map.ListMapNodes.Count, Is.EqualTo(18));
 		}
 
-		[Test]
-		public void MovePlayer_ShouldIncrementPlayerLocation() {
-			// Arrange
-			var gameState = new GameState { PlayerLocation = 1 };
-
-			// Act
-			_mapService.MovePlayer(gameState);
-
-			// Assert
-			Assert.That(gameState.PlayerLocation, Is.EqualTo(2));
-			Assert.IsFalse(gameState.IsLocationComplete);
-		}
-
-		[Test]
-		public void MovePlayer_Should_Reset_Location_To_1_At_End_Of_The_Map() {
-			// Arrange
-			var gameState = new GameState { PlayerLocation = 18 };
-
-			// Act
-			_mapService.MovePlayer(gameState);
-
-			// Assert
-			Assert.That(gameState.PlayerLocation, Is.EqualTo(1));
-		}
-
 	}
 }

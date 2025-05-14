@@ -17,13 +17,6 @@ namespace Tests_BDD.StepDefinitions {
 		}
 
 		#region Boss Spawn Test
-		[Given("I beat the {int}th room")]
-		public void GivenIBeatTheThRoom(int p0) { 
-			// Navigate to the game page
-			webDriver.Navigate().GoToUrl("https://localhost:7186/Game/SkipToBoss");
-			// Defeat the room's enemy
-			PromptQuestTestMethods.ClearRoom(webDriver);
-		}
 
 		[When("I move to the {int}th room")]
 		public void WhenIMoveToTheThRoom(int p0) {
@@ -42,7 +35,7 @@ namespace Tests_BDD.StepDefinitions {
 		#region Boss Defeat Test
 		[Given("I am in the boss room")]
 		public void GivenIAmInTheBossRoom() {
-			PromptQuestTestMethods.SkipToBoss(webDriver);
+			PromptQuestTestMethods.MoveToRoom(webDriver, 18);
 		}
 
 		[When("I defeat the boss")]

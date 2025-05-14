@@ -20,17 +20,19 @@ namespace Tests_BDD.Features
     [System.CodeDom.Compiler.GeneratedCodeAttribute("Reqnroll", "2.0.0.0")]
     [System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
     [NUnit.Framework.TestFixtureAttribute()]
-    [NUnit.Framework.DescriptionAttribute("Floor Boss")]
-    public partial class FloorBossFeature
+    [NUnit.Framework.DescriptionAttribute("Add Shop Nodes")]
+    [NUnit.Framework.CategoryAttribute("scrum-122")]
+    public partial class AddShopNodesFeature
     {
         
         private global::Reqnroll.ITestRunner testRunner;
         
-        private static string[] featureTags = ((string[])(null));
+        private static string[] featureTags = new string[] {
+                "scrum-122"};
         
-        private static global::Reqnroll.FeatureInfo featureInfo = new global::Reqnroll.FeatureInfo(new System.Globalization.CultureInfo("en-US"), "Features", "Floor Boss", "The ability for the player to fight a boss at the end of the floor", global::Reqnroll.ProgrammingLanguage.CSharp, featureTags);
+        private static global::Reqnroll.FeatureInfo featureInfo = new global::Reqnroll.FeatureInfo(new System.Globalization.CultureInfo("en-US"), "Features", "Add Shop Nodes", "\tTests features regaurding shops", global::Reqnroll.ProgrammingLanguage.CSharp, featureTags);
         
-#line 1 "FloorBoss.feature"
+#line 1 "Shop.feature"
 #line hidden
         
         [NUnit.Framework.OneTimeSetUpAttribute()]
@@ -82,45 +84,13 @@ namespace Tests_BDD.Features
         }
         
         [NUnit.Framework.TestAttribute()]
-        [NUnit.Framework.DescriptionAttribute("Entering the boss room")]
-        [NUnit.Framework.CategoryAttribute("scrum-83")]
-        public async System.Threading.Tasks.Task EnteringTheBossRoom()
-        {
-            string[] tagsOfScenario = new string[] {
-                    "scrum-83"};
-            System.Collections.Specialized.OrderedDictionary argumentsOfScenario = new System.Collections.Specialized.OrderedDictionary();
-            global::Reqnroll.ScenarioInfo scenarioInfo = new global::Reqnroll.ScenarioInfo("Entering the boss room", null, tagsOfScenario, argumentsOfScenario, featureTags);
-#line 6
-this.ScenarioInitialize(scenarioInfo);
-#line hidden
-            if ((global::Reqnroll.TagHelper.ContainsIgnoreTag(scenarioInfo.CombinedTags) || global::Reqnroll.TagHelper.ContainsIgnoreTag(featureTags)))
-            {
-                testRunner.SkipScenario();
-            }
-            else
-            {
-                await this.ScenarioStartAsync();
-#line 7
- await testRunner.GivenAsync("I am on the game page", ((string)(null)), ((global::Reqnroll.Table)(null)), "Given ");
-#line hidden
-#line 8
- await testRunner.WhenAsync("I move to the 18th room", ((string)(null)), ((global::Reqnroll.Table)(null)), "When ");
-#line hidden
-#line 9
- await testRunner.ThenAsync("A boss should be spawned", ((string)(null)), ((global::Reqnroll.Table)(null)), "Then ");
-#line hidden
-            }
-            await this.ScenarioCleanupAsync();
-        }
-        
-        [NUnit.Framework.TestAttribute()]
-        [NUnit.Framework.DescriptionAttribute("Defeating the boss")]
-        public async System.Threading.Tasks.Task DefeatingTheBoss()
+        [NUnit.Framework.DescriptionAttribute("Check Shop Buttons Exist")]
+        public async System.Threading.Tasks.Task CheckShopButtonsExist()
         {
             string[] tagsOfScenario = ((string[])(null));
             System.Collections.Specialized.OrderedDictionary argumentsOfScenario = new System.Collections.Specialized.OrderedDictionary();
-            global::Reqnroll.ScenarioInfo scenarioInfo = new global::Reqnroll.ScenarioInfo("Defeating the boss", null, tagsOfScenario, argumentsOfScenario, featureTags);
-#line 11
+            global::Reqnroll.ScenarioInfo scenarioInfo = new global::Reqnroll.ScenarioInfo("Check Shop Buttons Exist", null, tagsOfScenario, argumentsOfScenario, featureTags);
+#line 5
 this.ScenarioInitialize(scenarioInfo);
 #line hidden
             if ((global::Reqnroll.TagHelper.ContainsIgnoreTag(scenarioInfo.CombinedTags) || global::Reqnroll.TagHelper.ContainsIgnoreTag(featureTags)))
@@ -130,17 +100,14 @@ this.ScenarioInitialize(scenarioInfo);
             else
             {
                 await this.ScenarioStartAsync();
-#line 12
+#line 6
  await testRunner.GivenAsync("I am on the game page", ((string)(null)), ((global::Reqnroll.Table)(null)), "Given ");
 #line hidden
-#line 13
- await testRunner.WhenAsync("I move to the 18th room", ((string)(null)), ((global::Reqnroll.Table)(null)), "When ");
+#line 7
+ await testRunner.WhenAsync("I move to a shop node", ((string)(null)), ((global::Reqnroll.Table)(null)), "When ");
 #line hidden
-#line 14
- await testRunner.WhenAsync("I defeat the boss", ((string)(null)), ((global::Reqnroll.Table)(null)), "When ");
-#line hidden
-#line 15
- await testRunner.ThenAsync("I should be given a boss item", ((string)(null)), ((global::Reqnroll.Table)(null)), "Then ");
+#line 8
+ await testRunner.ThenAsync("I should see a shop with items to buy", ((string)(null)), ((global::Reqnroll.Table)(null)), "Then ");
 #line hidden
             }
             await this.ScenarioCleanupAsync();

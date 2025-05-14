@@ -3,7 +3,7 @@ using PromptQuest.Models;
 
 namespace PromptQuest.Services {
 	public interface IMapService {
-		public void MovePlayer(GameState gameState, int mapNodeId = 0);
+		public void MovePlayer(GameState gameState, int mapNodeId = 0, bool admin = false);
 		public Map GetMap();
 	}
 	public class MapService : IMapService {
@@ -19,22 +19,26 @@ namespace PromptQuest.Services {
 			new MapNode { MapNodeId = 7, NodeType = "Enemy", ConnectedNodes = {9}, NodeHeight = 1, NodeDistance = 4},
 			new MapNode { MapNodeId = 8, NodeType = "Campsite", ConnectedNodes = {9}, NodeHeight = 3, NodeDistance = 4},
 			new MapNode { MapNodeId = 9, NodeType = "Enemy", ConnectedNodes = {10, 11}, NodeHeight = 2, NodeDistance = 5},
-			new MapNode { MapNodeId = 10, NodeType = "Enemy", ConnectedNodes = {12}, NodeHeight = 1, NodeDistance = 6},
+			new MapNode { MapNodeId = 10, NodeType = "Shop", ConnectedNodes = {12}, NodeHeight = 1, NodeDistance = 6},
 			new MapNode { MapNodeId = 11, NodeType = "Elite", ConnectedNodes = {12}, NodeHeight = 3, NodeDistance = 6},
 			new MapNode { MapNodeId = 12, NodeType = "Enemy", ConnectedNodes = {13, 14, 15}, NodeHeight = 2, NodeDistance = 7},
 			new MapNode { MapNodeId = 13, NodeType = "Treasure", ConnectedNodes = {16}, NodeHeight = 1, NodeDistance = 8},
 			new MapNode { MapNodeId = 14, NodeType = "Campsite", ConnectedNodes = {17}, NodeHeight = 2, NodeDistance = 8},
 			new MapNode { MapNodeId = 15, NodeType = "Event", ConnectedNodes = {17}, NodeHeight = 3, NodeDistance = 8},
-			new MapNode { MapNodeId = 16, NodeType = "Enemy", ConnectedNodes = {18}, NodeHeight = 1, NodeDistance = 9},
-			new MapNode { MapNodeId = 17, NodeType = "Treasure", ConnectedNodes = {18}, NodeHeight = 2, NodeDistance = 9},
+			new MapNode { MapNodeId = 16, NodeType = "Shop", ConnectedNodes = {18}, NodeHeight = 1, NodeDistance = 9},
+			new MapNode { MapNodeId = 17, NodeType = "Enemy", ConnectedNodes = {18}, NodeHeight = 2, NodeDistance = 9},
 			new MapNode { MapNodeId = 18, NodeType = "Boss", ConnectedNodes = {1}, NodeHeight = 2, NodeDistance = 10}
 		};
 		private static readonly Map _map = new Map() { ListMapNodes = _mapNodes };
 
 		// Moves the player to the mapNode with the given mapNodeId, if mapNodeId isn't provided, the player's location (mapNodeId) increases by 1.
-		public void MovePlayer(GameState gameState, int mapNodeId = 0) {
-			MapNode mapNodeCur = _mapNodes.Find(mn => mn.MapNodeId == gameState.PlayerLocation);
-			if(!mapNodeCur.ConnectedNodes.Contains(mapNodeId)) {
+		public void MovePlayer(GameState gameState, int mapNodeId = 0, bool admin = false) {
+			MapNode? mapNodeCur = _mapNodes.Find(mn => mn.MapNodeId == gameState.PlayerLocation);
+			if(mapNodeCur == null) {
+				gameState.AddMessage("You are lost in the void.");
+				return;
+			}
+			if(!mapNodeCur.ConnectedNodes.Contains(mapNodeId) && !admin) {
 				return;
 			}
 			// Just for now to keep track of visited nodes.
@@ -61,6 +65,7 @@ namespace PromptQuest.Services {
 			gameState.InCampsite = false;
 			gameState.InEvent = false;
 			gameState.InTreasure = false;
+			gameState.InShop = false;
 			// Check if the player is on a campsite or event node
 			var currentNode = _mapNodes.FirstOrDefault(node => node.MapNodeId == gameState.PlayerLocation);
 			if(currentNode != null && currentNode.NodeType == "Campsite") {
@@ -122,6 +127,14 @@ namespace PromptQuest.Services {
 				gameState.AddMessage("You find a chest during your travels!");
 				gameState.AddMessage("Open the chest?");
 				gameState.InTreasure = true;
+				return;
+			}
+			if(currentNode != null && currentNode.NodeType == "Shop") {
+				gameState.AddMessage("You find yourself at an ominous shop with no tender.");
+				gameState.AddMessage("What would you like to buy?");
+				gameState.InShop = true;
+				// Allow player to leave immediately.
+				gameState.IsLocationComplete = true;
 				return;
 			}
 			if(currentNode.NodeType == "Enemy" || currentNode.NodeType == "Boss" || currentNode.NodeType == "Elite") {

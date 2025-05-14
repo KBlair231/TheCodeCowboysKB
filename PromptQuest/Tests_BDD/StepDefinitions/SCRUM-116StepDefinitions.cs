@@ -26,7 +26,7 @@ namespace Tests_BDD.StepDefinitions {
 			IWebElement eliteName = webDriver.FindElement(By.Id("enemy-name"));
 			// Assert that the elite name displayed is Spectral Orc Berserker
 			string testString = eliteName.Text;
-			Assert.IsTrue(eliteName.Text == "Spectral Orc Berserker", "The elite name is incorrect.");
+			Assert.IsTrue(eliteName.Text == "Spectral Orc Berserker", "The elite name is: " + testString);
 		}
 
 		[When("I defeat the elite")]

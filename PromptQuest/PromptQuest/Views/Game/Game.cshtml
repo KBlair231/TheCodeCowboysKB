@@ -19,7 +19,7 @@
 	<div class="login-display" style="top: 0; left: 0; height: 8vmin; width: 20vmin;">
 		@if (isUserLoggedIn)
 		{
-			<img src="@userProfileImage"/>
+			<img src="@userProfileImage" />
 			<a class="pq-link" href="/Account/SignOutFromGoogleLogin">Logout</a>
 		}
 		else
@@ -64,6 +64,9 @@
 	<div class="pq-center-element-x" id="treasure-button-display" style="display:none; bottom: 0; left: 50%; height: 45vmin; width: fit-content;">
 		<button class="pq-button" id="open-treasure-btn" style="margin-bottom:2vmin; width: 100%;">Open</button>
 		<button class="pq-button" id="skip-treasure-btn" style="margin-bottom:2vmin; width: 100%;">Seems Like a Trap...</button>
+	</div>
+	<!-- Shop Buttons Display -->
+	<div class="pq-center-element-x" id="shop-button-display" style="display:none; bottom: 0; left: 50%; height: 45vmin; width: 45vmin;">
 	</div>
 	<!-- Enemy Display -->
 	<div class="pq-container" id="enemy-display" style="display:none; bottom: 0; right: 0; width: 50vmin; height: 50vmin;">
@@ -130,7 +133,6 @@
 					@for (int i = 1; i <= 20; i++)
 					{
 						<div class="pq-inventory-slot" id="inventory-slot-@i">
-							
 						</div>
 					}
 				</div>

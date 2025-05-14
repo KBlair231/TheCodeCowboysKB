@@ -56,6 +56,10 @@ namespace Tests_BDD {
 		/// <summary> Repeatedly clicks attack until the enemy is defeated. </summary>
 		public static void ClearRoom(IWebDriver webDriver) {
 			EquipItem(webDriver, 7);
+			EquipItem(webDriver, 1);
+			EquipItem(webDriver, 2);
+			EquipItem(webDriver, 3);
+			EquipItem(webDriver, 4);
 			// Click on the attack button until the enemy is dead.
 			while (webDriver.FindElement(By.Id("enemy-display")).Displayed && webDriver.FindElement(By.Id("action-button-display")).Displayed) {
 				if (int.Parse(webDriver.FindElement(By.Id("player-hp")).Text.Split("/")[0]) <= 10) {
@@ -93,7 +97,7 @@ namespace Tests_BDD {
 
 		/// <summary> Gets you to the boss room with full health/potions. </summary>
 		public static void SkipToBoss(IWebDriver webDriver) {
-			MoveToRoom(webDriver, 10);
+			MoveToRoom(webDriver, 18);
 		}
 
 		/// <summary> Moves user to the specified roomNumber. </summary>

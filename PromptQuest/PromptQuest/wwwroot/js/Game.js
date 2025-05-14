@@ -7,6 +7,7 @@ let backgroundImage;
 let campsiteButtonDisplay;
 let eventButtonDisplay;
 let treasureButtonDisplay;
+let shopButtonDisplay;
 let dialogBox;
 let abilityCooldownIcon;
 let bleedingIndicator;
@@ -33,6 +34,7 @@ document.addEventListener("DOMContentLoaded", () => {
 	campsiteButtonDisplay = document.getElementById("campsite-button-display");
 	eventButtonDisplay = document.getElementById("event-button-display");
 	treasureButtonDisplay = document.getElementById("treasure-button-display");
+	shopButtonDisplay = document.getElementById("shop-button-display");
 	dialogBox = document.getElementById("dialog-box");
 	bleedingIndicator = document.getElementById("bleeding-indicator");
 	burningIndicator = document.getElementById("burning-indicator");
@@ -67,6 +69,8 @@ function refreshDisplay() {
 	refreshEnemyDisplay();
 	refreshDialogBox();
 	refreshMenu();
+	//Add shop purchase buttons on load
+	refreshShop();
 	//Sync button states (disabled/enabled).
 	attackBtn.syncButtonState(gameState.inCombat && gameState.isPlayersTurn && !gameState.isLocationComplete && gameState.player.currentHealth > 0);
 	healBtn.syncButtonState(gameState.inCombat && gameState.isPlayersTurn && !gameState.isLocationComplete && gameState.player.currentHealth > 0);
@@ -85,6 +89,8 @@ function refreshDisplay() {
 	campsiteButtonDisplay.syncVisibility(gameState.inCampsite);
 	eventButtonDisplay.syncVisibility(gameState.inEvent);
 	treasureButtonDisplay.syncVisibility(gameState.inTreasure);
+	shopButtonDisplay.syncVisibility(gameState.inShop);
+
 	// Check for status effects and update their visibility from the enum
 	bleedingIndicator.syncVisibility(gameState.enemy.statusEffects > 0 && (gameState.enemy.statusEffects == 1 || gameState.enemy.statusEffects == 3));
 	burningIndicator.syncVisibility(gameState.enemy.statusEffects > 0 && (gameState.enemy.statusEffects == 2 || gameState.enemy.statusEffects == 3));
@@ -111,6 +117,33 @@ function hideRespawnModal() {
 	const modalInstance = bootstrap.Modal.getInstance(respawnModalElement);
 	if (modalInstance) {
 		modalInstance.hide();
+	}
+}
+
+// Items currently in shop
+const shopItems = [
+	{ name: "Darksteel Leggings", id: 1, price: 25 },
+	{ name: "Radiant Glass Helm", id: 2, price: 65 },
+	{ name: "The Pencil Blade", id: 3, price: 75 }
+];
+
+// Function to dynamically add shop purchase buttons
+function refreshShop() {
+	// Clear any existing buttons
+	shopButtonDisplay.innerHTML = "";
+	for (let i = 0; i < shopItems.length; i++) {
+		const item = shopItems[i];
+		const btn = document.createElement("button");
+		btn.textContent = "Buy " + item.name + " for " + item.price + " gold?";
+		btn.className = "pq-button";
+		btn.style = "margin-bottom:2vmin; width: 100%;";
+		// Attach the player action "purchase" with the item id as the value
+		btn.attachPlayerAction("purchase", () => item.id);
+		shopButtonDisplay.appendChild(btn);
+		// Check if player already owns item by name. If so, disable its button in the shop
+		if (gameState.player.items.find(i => i.name === item.name) != null) {
+			btn.disabled = true;
+		}
 	}
 }
 

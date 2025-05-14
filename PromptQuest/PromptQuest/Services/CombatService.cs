@@ -6,7 +6,7 @@ namespace PromptQuest.Services {
 
 	public interface ICombatService {
 		void StartCombat(GameState gameState);
-		void PlayerAttack(GameState gameState,int attackMult = 1,bool decrementAbility = true);
+		void PlayerAttack(GameState gameState, int attackMult = 1, bool decrementAbility = true);
 		void PlayerUseHealthPotion(GameState gameState);
 		void PlayerRest(GameState gameState);
 		void PlayerSkipRest(GameState gameState);
@@ -15,12 +15,14 @@ namespace PromptQuest.Services {
 		void PlayerAbility(GameState gameState);
 		void PlayerOpenTreasure(GameState gameState);
 		void PlayerSkipTreasure(GameState gameState);
+		void PlayerPurchaseItem(GameState gameState, int actionValue);
 		void RespawnPlayer(GameState gameState);
 		void EnemyAttack(GameState gameState);
+		void EnemyDied(GameState gameState);
 		Enemy GetEnemy(GameState gameState);
 	}
 
-	public class CombatService:ICombatService {
+	public class CombatService : ICombatService {
 		/// <summary>Initiates combat between the player and an enemy and updates the game state. </summary>
 		public void StartCombat(GameState gameState) {
 			gameState.InCombat = true;
@@ -49,74 +51,48 @@ namespace PromptQuest.Services {
 			Random random = new Random();//for any random rolls
 			int attackBuff = 0;//for any attack buffs
 												 // Get the player's equipped item
-	//beggining of attack portion
-		//Checking for the Quick Shot passive
+			//beggining of attack portion
+			//Checking for the Quick Shot passive
 			int numberOfAttacks = 1;
 			numberOfAttacks += gameState.Player.QuickShot(random.Next(0,100));
-			for (int i = 0; i < numberOfAttacks; i++)
-			{ //beggining of loop for multiple attacks
+			for (int i = 0; i < numberOfAttacks; i++) {
 				//beggining of damage calc
 				// Checking for Heavy Smash passive
 				attackBuff = gameState.Player.HeavySmash(random.Next(0,100));
-				 // Calculate damage as attack - defense.
-					int damage = (gameState.Player.AttackStat + attackBuff) * attackMult - gameState.Enemy.Defense;
+				// Calculate damage as attack - defense.
+				int damage = (gameState.Player.AttackStat + attackBuff) * attackMult - gameState.Enemy.Defense;
 				// If attack is less than one make it one.
-				if (damage < 1)
-				{
+				if(damage < 1) {
 					damage = 1;
 				}
 				//Checking for Mana Burn passive
 				damage += gameState.Player.ManaBurn(random.Next(0,100));
 				gameState.Enemy.Defense -= gameState.Player.PoisonWeapons(random.Next(0,100));
-					// Update enemy health.
-					gameState.Enemy.CurrentHealth -= damage;
-				//end of damabe calc
-
-			//decrement ability cooldown if ability was not used
-			if (decrementAbility && gameState.Player.AbilityCooldown>0)
-			{
-				gameState.Player.AbilityCooldown -= 1;
-				gameState.Player.ArcaneRecovery(random.Next(0,100));
-			}
-			 // Return the result to the user.
-			gameState.AddMessage($"You attacked the {gameState.Enemy.Name} for {damage} damage");
-				//Status effect section
+				// Update enemy health.
+				gameState.Enemy.CurrentHealth -= damage;
+				//end of damage calc
+				//decrement ability cooldown if ability was not used
+				if(decrementAbility && gameState.Player.AbilityCooldown > 0) {
+					gameState.Player.AbilityCooldown -= 1;
+					gameState.Player.ArcaneRecovery(random.Next(0,100));
+				}
+				// Return the result to the user.
+				gameState.AddMessage($"You attacked the {gameState.Enemy.Name} for {damage} damage");
+				// Get the player's equipped item
 				Item item = gameState.Player.EquippedWeapon;
-				if (item.StatusEffects != StatusEffect.None)
-				{
-					int statusEffectChance = random.Next(0, 5); // 25% chance to apply status effect
-					if (statusEffectChance == 1)
-					{
-						if (!gameState.Enemy.StatusEffects.HasFlag(item.StatusEffects))
-						{
+				if(item.StatusEffects != StatusEffect.None) {
+					int statusEffectChance = random.Next(0,5); // 25% chance to apply status effect
+					if(statusEffectChance == 1) {
+						if(!gameState.Enemy.StatusEffects.HasFlag(item.StatusEffects)) {
 							gameState.AddMessage($"The {gameState.Enemy.Name} is now affected by {item.StatusEffects.ToString()}!");
 							gameState.Enemy.StatusEffects = item.StatusEffects;
 						}
 					}
 				}
-				//end of attack portion
-			}//End of attack loop
-			// Check ifenemy died.
-			if (gameState.Enemy.CurrentHealth <= 0) {
-				gameState.IsPlayersTurn = true; // Zero this field out because combat is over.
-				gameState.IsLocationComplete = true; // Player has completed the current area.
-				gameState.AddMessage($"You have defeated the {gameState.Enemy.Name}! Check your map to see where you're going next.");
-				// Generate a random amount of gold between 6 and 15
-				int gold = random.Next(6, 16);
-				gameState.Player.Gold += gold;
-				gameState.AddMessage($"You gained {gold} gold!");
-				if(gameState.PlayerLocation == 18) {
-					Item bossItem = GetBossItem(gameState); // Get the boss item.
-					gameState.AddMessage($"You picked up the {gameState.Enemy.Name}'s {bossItem.Name}!");
-					gameState.Player.Items.Add(bossItem);
-					return;
-				}
-				if(gameState.PlayerLocation == 11) {
-					Item eliteItem = GetEliteItem(gameState); // Get the elite's item.
-					gameState.AddMessage($"You picked up the {gameState.Enemy.Name}'s {eliteItem.Name}!");
-					gameState.Player.Items.Add(eliteItem);
-					return;
-				}
+			}
+			// Check if enemy died.
+			if(gameState.Enemy.CurrentHealth <= 0) {
+				EnemyDied(gameState);
 			}
 			gameState.IsPlayersTurn = false;
 		}
@@ -126,7 +102,7 @@ namespace PromptQuest.Services {
 			switch(gameState.Player.Class.ToLower()) {
 				case "warrior"://attack for double power, uses the attack function
 					gameState.AddMessage($"You used your ability! You power up and perform a strong attack!");
-					PlayerAttack(gameState,2,false);
+					PlayerAttack(gameState, 2, false);
 					gameState.Player.AbilityCooldown = 3;
 					break;
 				case "mage"://gain +6 defense for the next attack
@@ -136,8 +112,8 @@ namespace PromptQuest.Services {
 					break;
 				case "archer"://perform two attacks
 					gameState.AddMessage($"You used your ability! You shoot two arrows at the enemy!");
-					PlayerAttack(gameState,1,false);
-					PlayerAttack(gameState,1,false);
+					PlayerAttack(gameState, 1, false);
+					PlayerAttack(gameState, 1, false);
 					gameState.Player.AbilityCooldown = 3;
 					break;
 				default:
@@ -362,9 +338,9 @@ namespace PromptQuest.Services {
 
 		/// <summary>Player opens treasure chest, updates the game state, then returns a message.</summary>
 		public void PlayerOpenTreasure(GameState gameState) {
-			int randPotions = new Random().Next(1,4); // Randomly give 1 to 3 potions
+			int randPotions = new Random().Next(1, 4); // Randomly give 1 to 3 potions
 			gameState.Player.HealthPotions += randPotions;
-			int randItem = new Random().Next(1,5); // Randomly give an item from the list below
+			int randItem = new Random().Next(1, 5); // Randomly give an item from the list below
 			Item treasureItem = new Item();
 			if(randItem == 1) {
 				// If 1, give them a treasure specific item.
@@ -402,7 +378,6 @@ namespace PromptQuest.Services {
 				treasureItem.itemType = ItemType.Helm;
 				gameState.Player.Items.Add(treasureItem);
 			}
-
 			// Tell player what happened
 			gameState.AddMessage("You gained: " + randPotions + " Health Potion(s) and " + treasureItem.Name + "!");
 			// Ensure player can leave
@@ -413,6 +388,95 @@ namespace PromptQuest.Services {
 		public void PlayerSkipTreasure(GameState gameState) {
 			gameState.AddMessage("Better safe than sorry...");
 			gameState.IsLocationComplete = true;
+		}
+
+		/// <summary>Player purchases an item, updates the game state, then returns a message.</summary>
+		public void PlayerPurchaseItem(GameState gameState, int actionValue) {
+			Item shopItem = new Item();
+			int itemPrice = 0;
+			if(actionValue == 1) {
+				// Set item price
+				itemPrice = 25;
+				if(gameState.Player.Gold < itemPrice) {
+					gameState.AddMessage("You don't have enough gold!");
+					return;
+				}
+				gameState.Player.Gold -= itemPrice; // Deduct gold
+				shopItem = GetShopItem(actionValue);
+				gameState.Player.Items.Add(shopItem);
+			}
+			else if(actionValue == 2) {
+				// Set item price
+				itemPrice = 65;
+				if(gameState.Player.Gold < itemPrice) {
+					gameState.AddMessage("You don't have enough gold!");
+					return;
+				}
+				gameState.Player.Gold -= itemPrice; // Deduct gold
+				shopItem = GetShopItem(actionValue);
+				gameState.Player.Items.Add(shopItem);
+			}
+			else if(actionValue == 3) {
+				// Set item price
+				itemPrice = 75;
+				if(gameState.Player.Gold < itemPrice) {
+					gameState.AddMessage("You don't have enough gold!");
+					return;
+				}
+				gameState.Player.Gold -= itemPrice; // Deduct gold
+				shopItem = GetShopItem(actionValue);
+				gameState.Player.Items.Add(shopItem);
+			}
+			else {
+				// Set item price
+				itemPrice = 1000;
+				if(gameState.Player.Gold < itemPrice) {
+					gameState.AddMessage("You don't have enough gold!");
+					return;
+				}
+				gameState.Player.Gold -= itemPrice; // Deduct gold
+				shopItem = GetShopItem(actionValue);
+				gameState.Player.Items.Add(shopItem);
+			}
+			// Tell player what happened
+			gameState.AddMessage("You bought: " + shopItem.Name + " for " + itemPrice + " gold!");
+			gameState.AddMessage("You have " + gameState.Player.Gold + " gold left.");
+			// Ensure player can leave
+			gameState.IsLocationComplete = true;
+		}
+
+		/// <summary>Gets a shop item and returns it.</summary>
+		public Item GetShopItem(int actionValue) {
+			Item shopItem = new Item();
+			if(actionValue == 1) {
+				shopItem.Name = "Darksteel Leggings";
+				shopItem.Attack = 1;
+				shopItem.Defense = 12;
+				shopItem.ImageSrc = "/images/DarkSteelLeggings.png";
+				shopItem.itemType = ItemType.Legs;
+			}
+			else if(actionValue == 2) {
+				shopItem.Name = "Radiant Glass Helm";
+				shopItem.Attack = 3;
+				shopItem.Defense = 9;
+				shopItem.ImageSrc = "/images/RadiantGlassHelm.png";
+				shopItem.itemType = ItemType.Helm;
+			}
+			else if(actionValue == 3) {
+				shopItem.Name = "The Pencil Blade";
+				shopItem.Attack = 10;
+				shopItem.Defense = -3;
+				shopItem.ImageSrc = "/images/ThePencilBlade.png";
+				shopItem.itemType = ItemType.Weapon;
+			}
+			else { // Shouldn't occur, but just in case.
+				shopItem.Name = "Elf Hat";
+				shopItem.Attack = 0;
+				shopItem.Defense = 12;
+				shopItem.ImageSrc = "/images/ElfHat.png";
+				shopItem.itemType = ItemType.Helm;
+			}
+			return shopItem;
 		}
 
 		public void RespawnPlayer(GameState gameState) {
@@ -478,20 +542,30 @@ namespace PromptQuest.Services {
 			gameState.IsPlayersTurn = true;
 			// Check if enemy died.
 			if(gameState.Enemy.CurrentHealth <= 0) {
-				gameState.IsLocationComplete = true; // Player has completed the current area.
-				gameState.AddMessage($"You have defeated the {gameState.Enemy.Name}! Check your map to see where you're going next.");
-				if(gameState.PlayerLocation == 10) {
-					Item bossItem = GetBossItem(gameState); // Get the boss item.
-					gameState.AddMessage($"You picked up the {gameState.Enemy.Name}'s {bossItem.Name}!");
-					gameState.Player.Items.Add(bossItem);
-					return;
-				}
-				if(gameState.PlayerLocation == 7) {
-					Item eliteItem = GetEliteItem(gameState); // Get the elite's item.
-					gameState.AddMessage($"You picked up the {gameState.Enemy.Name}'s {eliteItem.Name}!");
-					gameState.Player.Items.Add(eliteItem);
-					return;
-				}
+				EnemyDied(gameState);
+			}
+		}
+
+		public void EnemyDied(GameState gameState) {
+			gameState.IsPlayersTurn = true; // Zero this field out because combat is over.
+			gameState.IsLocationComplete = true; // Player has completed the current area.
+			gameState.AddMessage($"You have defeated the {gameState.Enemy.Name}! Check your map to see where you're going next.");
+			// Generate a random amount of gold between 6 and 15
+			Random random = new Random();
+			int gold = random.Next(6, 16);
+			gameState.Player.Gold += gold;
+			gameState.AddMessage($"You gained {gold} gold!");
+			if(gameState.PlayerLocation == 18) {
+				Item bossItem = GetBossItem(gameState); // Get the boss item.
+				gameState.AddMessage($"You picked up the {gameState.Enemy.Name}'s {bossItem.Name}!");
+				gameState.Player.Items.Add(bossItem);
+				return;
+			}
+			if(gameState.PlayerLocation == 11) {
+				Item eliteItem = GetEliteItem(gameState); // Get the elite's item.
+				gameState.AddMessage($"You picked up the {gameState.Enemy.Name}'s {eliteItem.Name}!");
+				gameState.Player.Items.Add(eliteItem);
+				return;
 			}
 		}
 
@@ -503,7 +577,7 @@ namespace PromptQuest.Services {
 		public Enemy GetEnemy(GameState gameState) {
 			Enemy enemy = new Enemy();
 			Random random = new Random();
-			int enemyType = random.Next(1,4); // Generates a number between 1 and 3
+			int enemyType = random.Next(1, 4); // Generates a number between 1 and 3
 			if(gameState.Floor == 1) {
 				switch(enemyType) {
 					case 1:

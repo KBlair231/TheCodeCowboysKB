@@ -38,6 +38,8 @@ namespace PromptQuest.Models {
 		public int EventNum { get; set; } = 0;
 		///<summary> Whether or not the player is in a treasure node. </summary>
 		public bool InTreasure { get; set; } = false;
+		///<summary> Whether or not the player is in a shop node. </summary>
+		public bool InShop { get; set; } = false;
 		///<summary> Whether or not it is the player's turn. </summary>
 		public bool IsPlayersTurn { get; set; } = false;
 		///<summary> The mapNodeId of the mapNode the player is currently at. </summary>
