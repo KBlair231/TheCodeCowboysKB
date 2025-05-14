@@ -168,7 +168,7 @@ function refreshPlayerDisplay() {
 	document.querySelectorAll(".player-image").forEach(el => { el.src = `data:image/png;base64,${gameState.player.image}`; }); // Placeholder image for now.
 	document.querySelectorAll(".player-image").forEach(el => { el.alt = gameState.player.name; });
 	document.querySelectorAll(".player-attack").forEach(el => { el.textContent = gameState.player.attackStat ?? 0; });
-	document.querySelectorAll(".player-defense").forEach(el => { el.textContent = gameState.player.defenseStat + gameState.player.defenseBuff ?? 0; });
+	document.querySelectorAll(".player-defense").forEach(el => { el.textContent = gameState.player.defenseStat ?? 0; });
 	document.querySelectorAll(".player-hp").forEach(el => { el.textContent = gameState.player.currentHealth + "/" + gameState.player.maxHealth + " HP"; });
 	document.getElementById("player-health-potions").textContent = gameState.player.healthPotions;
 	document.getElementById("player-passive").textContent = getPassiveDescription(gameState.player.passive);

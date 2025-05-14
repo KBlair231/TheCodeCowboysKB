@@ -21,8 +21,8 @@ namespace PlayerAbilityTests.Tests
 				{
 					CurrentHealth = 10,
 					MaxHealth = 10,
-					Attack = 3,
-					Defense = 2,
+					BaseAttack = 3,
+					BaseDefense = 2,
 					Name = "TestPlayer",
 
 				}
@@ -30,7 +30,7 @@ namespace PlayerAbilityTests.Tests
 			_combatService.StartCombat(_gameState);
 			_gameState.Enemy.CurrentHealth = 10;
 			_gameState.Enemy.MaxHealth = 10;
-			_gameState.Player.Attack = 7;
+			_gameState.Player.BaseAttack = 7;
 			_gameState.Enemy.Defense = 0;
 			_gameState.IsPlayersTurn = true;
 		}
@@ -46,7 +46,7 @@ namespace PlayerAbilityTests.Tests
 			_combatService.PlayerAbility(_gameState);
 
 			// Assert  
-			int expectedDamage = (int)Math.Floor((double)(_gameState.Player.Attack + _gameState.Player.ItemEquipped.Attack) * 2) - _gameState.Enemy.Defense;
+			int expectedDamage = (int)Math.Floor((double)(_gameState.Player.AttackStat * 2) - _gameState.Enemy.Defense);
 			if (expectedDamage < 1) expectedDamage = 1;
 			int actualDamage = _gameState.Enemy.MaxHealth - _gameState.Enemy.CurrentHealth;
 			Assert.That(actualDamage, Is.EqualTo(expectedDamage));
@@ -182,7 +182,7 @@ namespace PlayerAbilityTests.Tests
 			_combatService.EnemyAttack(_gameState);
 
 			// Assert  
-			int expectedDamage = _gameState.Enemy.Attack - (_gameState.Player.Defense + _gameState.Player.ItemEquipped.Defense - _gameState.Player.DefenseBuff);
+			int expectedDamage = _gameState.Enemy.Attack - (_gameState.Player.DefenseStat - _gameState.Player.DefenseBuff);
 			if (expectedDamage < 1) expectedDamage = 1;
 
 			int actualDamage = _gameState.Player.MaxHealth - _gameState.Player.CurrentHealth;
@@ -216,7 +216,7 @@ namespace PlayerAbilityTests.Tests
 			_combatService.PlayerAbility(_gameState);
 
 			// Assert  
-			int expectedDamage = (int)Math.Floor((double)(_gameState.Player.Attack + _gameState.Player.ItemEquipped.Attack)) - _gameState.Enemy.Defense;
+			int expectedDamage = (int)Math.Floor((double)(_gameState.Player.AttackStat)) - _gameState.Enemy.Defense;
 			if (expectedDamage < 1) expectedDamage = 1;
 			expectedDamage *= 2; // Double the damage for the second attack
 			int actualDamage = _gameState.Enemy.MaxHealth - _gameState.Enemy.CurrentHealth;
