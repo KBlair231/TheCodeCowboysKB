@@ -9,7 +9,7 @@ namespace PromptQuest.Models {
 		public string Name { get; set; } = "none";
 		public int Attack { get; set; } = 0;
 		public int Defense { get; set; } = 0;
-		public string ImageSrc { get; set; } = "/images/PromptQuestLogo.png";
+		public string ImageSrc { get; set; } = "";
 		public StatusEffect StatusEffects { get; set; } = StatusEffect.None;
 		public ItemType itemType { get; set; } = ItemType.Weapon;
 	}

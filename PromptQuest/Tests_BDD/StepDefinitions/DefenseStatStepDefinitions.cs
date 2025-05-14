@@ -15,8 +15,8 @@ namespace PromptQuest.Tests_BDD.StepDefinitions {
 			_gameState.Player = new Player {
 				CurrentHealth = 10,
 				MaxHealth = 10,
-				Attack = 5,
-				Defense = 2,
+				BaseAttack = 5,
+				BaseDefense = 2,
 				Name = "TestPlayer",
 				Class = "Warrior",
 			};
@@ -34,7 +34,7 @@ namespace PromptQuest.Tests_BDD.StepDefinitions {
 
 		[Then("the user should receive damage equal to the enemy's attack minus player defense")]
 		public void ThenTheUserShouldReceiveDamageEqualToTheEnemysAttackMinusPlayerDefense() {
-			int expectedDamage = _gameState.Enemy.Attack - (_gameState.Player.Defense + _gameState.Player.ItemEquipped.Defense);
+			int expectedDamage = _gameState.Enemy.Attack - (_gameState.Player.BaseDefense + _gameState.Player.EquippedWeapon.Defense);
 			if (expectedDamage < 1) expectedDamage = 1;
 
 			int actualDamage = _gameState.Player.MaxHealth - _gameState.Player.CurrentHealth;
@@ -53,7 +53,7 @@ namespace PromptQuest.Tests_BDD.StepDefinitions {
 		}
 		[Then("the enemy should receive damage equal to the user's attack minus enemy defense")]
 		public void ThenTheEnemyShouldReceiveDamageEqualToTheUsersAttackMinusEnemyDefense() {
-			int expectedDamage = _gameState.Player.Attack + _gameState.Player.ItemEquipped.Attack - _gameState.Enemy.Defense;
+			int expectedDamage = _gameState.Player.BaseAttack + _gameState.Player.EquippedWeapon.Attack - _gameState.Enemy.Defense;
 			if (expectedDamage < 1) expectedDamage = 1;
 			int actualDamage = _gameState.Enemy.MaxHealth - _gameState.Enemy.CurrentHealth;
 			Assert.AreEqual(expectedDamage, actualDamage, _resultMessage);

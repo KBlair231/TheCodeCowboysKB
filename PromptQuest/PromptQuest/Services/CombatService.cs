@@ -46,10 +46,8 @@ namespace PromptQuest.Services {
 
 		/// <summary> Calculates the damage that the player does to the enemy, updates the game state, then returns a message.</summary>
 		public void PlayerAttack(GameState gameState,int attackMult = 1,bool decrementAbility = true) {
-			// Get the player's equipped item
-			Item item = gameState.Player.ItemEquipped;
 			// Calculate damage as attack - defense.
-			int damage = (int)Math.Floor((double)(gameState.Player.Attack + item.Attack) * attackMult) - gameState.Enemy.Defense;
+			int damage = (int)Math.Floor((double)(gameState.Player.AttackStat) * attackMult) - gameState.Enemy.Defense;
 			// If attack is less than one make it one.
 			if(damage < 1) {
 				damage = 1;
@@ -62,6 +60,8 @@ namespace PromptQuest.Services {
 			}
 			// Return the result to the user.
 			gameState.AddMessage($"You attacked the {gameState.Enemy.Name} for {damage} damage");
+			// Get the player's equipped item
+			Item item = gameState.Player.EquippedWeapon;
 			if(item.StatusEffects != StatusEffect.None) {
 				Random random = new Random();
 				int statusEffectChance = random.Next(0,5); // 25% chance to apply status effect
@@ -323,7 +323,7 @@ namespace PromptQuest.Services {
 					break;
 				case 10:
 					gameState.AddMessage("You feel stronger!");
-					gameState.Player.Attack += 2; // Increase attack by 2 permanently
+					gameState.Player.BaseAttack += 2; // Increase attack by 2 permanently
 					break;
 			}
 
@@ -411,10 +411,8 @@ namespace PromptQuest.Services {
 
 		/// <summary>Calculates the damage that the enemy does to the player, updates the game state, then returns a message.</summary>
 		public void EnemyAttack(GameState gameState) {
-			// Get the player's equipped item
-			Item item = gameState.Player.ItemEquipped;
 			// Calculate damage as attack - defense.
-			int damage = gameState.Enemy.Attack - gameState.Player.Defense - item.Defense - gameState.Player.DefenseBuff;
+			int damage = gameState.Enemy.Attack - gameState.Player.DefenseStat - gameState.Player.DefenseBuff;
 			if(gameState.Player.DefenseBuff>0) {
 				gameState.AddMessage("Your shield blocked incoming damage");
 			}
@@ -607,6 +605,7 @@ namespace PromptQuest.Services {
 				eliteItem.ImageSrc = "/images/SpikedLeaf.png";
 			}
 			else {
+				
 				// If the player is on the third floor, give them an elite specific item.
 				eliteItem.Name = "Demon Cleaver";
 				eliteItem.Attack = 10;

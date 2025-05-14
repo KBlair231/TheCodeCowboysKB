@@ -85,7 +85,7 @@ namespace Tests_BDD {
 		}
 
 		[Then("that item will move to the equipped item slot")]
-		public void ThenThatItemWillMoveToTheEquippedItemSlot() {
+		public void ThenThatItemWillMoveToTheequippedWeaponSlot() {
 			IWebElement equippedSlot = webDriver.FindElement(By.Id("equipped-item"));
 			Assert.IsNotNull(equippedSlot.Text);
 		}

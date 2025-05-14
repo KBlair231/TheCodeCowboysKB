@@ -38,8 +38,8 @@ namespace PromptQuest.Controllers {
 			player.MaxHealth = 15;
 			player.CurrentHealth = 15;
 			player.HealthPotions = 2;
-			player.Attack = 3;
-			player.Defense = 1;
+			player.BaseAttack = 3;
+			player.BaseDefense = 1;
 			player.Class = player.Class;
 			if(ModelState.IsValid) { // Character created succesfully
 				GameState gameState = await _gameStateService.StartNewGame(player); // Start a new game. If the user already has one it will be overwritten.
@@ -87,13 +87,16 @@ namespace PromptQuest.Controllers {
 						_combatService.PlayerAttack(gameState);
 						break;
 					case "equip":
-							Item item = gameState.Player.ItemEquipped;
-							if(item != null) {
-								item.Equipped = false;
+							Item newItem = gameState.Player.Items[actionValue];
+							Item? oldItem = gameState.Player.Items.FirstOrDefault(i => i.itemType == newItem.itemType && i.Equipped == true);
+							if(oldItem != null) {
+								oldItem.Equipped = false;
+								if(oldItem.Name == newItem.Name) {
+									break;
+								}
 							}
 							//Mark new item as equipped.
-							item = gameState.Player.Items[actionValue];
-							item.Equipped = true;//Causes Player.ItemEquipped to update.
+							newItem.Equipped = true;
 						break;
 					case "heal":
 						_combatService.PlayerUseHealthPotion(gameState);

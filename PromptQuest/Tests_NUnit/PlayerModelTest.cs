@@ -14,8 +14,8 @@ namespace PlayerModelTest.Tests {
 				HealthPotions = 2,
 				MaxHealth = 100,
 				CurrentHealth = 100,
-				Defense = 1,
-				Attack = 10,
+				BaseDefense = 1,
+				BaseAttack = 10,
 				Class = "Warrior" // Set a default class for testing
 			};
 		}

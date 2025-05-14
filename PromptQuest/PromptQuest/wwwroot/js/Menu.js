@@ -3,7 +3,11 @@
 let menu;
 let map;
 let inventory;
-let equippedItemSlot;
+let equippedWeaponSlot;
+let equippedHelmSlot;
+let equippedChestSlot;
+let equippedLegsSlot;
+let equippedBootsSlot;
 let itemDetails;
 //Menu buttons
 let openMenuBtn;
@@ -24,7 +28,11 @@ document.addEventListener("DOMContentLoaded", async () => {
 	//Grab the commonly used UI elements on load.
 	menu = document.getElementById("menu");
 	inventory = document.getElementById("inventory");
-	equippedItemSlot = document.getElementById("equipped-item");
+	equippedWeaponSlot = document.getElementById("equipped-weapon");
+	equippedHelmSlot = document.getElementById("equipped-helm");
+	equippedChestSlot = document.getElementById("equipped-chest");
+	equippedLegsSlot = document.getElementById("equipped-legs");
+	equippedBootsSlot = document.getElementById("equipped-boots");
 	itemDetails = document.getElementById("item-details");
 	map = document.getElementById("map");
 	//Grab all menu buttons from the DOM on load.
@@ -88,28 +96,17 @@ function refreshInventory() {
 		image.addEventListener("click", () => {
 			selectItem(items[i], i);
 		});
+		if (i == selectedItemIndex) {
+			updateEquipButton(items[i]);
+		}
 	}
-	// Fill Equipped item slot
-	const equippedItem = gameState.player.itemEquipped;
-	//Clear out equipped item slot
-	const equippedItemSlot = document.getElementById("equipped-item");
-	while (equippedItemSlot.firstChild) {
-		equippedItemSlot.removeChild(equippedItemSlot.firstChild);
-	}
-	if (equippedItem != null) {
-		const image = document.createElement("img");
-		image.src = equippedItem.imageSrc;
-		image.alt = equippedItem.name;
-		equippedItemSlot.appendChild(image);
-		//Set up the select behavior
-		image.addEventListener("click", () => {
-			selectItem(equippedItem, -1);
-		});
-	}
+	fillEquippedSlot(gameState.player.equippedHelm);
+	fillEquippedSlot(gameState.player.equippedChest);
+	fillEquippedSlot(gameState.player.equippedLegs);
+	fillEquippedSlot(gameState.player.equippedBoots);
+	fillEquippedSlot(gameState.player.equippedWeapon);
 	//Make item details visible if an item is selected.
 	itemDetails.syncVisibility(selectedItemIndex != -1);
-	//Equip button like all other action buttons disable on click to prevent spam, so let's make sure it gets re enabled on refresh.
-	equipBtn.syncButtonState(true);
 }
 
 async function refreshMap() {
@@ -210,6 +207,7 @@ function selectItem(item, index) {
 	if (newInventorySlot != null) {
 		newInventorySlot.style.borderColor = "#ffdc4a";//Highlight newly selected slot.
 	}
+	updateEquipButton(item);
 	//Update item details to match selected item.
 	document.getElementById("item-name").textContent = item.name;
 	document.getElementById("item-attack").textContent = item.attack;
@@ -241,6 +239,47 @@ function itemTypeCheck(item) {
 		return 'Helm';
 	}
 }
+function fillEquippedSlot(item) {
+	if ( item == null) {
+		return;
+	}
+	//Clear out equipped item slot
+	const equippedSlot = document.getElementById("equipped-" + itemTypeCheck(item.itemType).toLowerCase());
+	while (equippedSlot.firstChild) {
+		equippedSlot.removeChild(equippedSlot.firstChild);
+	}
+	if (item.imageSrc == "") {
+		return;
+	}
+	const image = document.createElement("img");
+	image.src = item.imageSrc;
+	image.alt = item.name;
+	equippedSlot.appendChild(image);
+	//Set up the select behavior
+	image.addEventListener("click", () => {
+		selectItem(item, -1);
+	});
+}
+function updateEquipButton(item) {
+	equipBtn.disabled = false;
+	equipBtn.textContent = "Equip Item";
+	if (gameState.player.equippedWeapon.name == item.name) {
+		equipBtn.textContent = "Unequip";
+	}
+	if (gameState.player.equippedBoots.name == item.name) {
+		equipBtn.textContent = "Unequip";
+	}
+	if (gameState.player.equippedLegs.name == item.name) {
+		equipBtn.textContent = "Unequip";
+	}
+	if (gameState.player.equippedChest.name == item.name) {
+		equipBtn.textContent = "Unequip";
+	}
+	if (gameState.player.equippedHelm.name == item.name) {
+		equipBtn.textContent = "Unequip";
+	}
+}
+
 async function equipItem() {
 	// If there is no selected item then do nothing.
 	if (selectedItemIndex == -1) {

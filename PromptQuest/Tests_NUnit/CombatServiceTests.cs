@@ -28,7 +28,7 @@ namespace PromptQuest.Tests.Services {
 			_combatService.StartCombat(_gameState);
 			_gameState.Enemy.CurrentHealth = 10;
 			_gameState.Enemy.MaxHealth = 10;
-			_gameState.Player.Attack = 3;
+			_gameState.Player.BaseAttack = 3;
 			_gameState.Enemy.Defense = 0;
 			_gameState.IsPlayersTurn = true;
 
@@ -51,7 +51,7 @@ namespace PromptQuest.Tests.Services {
 			_combatService.StartCombat(_gameState);
 			_gameState.Enemy.CurrentHealth = 10;
 			_gameState.Enemy.MaxHealth = 10;
-			_gameState.Player.Attack = 5;
+			_gameState.Player.BaseAttack = 5;
 			_gameState.Enemy.Defense = 3;
 			_gameState.IsPlayersTurn = true;
 
@@ -74,7 +74,7 @@ namespace PromptQuest.Tests.Services {
 			_combatService.StartCombat(_gameState);
 			_gameState.Enemy.CurrentHealth = 10;
 			_gameState.Enemy.MaxHealth = 10;
-			_gameState.Player.Attack = 1;
+			_gameState.Player.BaseAttack = 1;
 			_gameState.Enemy.Defense = 5;
 			_gameState.IsPlayersTurn = true;
 
@@ -197,7 +197,7 @@ namespace PromptQuest.Tests.Services {
 			_gameState.Player.CurrentHealth = 10;
 			_gameState.Player.MaxHealth = 10;
 			_gameState.Enemy.Attack = 3;
-			_gameState.Player.Defense = 0;
+			_gameState.Player.BaseDefense = 0;
 			_gameState.IsPlayersTurn = false;
 
 			// Act
@@ -220,7 +220,7 @@ namespace PromptQuest.Tests.Services {
 			_gameState.Player.CurrentHealth = 10;
 			_gameState.Player.MaxHealth = 10;
 			_gameState.Enemy.Attack = 5;
-			_gameState.Player.Defense = 3;
+			_gameState.Player.BaseDefense = 3;
 			_gameState.IsPlayersTurn = false;
 
 			// Act
@@ -243,7 +243,7 @@ namespace PromptQuest.Tests.Services {
 			_gameState.Player.CurrentHealth = 10;
 			_gameState.Player.MaxHealth = 10;
 			_gameState.Enemy.Attack = 1;
-			_gameState.Player.Defense = 5;
+			_gameState.Player.BaseDefense = 5;
 			_gameState.IsPlayersTurn = false;
 
 			// Act
@@ -286,7 +286,7 @@ namespace PromptQuest.Tests.Services {
 			_gameState.Player.MaxHealth = 10;
 			_gameState.Player.HealthPotions = 0;
 			_gameState.Enemy.Attack = 1;
-			_gameState.Player.Defense = 5;
+			_gameState.Player.BaseDefense = 5;
 			_gameState.InCombat = true;
 			_gameState.IsPlayersTurn = true;
 

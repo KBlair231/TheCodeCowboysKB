@@ -19,8 +19,8 @@ namespace PromptQuest.Tests_BDD.StepDefinitions
 			{
 				CurrentHealth = 10,
 				MaxHealth = 10,
-				Attack = 3,
-				Defense = 2,
+				BaseAttack = 3,
+				BaseDefense = 2,
 				Name = "TestPlayer",
 			};
 		}
@@ -75,7 +75,7 @@ namespace PromptQuest.Tests_BDD.StepDefinitions
 		[Then("the enemy should receive damage equal to the user's attack times {int} minus enemy defense")]
 		public void ThenTheEnemyShouldReceiveDamageEqualToTheUsersAttackTimesMinusEnemyDefense(int mult)
 		{
-			int expectedDamage = (int)Math.Floor((double)(_gameState.Player.Attack + _gameState.Player.ItemEquipped.Attack) * mult) - _gameState.Enemy.Defense;
+			int expectedDamage = (int)Math.Floor((double)(_gameState.Player.BaseAttack + _gameState.Player.EquippedWeapon.Attack) * mult) - _gameState.Enemy.Defense;
 			if (expectedDamage < 1) expectedDamage = 1;
 			int actualDamage = _gameState.Enemy.MaxHealth - _gameState.Enemy.CurrentHealth;
 			Assert.AreEqual(expectedDamage, actualDamage, _resultMessage);
@@ -94,7 +94,7 @@ namespace PromptQuest.Tests_BDD.StepDefinitions
 		[Then("the damage received should be reduced by the defense buff")]
 		public void ThenTheUserShouldReceiveDamageEqualToTheEnemysAttackMinusPlayerDefense()
 		{
-			int expectedDamage = _gameState.Enemy.Attack - (_gameState.Player.Defense + _gameState.Player.ItemEquipped.Defense-_gameState.Player.DefenseBuff);
+			int expectedDamage = _gameState.Enemy.Attack - (_gameState.Player.BaseDefense + _gameState.Player.EquippedWeapon.Defense-_gameState.Player.DefenseBuff);
 			if (expectedDamage < 1) expectedDamage = 1;
 
 			int actualDamage = _gameState.Player.MaxHealth - _gameState.Player.CurrentHealth;
@@ -103,7 +103,7 @@ namespace PromptQuest.Tests_BDD.StepDefinitions
 		[Then("the enemy should receive damage equal to the user's attack minus enemy defense, twice")]
 		public void ThenTheEnemyShouldReceiveDamageEqualToTheUsersAttackTimesMinusEnemyDefenseTwice()
 		{
-			int expectedDamage = (int)Math.Floor((double)(_gameState.Player.Attack + _gameState.Player.ItemEquipped.Attack)) - _gameState.Enemy.Defense;
+			int expectedDamage = (int)Math.Floor((double)(_gameState.Player.BaseAttack + _gameState.Player.EquippedWeapon.Attack)) - _gameState.Enemy.Defense;
 			if (expectedDamage < 1) expectedDamage = 1;
 			expectedDamage *= 2; // Double the damage for the second attack
 			int actualDamage = _gameState.Enemy.MaxHealth - _gameState.Enemy.CurrentHealth;

@@ -115,6 +115,9 @@ namespace PromptQuest.Services {
 
 		/// <summary> Deletes the GameState with the given GoogleUserId. If it isn't found, nothing happens. </summary>
 		private async Task DeleteGameState() {
+			if (!IsAuthenticatedUser()) {
+				return; 
+			}
 			string userGoogleId = GetGoogleAccountId();
 			var existingGameState = await FetchGameStateFromDb(userGoogleId);
 			if(existingGameState == null) {
@@ -129,6 +132,9 @@ namespace PromptQuest.Services {
 		}
 
 		public void DeleteEnemy(int enemyId) {
+			if (!IsAuthenticatedUser()) {
+				return;
+			}
 			var enemy = _dbContext.Enemies.Find(enemyId);
 			if(enemy == null) {
 				return;//This Enemy doesn't exist in the db. So, do nothing.
