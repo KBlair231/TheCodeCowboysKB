@@ -107,6 +107,7 @@ function refreshInventory() {
 	fillEquippedSlot(gameState.player.equippedWeapon);
 	//Make item details visible if an item is selected.
 	itemDetails.syncVisibility(selectedItemIndex != -1);
+	equipBtn.syncButtonState(selectedItemIndex != -1);
 }
 
 async function refreshMap() {
@@ -255,11 +256,8 @@ function fillEquippedSlot(item) {
 	const image = document.createElement("img");
 	image.src = item.imageSrc;
 	image.alt = item.name;
+	image.id = item.name;
 	equippedSlot.appendChild(image);
-	//Set up the select behavior
-	image.addEventListener("click", () => {
-		selectItem(item, -1);
-	});
 }
 function updateEquipButton(item) {
 	equipBtn.disabled = false;

@@ -80,23 +80,26 @@ namespace PromptQuest.Controllers {
 		}
 
 		[HttpPost]
-		public async Task<JsonResult> PlayerAction(string playerAction, int actionValue = 0) {
+		public async Task<JsonResult> PlayerAction(string playerAction, int actionValue = -1) {
 			Func<GameState, Task> action = new Func<GameState, Task>(async (gameState) => { 
 				switch(playerAction.ToLower()) {
 					case "attack":
 						_combatService.PlayerAttack(gameState);
 						break;
 					case "equip":
-							Item newItem = gameState.Player.Items[actionValue];
-							Item? oldItem = gameState.Player.Items.FirstOrDefault(i => i.itemType == newItem.itemType && i.Equipped == true);
-							if(oldItem != null) {
-								oldItem.Equipped = false;
-								if(oldItem.Name == newItem.Name) {
-									break;
-								}
+						if(actionValue < 0) {
+							break;
+						}
+						Item newItem = gameState.Player.Items[actionValue];
+						Item? oldItem = gameState.Player.Items.FirstOrDefault(i => i.itemType == newItem.itemType && i.Equipped == true);
+						if(oldItem != null) {
+							oldItem.Equipped = false;
+							if(oldItem.Name == newItem.Name) {
+								break;
 							}
-							//Mark new item as equipped.
-							newItem.Equipped = true;
+						}
+						//Mark new item as equipped.
+						newItem.Equipped = true;
 						break;
 					case "heal":
 						_combatService.PlayerUseHealthPotion(gameState);
@@ -120,6 +123,9 @@ namespace PromptQuest.Controllers {
 						_combatService.PlayerSkipTreasure(gameState); // Currently in _combatService, may change later
 						break;
 					case "move":
+						if (actionValue < 0) {
+							break;
+						}
 						_mapService.MovePlayer(gameState, actionValue);
 						if(gameState.InCombat) {//Moving the player could put the player in combat
 							_combatService.StartCombat(gameState);//Server should be the one to start combat

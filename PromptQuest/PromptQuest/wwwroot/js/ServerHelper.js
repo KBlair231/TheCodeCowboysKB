@@ -20,11 +20,9 @@ async function loadGame() {
 
 // ----------------------------------- SERVER INTERACTION METHODS ----------------------------------------------------------------------
 
-async function executePlayerAction(playerAction, actionValue = 0) {
+async function executePlayerAction(playerAction, actionValue = -1) {
 	let url = `/Game/PlayerAction?playerAction=${playerAction}`;
-	if (actionValue > 0) {
-		url += `&actionValue=${actionValue}`; // Append action value if provided.
-	}
+	url += `&actionValue=${actionValue}`; // Append action value if provided.
 	await sendPostRequest(url);
 	//Enemy's turn now if it isn't the players turn and they are in combat and the enemy is still alive.
 	if (gameState.isPlayersTurn == false && gameState.inCombat && gameState.enemy.currentHealth > 0) {
