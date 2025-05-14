@@ -115,12 +115,14 @@ namespace PromptQuest.Services {
 
 		/// <summary> Deletes the GameState with the given GoogleUserId. If it isn't found, nothing happens. </summary>
 		private async Task DeleteGameState() {
-			if (!IsAuthenticatedUser()) {
-				return; 
+			if (!IsAuthenticatedUser())
+			{
+				return;// do nothing if not logged in
 			}
 			string userGoogleId = GetGoogleAccountId();
 			var existingGameState = await FetchGameStateFromDb(userGoogleId);
-			if(existingGameState == null) {
+			if (existingGameState == null)
+			{
 				return;//There is no GameState in the db for this user. So, do nothing.
 			}
 			//Manually delete related items because EF's cascade delete be buggin'

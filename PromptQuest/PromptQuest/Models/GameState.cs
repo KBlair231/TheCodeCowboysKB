@@ -97,3 +97,12 @@ namespace PromptQuest.Models {
 		Burning = 2
 	}
 }
+	public enum Passives {
+	None = 0,
+	HeavySmash=1,
+	SpikedBulwark = 2,
+	ArcaneRecovery = 3,
+	ManaBurn = 4,
+	QuickShot = 5,
+	PoisonWeapons = 6
+}

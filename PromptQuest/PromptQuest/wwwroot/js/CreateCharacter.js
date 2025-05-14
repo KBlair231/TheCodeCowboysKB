@@ -4,16 +4,18 @@ let createCharacterBtn;//The button used to create your character and start the 
 let playerImage;//A picture of the player's character at the top of the screen.
 let playerImageData;//A dummy input on the form that the player's image data hitches a ride on up to the server.
 let playerImageLoader;//A loading icon that shows while openAi is generating the iamge.
-
+let passiveDescription; // description for passive abilities
 document.addEventListener("DOMContentLoaded", async () => { //currently only included in CreateCharacter.cshtml
 	playerImage = document.getElementById('player-image');
 	playerImageData = document.getElementById('player-image-data');
 	await fetchDefaultPlayerImage() //Load in default image and image data so that it's never blank/null.
 	playerImageLoader = document.getElementById('player-image-loader');
 	description = document.getElementById("description");
-	previewBtn = document.getElementById('preview-btn');
-	createCharacterBtn = document.getElementById('create-character-btn');
-	previewBtn.addEventListener('click', async (e) => {
+	previewButton = document.getElementById('preview-btn');
+	passiveDescription = document.getElementById("passive-description");
+	document.getElementById("passive-select").addEventListener("change", loadPassiveDescription, false);
+	loadPassiveDescription();
+	previewButton.addEventListener('click', async (e) => {
 		e.preventDefault();//Stops the form from being submitted.
 		previewBtn.disabled = true; //This button click costs Ben money, lets make damn sure it doesn't get spammed.
 		createCharacterBtn.disabled = true;
@@ -66,3 +68,10 @@ async function fetchDefaultPlayerImage() {
 	playerImage.style.display = "block";//Show image now that it is loaded, we don't want the user seeing it loading.
 }
 
+
+	function loadPassiveDescription() {
+		let passiveSelect = document.getElementById("passive-select");
+		let selectedPassive = passiveSelect.options[passiveSelect.selectedIndex].value;
+		passiveDescription.innerHTML = getPassiveDescription(selectedPassive);
+
+	}

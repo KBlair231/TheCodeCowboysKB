@@ -45,40 +45,63 @@ namespace PromptQuest.Services {
 		#region Player Action Methods
 
 		/// <summary> Calculates the damage that the player does to the enemy, updates the game state, then returns a message.</summary>
-		public void PlayerAttack(GameState gameState,int attackMult = 1,bool decrementAbility = true) {
-			// Calculate damage as attack - defense.
-			int damage = (int)Math.Floor((double)(gameState.Player.AttackStat) * attackMult) - gameState.Enemy.Defense;
-			// If attack is less than one make it one.
-			if(damage < 1) {
-				damage = 1;
-			}
-			// Update enemy health.
-			gameState.Enemy.CurrentHealth -= damage;
+		public void PlayerAttack(GameState gameState, int attackMult = 1, bool decrementAbility = true) {
+			Random random = new Random();//for any random rolls
+			int attackBuff = 0;//for any attack buffs
+												 // Get the player's equipped item
+	//beggining of attack portion
+		//Checking for the Quick Shot passive
+			int numberOfAttacks = 1;
+			numberOfAttacks += gameState.Player.QuickShot(random.Next(0,100));
+			for (int i = 0; i < numberOfAttacks; i++)
+			{ //beggining of loop for multiple attacks
+				//beggining of damage calc
+				// Checking for Heavy Smash passive
+				attackBuff = gameState.Player.HeavySmash(random.Next(0,100));
+				 // Calculate damage as attack - defense.
+					int damage = (gameState.Player.AttackStat + attackBuff) * attackMult - gameState.Enemy.Defense;
+				// If attack is less than one make it one.
+				if (damage < 1)
+				{
+					damage = 1;
+				}
+				//Checking for Mana Burn passive
+				damage += gameState.Player.ManaBurn(random.Next(0,100));
+				gameState.Enemy.Defense -= gameState.Player.PoisonWeapons(random.Next(0,100));
+					// Update enemy health.
+					gameState.Enemy.CurrentHealth -= damage;
+				//end of damabe calc
+
 			//decrement ability cooldown if ability was not used
-			if(decrementAbility && gameState.Player.AbilityCooldown>0) {
+			if (decrementAbility && gameState.Player.AbilityCooldown>0)
+			{
 				gameState.Player.AbilityCooldown -= 1;
+				gameState.Player.ArcaneRecovery(random.Next(0,100));
 			}
-			// Return the result to the user.
+			 // Return the result to the user.
 			gameState.AddMessage($"You attacked the {gameState.Enemy.Name} for {damage} damage");
-			// Get the player's equipped item
-			Item item = gameState.Player.EquippedWeapon;
-			if(item.StatusEffects != StatusEffect.None) {
-				Random random = new Random();
-				int statusEffectChance = random.Next(0,5); // 25% chance to apply status effect
-				if(statusEffectChance == 1) {
-					if(!gameState.Enemy.StatusEffects.HasFlag(item.StatusEffects)) {
-						gameState.AddMessage($"The {gameState.Enemy.Name} is now affected by {item.StatusEffects.ToString()}!");
-						gameState.Enemy.StatusEffects = item.StatusEffects;
+				//Status effect section
+				Item item = gameState.Player.EquippedWeapon;
+				if (item.StatusEffects != StatusEffect.None)
+				{
+					int statusEffectChance = random.Next(0, 5); // 25% chance to apply status effect
+					if (statusEffectChance == 1)
+					{
+						if (!gameState.Enemy.StatusEffects.HasFlag(item.StatusEffects))
+						{
+							gameState.AddMessage($"The {gameState.Enemy.Name} is now affected by {item.StatusEffects.ToString()}!");
+							gameState.Enemy.StatusEffects = item.StatusEffects;
+						}
 					}
 				}
-			}
-			// Check if enemy died.
-			if(gameState.Enemy.CurrentHealth <= 0) {
+				//end of attack portion
+			}//End of attack loop
+			// Check ifenemy died.
+			if (gameState.Enemy.CurrentHealth <= 0) {
 				gameState.IsPlayersTurn = true; // Zero this field out because combat is over.
 				gameState.IsLocationComplete = true; // Player has completed the current area.
 				gameState.AddMessage($"You have defeated the {gameState.Enemy.Name}! Check your map to see where you're going next.");
 				// Generate a random amount of gold between 6 and 15
-				Random random = new Random();
 				int gold = random.Next(6, 16);
 				gameState.Player.Gold += gold;
 				gameState.AddMessage($"You gained {gold} gold!");
@@ -420,6 +443,17 @@ namespace PromptQuest.Services {
 																			 // If attack is less than one make it one.
 			if(damage < 1)
 				damage = 1;
+			// If the player has Spiked Bulwark, deal damage to the enemy.
+			if (gameState.Player.HasPassive(Passives.SpikedBulwark))
+			{
+				int returnDamage = 1;
+				if (gameState.Player.Class.ToLower() == "warrior")
+				{
+					returnDamage = 2;
+				}
+				gameState.Enemy.CurrentHealth -= returnDamage;
+				gameState.AddMessage($"Your Spiked Bulwark passive dealt {returnDamage} damage back to the {gameState.Enemy.Name}!");
+			}
 			// Update player health.
 			gameState.Player.CurrentHealth -= damage;
 			// Return an action result with a message describing what happened.

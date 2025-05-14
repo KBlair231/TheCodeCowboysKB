@@ -38,6 +38,16 @@
 				<option value="Archer">Archer</option>
 			</select>
 			<span asp-validation-for="Class" class="text-danger"></span>
+			<select asp-for="Passive" id="passive-select" class="pq-form-control">
+				<option value="1">Heavy Smash</option>
+				<option value="2">Spiked Bulwark</option>
+				<option value="3">Arcane Recovery</option>
+				<option value=4>Mana Burn</option>
+				<option value=5>Quick Shot</option>
+				<option value=6>Poison Weapons</option>
+			</select>
+			<span asp-validation-for="Passive" class="text-danger"></span>
+			<div class="pq-font" id="passive-description">No Passive</div>
 			<!-- Dummy field that is invisible. Used to pass the base 64 string of the player's image up with the form. -->
 			<input asp-for="Image" id="player-image-data" style="display:none;"/>
 			<span asp-validation-for="Image" class="text-danger"></span>
@@ -47,4 +57,5 @@
 	</div>
 </div>
 
+<script src="~/js/Passives.js"></script>
 <script src="~/js/CreateCharacter.js"></script>

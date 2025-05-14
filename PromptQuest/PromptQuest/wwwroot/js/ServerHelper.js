@@ -12,7 +12,7 @@ async function loadGame() {
 		window.location.href = "/"; //boot them to the Main Menu.
 	}
 	if (gameState.inTutorial) {
-		StartTutorial();
+			StartTutorial();
 	}
 	// Update display with loaded data.
 	refreshDisplay();
