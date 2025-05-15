@@ -69,7 +69,6 @@ function refreshDisplay() {
 	refreshEnemyDisplay();
 	refreshDialogBox();
 	refreshMenu();
-	//Add shop purchase buttons on load
 	refreshShop();
 	//Sync button states (disabled/enabled).
 	attackBtn.syncButtonState(gameState.inCombat && gameState.isPlayersTurn && !gameState.isLocationComplete && gameState.player.currentHealth > 0);
@@ -172,7 +171,8 @@ function refreshPlayerDisplay() {
 	document.querySelectorAll(".player-hp").forEach(el => { el.textContent = gameState.player.currentHealth + "/" + gameState.player.maxHealth + " HP"; });
 	document.getElementById("player-health-potions").textContent = gameState.player.healthPotions;
 	document.getElementById("player-passive").textContent = getPassiveDescription(gameState.player.passive);
-	abilityCooldownIcon.src = "/images/" +gameState.player.abilityCooldown + "_6_Clock.png"
+	abilityCooldownIcon.src = "/images/" + gameState.player.abilityCooldown + "_6_Clock.png";
+	document.getElementById("player-health-bar").style.height = ((gameState.player.currentHealth / gameState.player.maxHealth) * 100) + "%";
 }
 
 function refreshEnemyDisplay() {
@@ -181,7 +181,8 @@ function refreshEnemyDisplay() {
 	document.getElementById("enemy-image").alt = gameState.enemy.name;
 	document.getElementById("enemy-attack").textContent = gameState.enemy.attack;
 	document.getElementById("enemy-defense").textContent = gameState.enemy.defense;
-	document.getElementById("enemy-hp").textContent = gameState.enemy.currentHealth + "/" + gameState.enemy.maxHealth + " HP";
+	//document.getElementById("enemy-hp").textContent = gameState.enemy.currentHealth + "/" + gameState.enemy.maxHealth + " HP";
+	document.getElementById("enemy-health-bar").style.height = ((gameState.enemy.currentHealth / gameState.enemy.maxHealth) * 100) + "%";
 }
 
 //------------------------ OVERLOADS --------------------------------------------------------------------------------------------------------------

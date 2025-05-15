@@ -10,7 +10,7 @@
 	}
 }
 
-<img src="~/images/BackgroundGloomyDarkForest.png" style="position: absolute; top: 50%; left: 50%; height: 100%; width: 100%; transform: translate(-50%, -50%);" />
+<img src="~/images/BackgroundGloomyDarkForest.png" style="position: absolute; top: 50%; left: 50%; height: 100%; width: 100%; transform: translate(-50%, -50%); user-select: none;" />
 <div class="pq-container">
 	<img class="bg-image" id="bg-image" src="~/images/campsite.png" style="display:none; position: absolute; top: 50%; left: 50%; height: 50%; width: auto; transform: translate(-50%, -10%);" />
 	<!-- Menu Button -->
@@ -30,16 +30,19 @@
 	<!-- Dialog Box -->
 	<div class="dialog-box pq-center-element-x" id="dialog-box" style="overflow-x:auto;top: 25%; left: 50%; height: 20vmin; width: 100vmin;"></div>
 	<!-- Player Display -->
-	<div class="pq-container" id="player-display" style="display:none;bottom: 0; left: 0; width: 50vmin; height: 50vmin;">
+	<div class="pq-container" id="player-display" style="display:none; bottom: 0; left: 0; width: 50vmin; height: 50vmin;">
 		<div class="player-name" style="top: 2%; left: 4%;"></div>
-		<img class="player-image" src="~/images/LoadingImage.png" style="top: 10%; left: 3%; height: 75%; width: auto;" />
+		<img class="player-image pq-border" src="~/images/LoadingImage.png" style="top: 10%; left: 3%; height: 75%; width: auto;" />
+		<div id="player-health-bar-container" class="pq-border" style="top: 10%; left: 81%; width: 5%; height: 55%; position: relative; overflow: hidden;">
+			<div id="player-health-bar" style="width: 100%; background-color: darkred; position: absolute; bottom: 0; transition: height 1.0s ease-in-out;"></div>
+		</div>
 		<img class="player-potions-icon" src="~/images/PotionIcon.png" alt="Potion Icon" style="top: 70%; left: 76%; height: 15%; width: auto;">
 		<div class="player-potions stat-text" id="player-health-potions" style="top: 74%; left: 89%;"></div>
-		<img class="player-attack-icon" src="~/images/SwordIcon.png" alt="Attack Icon" style="bottom: 0; left: 3%; height: 15%; width: auto;">
-		<span class="player-attack stat-text" id="player-attack" style="bottom: 1%; left: 15%;">0</span>
-		<img class="player-defense-icon" src="~/images/ShieldIcon.png" alt="Shield Icon" style="bottom: 0; left: 25%; height: 15%; width: auto;">
-		<span class="player-defense stat-text" id="player-defense" style="bottom: 1%; left: 38%;">0</span>
-		<span class="player-hp stat-text" id="player-hp" style="bottom: 3%; right: 25%;"></span>
+		<img class="player-attack-icon" src="~/images/SwordIcon.png" alt="Attack Icon" style="bottom: 0; left: 18%; height: 15%; width: auto;">
+		<span class="player-attack stat-text" id="player-attack" style="bottom: 0%; left: 30%;">0</span>
+		<img class="player-defense-icon" src="~/images/ShieldIcon.png" alt="Shield Icon" style="bottom: 0; left: 40%; height: 15%; width: auto;">
+		<span class="player-defense stat-text" id="player-defense" style="bottom: 0%; left: 53%;">0</span>
+		@* <span class="player-hp stat-text" id="player-hp" style="bottom: 3%; right: 25%;"></span> *@
 	</div>
 	<!-- Action Buttons Display -->
 	<div class="pq-center-element-x" id="action-button-display" style="display:none; bottom: 0; left: 50%; height: 45vmin; width: fit-content;">
@@ -70,13 +73,16 @@
 	</div>
 	<!-- Enemy Display -->
 	<div class="pq-container" id="enemy-display" style="display:none; bottom: 0; right: 0; width: 50vmin; height: 50vmin;">
+		<div id="enemy-health-bar-container" class="pq-border" style="top: 10%; left: 14%; width: 5%; height: 75%; position: relative; overflow: hidden;">
+			<div id="enemy-health-bar" style="width: 100%; background-color: darkred; position: absolute; bottom: 0; transition: height 1.0s ease-in-out;"></div>
+		</div>
 		<div class="enemy-name" id="enemy-name" style="top: 2%; right: 4%;"></div>
 		<img class="enemy-image" id="enemy-image" src="~/images/LoadingImage.png" style="top: 10%; right: 3%; height: 75%; width: auto;" />
-		<img class="enemy-attack-icon" src="~/images/SwordIcon.png" alt="Attack Icon" style="bottom: 0; right: 62%; height: 15%; width: auto;">
-		<span class="enemy-attack stat-text" id="enemy-attack" style="bottom: 1%; right: 62%;"></span>
-		<img class="enemy-defense-icon" src="~/images/ShieldIcon.png" alt="Shield Icon" style="bottom: 0; right: 40%; height: 15%; width: auto;">
-		<span class="enemy-defense stat-text" id="enemy-defense" style="bottom: 1%; right: 38%;"></span>
-		<span class="enemy-hp stat-text" id="enemy-hp" style="bottom: 3%; right: 5%;"></span>
+		<img class="enemy-attack-icon" src="~/images/SwordIcon.png" alt="Attack Icon" style="bottom: 0; right: 46%; height: 15%; width: auto;">
+		<span class="enemy-attack stat-text" id="enemy-attack" style="bottom: 1%; right: 46%;"></span>
+		<img class="enemy-defense-icon" src="~/images/ShieldIcon.png" alt="Shield Icon" style="bottom: 0; right: 24%; height: 15%; width: auto;">
+		<span class="enemy-defense stat-text" id="enemy-defense" style="bottom: 1%; right: 22%;"></span>
+		@* <span class="enemy-hp stat-text" id="enemy-hp" style="bottom: 3%; right: 5%;"></span> *@
 		<img class="bleeding-indicator" id="bleeding-indicator" src="~/images/BleedingIndicator.png" alt="Bleeding Indicator" style="top: 75%; left: 10%; height: 10%; width: auto;">
 		<img class="burning-indicator" id="burning-indicator" src="~/images/BurningIndicator.png" alt="Burning Indicator" style="top: 65%; left: 10%; height: 10%; width: auto;">
 	</div>
