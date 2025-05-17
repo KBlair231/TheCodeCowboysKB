@@ -31,12 +31,12 @@ namespace PromptQuest.Services {
 			gameState.Player.DefenseBuff = 0; //reset player defense buff
 			if(gameState.PlayerLocation == 11) {
 				gameState.Enemy = GetElite(gameState);
-				gameState.AddMessage($"You have been attacked by the {gameState.Enemy.Name}!"); // Let the user know that combat started.
+				gameState.AddMessage($"You have encountered the {gameState.Enemy.Name}!"); // Let the user know that combat started.
 				return;
 			}
 			if(gameState.PlayerLocation != 18) {
 				gameState.Enemy = GetEnemy(gameState);
-				gameState.AddMessage($"You have been attacked by the {gameState.Enemy.Name}!"); // Let the user know that combat started.
+				gameState.AddMessage($"You have encountered the {gameState.Enemy.Name}!"); // Let the user know that combat started.
 				return;
 			}
 			// If the player is in the boss room, spawn a boss.
@@ -76,8 +76,6 @@ namespace PromptQuest.Services {
 					gameState.Player.AbilityCooldown -= 1;
 					gameState.Player.ArcaneRecovery(random.Next(0,100));
 				}
-				// Return the result to the user.
-				gameState.AddMessage($"You attacked the {gameState.Enemy.Name} for {damage} damage");
 				// Get the player's equipped item
 				Item item = gameState.Player.EquippedWeapon;
 				if(item.StatusEffects != StatusEffect.None) {
@@ -101,17 +99,17 @@ namespace PromptQuest.Services {
 		public void PlayerAbility(GameState gameState) {
 			switch(gameState.Player.Class.ToLower()) {
 				case "warrior"://attack for double power, uses the attack function
-					gameState.AddMessage($"You used your ability! You power up and perform a strong attack!");
+					gameState.AddMessage($"You used your warrior ability! You power up and perform a strong attack!");
 					PlayerAttack(gameState, 2, false);
 					gameState.Player.AbilityCooldown = 3;
 					break;
 				case "mage"://gain +6 defense for the next attack
-					gameState.AddMessage($"You used your ability! You cast a shield spell to gain +6 defense against the next attack!");
+					gameState.AddMessage($"You used your mage ability! You cast a shield spell to gain +6 defense against the next attack!");
 					gameState.Player.DefenseBuff += 6;
 					gameState.Player.AbilityCooldown = 4;
 					break;
 				case "archer"://perform two attacks
-					gameState.AddMessage($"You used your ability! You shoot two arrows at the enemy!");
+					gameState.AddMessage($"You used your archer ability! You shoot two arrows at the enemy!");
 					PlayerAttack(gameState, 1, false);
 					PlayerAttack(gameState, 1, false);
 					gameState.Player.AbilityCooldown = 3;
@@ -131,7 +129,7 @@ namespace PromptQuest.Services {
 			}
 			// If player is already at max health, don't let them heal.
 			if(gameState.Player.CurrentHealth >= gameState.Player.MaxHealth) {
-				gameState.AddMessage("You are already at or above max health!");
+				gameState.AddMessage("You are already at max health!");
 				return;
 			}
 			// Update player health and number of potions.
@@ -140,10 +138,8 @@ namespace PromptQuest.Services {
 			// If the potion put the player's health above maximum, set it to maximum.
 			if(gameState.Player.CurrentHealth >= gameState.Player.MaxHealth) {
 				gameState.Player.CurrentHealth = gameState.Player.MaxHealth;
-				gameState.AddMessage($"You healed to max HP!"); // Overwrite current message.
 				return;
 			}
-			gameState.AddMessage($"You healed to {gameState.Player.CurrentHealth} HP!");
 			// Healing does not end the player's turn.
 		}
 
@@ -155,7 +151,7 @@ namespace PromptQuest.Services {
 			}
 			// If player is already at max health, don't let them rest.
 			if(gameState.Player.CurrentHealth >= gameState.Player.MaxHealth) {
-				gameState.AddMessage("You are already at or above max health!");
+				//gameState.AddMessage("You are already at max health!"); Not sure if this is necessary or not with the new health change indicators
 				gameState.IsLocationComplete = true;
 				return;
 			}
@@ -164,13 +160,11 @@ namespace PromptQuest.Services {
 			// If the potion put the player's health above maximum, set it to maximum.
 			if(gameState.Player.CurrentHealth >= gameState.Player.MaxHealth) {
 				gameState.Player.CurrentHealth = gameState.Player.MaxHealth;
-				gameState.AddMessage($"You healed to max HP!"); // Overwrite current message.
 				gameState.IsLocationComplete = true;
 				return;
 			}
 			// Ensure player can leave
 			gameState.IsLocationComplete = true;
-			gameState.AddMessage($"You healed to {gameState.Player.CurrentHealth} HP!");
 		}
 
 		/// <summary>Doesn't rest, updates the game state, then returns a message.</summary>
@@ -306,22 +300,22 @@ namespace PromptQuest.Services {
 					gameState.Player.Gold += 20; // Grant gold
 					break;
 				case 7:
-					gameState.AddMessage("You drink the red potion and feel more refreshed than ever! You gained 5 Maximum HP and healed to full!");
+					gameState.AddMessage("You drink the red potion and feel more refreshed than ever! Your Maximum HP has increased by 5 points.");
 					gameState.Player.MaxHealth += 5; // Increase max health by 5
 					gameState.Player.CurrentHealth = gameState.Player.MaxHealth; // Heal the player
 					break;
+				//case 8:
+				//	gameState.AddMessage("You drink the red potion and feel... a little disgusted. You lost 1 Maximum HP, but gained an uncapped 25 HP!");
+				//	gameState.Player.MaxHealth -= 1; // Decrease max health by 1
+				//	gameState.Player.CurrentHealth += 20; // Heal the player, even if it goes over max
+				//	break;
+				//case 9:
+				//	gameState.AddMessage("You drink the grey potion and feel like vomiting. Your Maximum HP is now 1, but you gained an uncapped 75 HP!");
+				//	gameState.Player.MaxHealth = 1; // Decrease max health to 1
+				//	gameState.Player.CurrentHealth += 75; // Heal the player, even if it goes over max
+				//	break;
 				case 8:
-					gameState.AddMessage("You drink the red potion and feel... a little disgusted. You lost 1 Maximum HP, but gained an uncapped 25 HP!");
-					gameState.Player.MaxHealth -= 1; // Decrease max health by 1
-					gameState.Player.CurrentHealth += 20; // Heal the player, even if it goes over max
-					break;
-				case 9:
-					gameState.AddMessage("You drink the grey potion and feel like vomiting. Your Maximum HP is now 1, but you gained an uncapped 75 HP!");
-					gameState.Player.MaxHealth = 1; // Decrease max health to 1
-					gameState.Player.CurrentHealth += 75; // Heal the player, even if it goes over max
-					break;
-				case 10:
-					gameState.AddMessage("You feel stronger!");
+					gameState.AddMessage("You feel stronger! Your base attack has increased by 2 points.");
 					gameState.Player.BaseAttack += 2; // Increase attack by 2 permanently
 					break;
 			}
@@ -520,8 +514,6 @@ namespace PromptQuest.Services {
 			}
 			// Update player health.
 			gameState.Player.CurrentHealth -= damage;
-			// Return an action result with a message describing what happened.
-			gameState.AddMessage($"The {gameState.Enemy.Name} attacked you for {damage} damage");
 			// Check if player died.
 			if(gameState.Player.CurrentHealth < 1) {
 				gameState.IsPlayersTurn = true; // Zero this field out because combat is over.
@@ -532,11 +524,11 @@ namespace PromptQuest.Services {
 			if(gameState.Enemy.StatusEffects.HasFlag(StatusEffect.Burning)) {
 				gameState.Enemy.CurrentHealth -= 2;
 				gameState.Enemy.StatusEffects &= ~StatusEffect.Burning; // Remove the burning effect
-				gameState.AddMessage($"The {gameState.Enemy.Name} took 2 damage from burning and the flame extinguished.");
+				gameState.AddMessage($"The {gameState.Enemy.Name} took damage from burning and the flame was extinguished.");
 			}
 			if(gameState.Enemy.StatusEffects.HasFlag(StatusEffect.Bleeding)) {
 				gameState.Enemy.CurrentHealth -= 1;
-				gameState.AddMessage($"The {gameState.Enemy.Name} took 1 damage from their untreated wound.");
+				gameState.AddMessage($"The {gameState.Enemy.Name} took damage from their untreated wound.");
 			}
 			// Player didn't die, so now it is their turn.
 			gameState.IsPlayersTurn = true;

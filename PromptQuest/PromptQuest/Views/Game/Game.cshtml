@@ -30,9 +30,16 @@
 	<!-- Dialog Box -->
 	<div class="dialog-box pq-center-element-x" id="dialog-box" style="overflow-x:auto;top: 25%; left: 50%; height: 20vmin; width: 100vmin;"></div>
 	<!-- Player Display -->
-	<div class="pq-container" id="player-display" style="display:none; bottom: 0; left: 0; width: 50vmin; height: 50vmin;">
+	<div class="pq-container" id="player-display" style="bottom: 0; left: 0; width: 50vmin; height: 50vmin; opacity: 0;">
+		<!-- Player Damage Indicator -->
+		<div id="player-damage-indicator"
+				 style="top: 10%; left: 90%; height: 70%; width: auto; 
+						font-size: 50px; font-weight: bold; font-family: 'texture', sans-serif;
+						text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.7);
+						opacity: 0; transition: opacity 1.0s ease-out, transform 2.0s ease-out;">
+		</div>
 		<div class="player-name" style="top: 2%; left: 4%;"></div>
-		<img class="player-image pq-border" src="~/images/LoadingImage.png" style="top: 10%; left: 3%; height: 75%; width: auto;" />
+		<img class="player-image pq-border" id="player-image" src="~/images/LoadingImage.png" style="top: 10%; left: 3%; height: 75%; width: auto;" />
 		<div id="player-health-bar-container" class="pq-border" style="top: 10%; left: 81%; width: 5%; height: 55%; position: relative; overflow: hidden;">
 			<div id="player-health-bar" style="width: 100%; background-color: darkred; position: absolute; bottom: 0; transition: height 1.0s ease-in-out;"></div>
 		</div>
@@ -72,9 +79,16 @@
 	<div class="pq-center-element-x" id="shop-button-display" style="display:none; bottom: 0; left: 50%; height: 45vmin; width: 45vmin;">
 	</div>
 	<!-- Enemy Display -->
-	<div class="pq-container" id="enemy-display" style="display:none; bottom: 0; right: 0; width: 50vmin; height: 50vmin;">
+	<div class="pq-container" id="enemy-display" style="bottom: 0; right: 0; width: 50vmin; height: 50vmin; opacity:0;">
 		<div id="enemy-health-bar-container" class="pq-border" style="top: 10%; left: 14%; width: 5%; height: 75%; position: relative; overflow: hidden;">
 			<div id="enemy-health-bar" style="width: 100%; background-color: darkred; position: absolute; bottom: 0; transition: height 1.0s ease-in-out;"></div>
+		</div>
+		<!-- Enemy Damage Indicator -->
+		<div id="enemy-damage-indicator"
+				 style="top: 10%; right: 90%; height: 70%; width: auto; z-index: 99;
+						font-size: 50px; font-weight: bold; font-family: 'texture', sans-serif;
+						text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.7);
+						opacity: 0; transition: opacity 1.0s ease-out, transform 2.0s ease-out;">
 		</div>
 		<div class="enemy-name" id="enemy-name" style="top: 2%; right: 4%;"></div>
 		<img class="enemy-image" id="enemy-image" src="~/images/LoadingImage.png" style="top: 10%; right: 3%; height: 75%; width: auto;" />
@@ -83,8 +97,8 @@
 		<img class="enemy-defense-icon" src="~/images/ShieldIcon.png" alt="Shield Icon" style="bottom: 0; right: 24%; height: 15%; width: auto;">
 		<span class="enemy-defense stat-text" id="enemy-defense" style="bottom: 1%; right: 22%;"></span>
 		@* <span class="enemy-hp stat-text" id="enemy-hp" style="bottom: 3%; right: 5%;"></span> *@
-		<img class="bleeding-indicator" id="bleeding-indicator" src="~/images/BleedingIndicator.png" alt="Bleeding Indicator" style="top: 75%; left: 10%; height: 10%; width: auto;">
-		<img class="burning-indicator" id="burning-indicator" src="~/images/BurningIndicator.png" alt="Burning Indicator" style="top: 65%; left: 10%; height: 10%; width: auto;">
+		<img class="bleeding-indicator" id="bleeding-indicator" src="~/images/BleedingIndicator.png" alt="Bleeding Indicator" style="top: 75%; left: 4%; height: 10%; width: auto;">
+		<img class="burning-indicator" id="burning-indicator" src="~/images/BurningIndicator.png" alt="Burning Indicator" style="top: 65%; left: 4%; height: 10%; width: auto;">
 	</div>
 </div>
 
@@ -155,12 +169,11 @@
 </div>
 
 <!-- Respawn Modal -->
-<div class="modal fade" id="respawnModal" tabindex="-1" aria-labelledby="respawnModalLabel" aria-hidden="true">
+<div class="modal fade" id="respawnModal" tabindex="-1" data-bs-backdrop="static" data-bs-keyboard="false" aria-labelledby="respawnModalLabel" aria-hidden="true">
 	<div class="modal-dialog pq-border pq-font text-light">
 		<div class="modal-content BackgroundColorDark p-2">
 			<div class="modal-header" style="border:none;">
 				<h5 class="modal-title" id="respawnModalLabel">You have been defeated!</h5>
-				<button type="button" class="btn-close" style="color:white;" data-bs-dismiss="modal" aria-label="Close"></button>
 			</div>
 			<div class="modal-body" style="border:none;">
 				Press the button below to respawn and fight again.

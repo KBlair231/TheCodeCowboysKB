@@ -59,6 +59,7 @@ namespace PromptQuest.Services {
 				// Set player's location to the selected mapNode
 				gameState.PlayerLocation = mapNodeId;
 			}
+			gameState.ClearMessages();//New room = blank dialog box.
 			gameState.IsLocationComplete = false;
 			// Zero out GameState status
 			gameState.InCombat = false;
@@ -74,7 +75,7 @@ namespace PromptQuest.Services {
 				return;
 			}
 			if(currentNode != null && currentNode.NodeType == "Event") {
-				gameState.EventNum = new Random().Next(1, 11); // Randomly select an event number
+				gameState.EventNum = new Random().Next(1, 9); // Randomly select an event number
 				switch(gameState.EventNum) {
 					case 1:
 						gameState.AddMessage("A prickly bush lies in your path. A few red objects shimmer from fairly deep inside.");
@@ -107,15 +108,16 @@ namespace PromptQuest.Services {
 						gameState.AddMessage("You find a large red potion that looks especially tasty.");
 						gameState.AddMessage("Drink it?");
 						break;
+					// The following events cause helth beyond the maximum. I don't know how the health bar should show that, so we're putting it aside for now.
+					//case 8:
+					//	gameState.AddMessage("You find a large red potion that looks... peculiar.");
+					//	gameState.AddMessage("Drink it?");
+					//	break;
+					//case 9:
+					//	gameState.AddMessage("You find an odd grey potion that looks kind of gross.");
+					//	gameState.AddMessage("Drink it?");
+					//	break;
 					case 8:
-						gameState.AddMessage("You find a large red potion that looks... peculiar.");
-						gameState.AddMessage("Drink it?");
-						break;
-					case 9:
-						gameState.AddMessage("You find an odd grey potion that looks kind of gross.");
-						gameState.AddMessage("Drink it?");
-						break;
-					case 10:
 						gameState.AddMessage("You find a shiny, magical stone on the floor.");
 						gameState.AddMessage("Crush it to absorb its power?");
 						break;
@@ -130,7 +132,7 @@ namespace PromptQuest.Services {
 				return;
 			}
 			if(currentNode != null && currentNode.NodeType == "Shop") {
-				gameState.AddMessage("You find yourself at an ominous shop with no tender.");
+				gameState.AddMessage("You find yourself at an ominous shop.");
 				gameState.AddMessage("What would you like to buy?");
 				gameState.InShop = true;
 				// Allow player to leave immediately.

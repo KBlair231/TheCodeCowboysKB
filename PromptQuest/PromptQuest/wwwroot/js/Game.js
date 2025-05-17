@@ -12,6 +12,8 @@ let dialogBox;
 let abilityCooldownIcon;
 let bleedingIndicator;
 let burningIndicator;
+let playerHealthBar;
+let enemyHealthBar;
 //Player action buttons
 let attackBtn;
 let healBtn;
@@ -22,6 +24,7 @@ let denyBtn;
 let abilityBtn;
 let openTreasureBtn;
 let skipTreasureBtn;
+let respawnBtn;
 
 //----------- LOAD UI ELEMENTS AND ADD EVENT LISTENERS ---------------------------------------------------------------------------------------
 
@@ -39,6 +42,8 @@ document.addEventListener("DOMContentLoaded", () => {
 	bleedingIndicator = document.getElementById("bleeding-indicator");
 	burningIndicator = document.getElementById("burning-indicator");
 	abilityCooldownIcon = document.getElementById("ability-cooldown-icon");
+	playerHealthBar = document.getElementById("player-health-bar");
+	enemyHealthBar = document.getElementById("enemy-health-bar");
 	//Grab all the player action buttons from the DOM on load.
 	attackBtn = document.getElementById("attack-btn");
 	healBtn = document.getElementById("health-potion-btn");
@@ -49,6 +54,7 @@ document.addEventListener("DOMContentLoaded", () => {
 	abilityBtn = document.getElementById("ability-btn");
 	openTreasureBtn = document.getElementById("open-treasure-btn");
 	skipTreasureBtn = document.getElementById("skip-treasure-btn");
+	respawnBtn = document.getElementById("respawn-btn");
 	//Add all player action button event listeners on load
 	attackBtn.attachPlayerAction('attack');
 	healBtn.attachPlayerAction('heal');
@@ -59,6 +65,7 @@ document.addEventListener("DOMContentLoaded", () => {
 	abilityBtn.attachPlayerAction('ability');
 	openTreasureBtn.attachPlayerAction('open-treasure');
 	skipTreasureBtn.attachPlayerAction('skip-treasure');
+	respawnBtn.attachPlayerAction('respawn');
 });
 
 //----------- REFRESH DISPLAY ---------------------------------------------------------------------------------------
@@ -70,64 +77,97 @@ function refreshDisplay() {
 	refreshDialogBox();
 	refreshMenu();
 	refreshShop();
+	refreshActionBtnDisplay();
 	//Sync button states (disabled/enabled).
-	attackBtn.syncButtonState(gameState.inCombat && gameState.isPlayersTurn && !gameState.isLocationComplete && gameState.player.currentHealth > 0);
-	healBtn.syncButtonState(gameState.inCombat && gameState.isPlayersTurn && !gameState.isLocationComplete && gameState.player.currentHealth > 0);
 	restBtn.syncButtonState(gameState.inCampsite && !gameState.isLocationComplete);
 	skipRestBtn.syncButtonState(gameState.inCampsite && !gameState.isLocationComplete);
 	acceptBtn.syncButtonState(gameState.inEvent && !gameState.isLocationComplete);
 	denyBtn.syncButtonState(gameState.inEvent && !gameState.isLocationComplete);
-	abilityBtn.syncButtonState(gameState.inCombat && gameState.isPlayersTurn && !gameState.isLocationComplete && gameState.player.currentHealth > 0 && gameState.player.abilityCooldown == 0);
 	openTreasureBtn.syncButtonState(gameState.inTreasure && !gameState.isLocationComplete);
 	skipTreasureBtn.syncButtonState(gameState.inTreasure && !gameState.isLocationComplete);
 	//Sync UI visibility (visible/hidden).
-	playerDisplay.syncVisibility(gameState.player.currentHealth > 0);
-	enemyDisplay.syncVisibility(gameState.inCombat && gameState.enemy.currentHealth > 0);
-	actionButtonDisplay.syncVisibility(gameState.inCombat && !gameState.isLocationComplete && gameState.player.currentHealth > 0);
+	actionButtonDisplay.syncVisibility(gameState.inCombat);
 	backgroundImage.syncVisibility(gameState.inCampsite && !gameState.isLocationComplete);
 	campsiteButtonDisplay.syncVisibility(gameState.inCampsite);
 	eventButtonDisplay.syncVisibility(gameState.inEvent);
 	treasureButtonDisplay.syncVisibility(gameState.inTreasure);
 	shopButtonDisplay.syncVisibility(gameState.inShop);
-
 	// Check for status effects and update their visibility from the enum
 	bleedingIndicator.syncVisibility(gameState.enemy.statusEffects > 0 && (gameState.enemy.statusEffects == 1 || gameState.enemy.statusEffects == 3));
 	burningIndicator.syncVisibility(gameState.enemy.statusEffects > 0 && (gameState.enemy.statusEffects == 2 || gameState.enemy.statusEffects == 3));
-	//This will be merged into the sync pattern above at some point.
-	hideRespawnModal();
-	if (gameState.player.currentHealth <= 0) { 
-		showRespawnModal();
+}
+
+// ------------------------ REFRESH DISPLAY HELPER METHODS ------------------------------------------------------------------------------------------------------
+
+function refreshPlayerDisplay() {
+	document.querySelectorAll(".player-name").forEach(el => { el.textContent = gameState.player.name; });
+	document.querySelectorAll(".player-image").forEach(el => { el.src = `/Game/GetCharacterImage`; }); // Placeholder image for now.
+	document.querySelectorAll(".player-image").forEach(el => { el.alt = gameState.player.name; });
+	document.querySelectorAll(".player-attack").forEach(el => { el.textContent = gameState.player.attackStat ?? 0; });
+	document.querySelectorAll(".player-defense").forEach(el => { el.textContent = gameState.player.defenseStat ?? 0; });
+	document.querySelectorAll(".player-hp").forEach(el => { el.textContent = gameState.player.currentHealth + "/" + gameState.player.maxHealth + " HP"; });
+	document.getElementById("player-health-potions").textContent = gameState.player.healthPotions;
+	document.getElementById("player-passive").textContent = getPassiveDescription(gameState.player.passive);
+	abilityCooldownIcon.src = "/images/" + gameState.player.abilityCooldown + "_6_Clock.png";
+	playerHealthBar.style.height = ((gameState.player.currentHealth / gameState.player.maxHealth) * 100) + "%";
+	let healthDifference = gameState.player.currentHealth - previousPlayerHealth;
+	if (healthDifference != 0) {
+		showDamageIndicator("player-damage-indicator", healthDifference);
+		if (healthDifference < 0) {
+			triggerShake('player-image');//Shake animation only when player takes damage (stops player image from shaking if healing)
+		}
 	}
-}
-
-// This respawn modal code will be refactored soon to fit into the above patterns.
-
-// Function to show the respawn modal
-function showRespawnModal() {
-	const respawnModal = new bootstrap.Modal(document.getElementById('respawnModal'));
-	const respawnButton = document.getElementById("respawn-btn");
-	respawnButton.attachPlayerAction('respawn');
-	respawnModal.show();
-}
-
-// Function to hide the respawn modal
-function hideRespawnModal() {
-	const respawnModalElement = document.getElementById('respawnModal');
-	const modalInstance = bootstrap.Modal.getInstance(respawnModalElement);
-	if (modalInstance) {
-		modalInstance.hide();
+	handleDeath(playerDisplay, gameState.player.currentHealth, playerHealthBar);
+	respawnBtn.syncButtonState(gameState.player.currentHealth <= 0); //Enable respawn button if player is dead.
+	if (gameState.player.currentHealth <= 0) {
+		setTimeout(() => {
+			showRespawnModal();
+		}, 3000); //Wait 3 seconds for death animation to be done before showing the respawn modal.
 	}
+	else {
+		hideRespawnModal();
+	}
+	previousPlayerHealth = gameState.player.currentHealth;//Update cached value for next check.
 }
 
-// Items currently in shop
-const shopItems = [
-	{ name: "Darksteel Leggings", id: 1, price: 25 },
-	{ name: "Radiant Glass Helm", id: 2, price: 65 },
-	{ name: "The Pencil Blade", id: 3, price: 75 }
-];
+function refreshEnemyDisplay() {
+	document.getElementById("enemy-name").textContent = gameState.enemy.name;
+	document.getElementById("enemy-image").src = gameState.enemy.imageUrl;
+	document.getElementById("enemy-image").alt = gameState.enemy.name;
+	document.getElementById("enemy-attack").textContent = gameState.enemy.attack;
+	document.getElementById("enemy-defense").textContent = gameState.enemy.defense;
+	//document.getElementById("enemy-hp").textContent = gameState.enemy.currentHealth + "/" + gameState.enemy.maxHealth + " HP";
+	enemyHealthBar.style.height = ((gameState.enemy.currentHealth / gameState.enemy.maxHealth) * 100) + "%";
+	let healthDifference = gameState.enemy.currentHealth - previousEnemyHealth;
+	if (healthDifference < 0) { //Only check for damage on enemy because they can't heal.
+		showDamageIndicator("enemy-damage-indicator", healthDifference);
+		triggerShake('enemy-image');
+	}
+	handleDeath(enemyDisplay, gameState.enemy.currentHealth, enemyHealthBar);
+	previousEnemyHealth = gameState.enemy.currentHealth;//Update cached value for next check.
+}
+
+function refreshDialogBox() {
+	dialogBox.innerHTML = "";
+	gameState.listMessages.forEach((message) => {
+		const logDiv = document.createElement("div");
+		logDiv.textContent = message; //Instantly show cached messages
+		dialogBox.appendChild(logDiv);
+	});
+	//Update message cache
+	cachedMessages = gameState.listMessages;
+	//Scroll to bottom to show new messages
+	dialogBox.scrollTop = dialogBox.scrollHeight;
+}
 
 // Function to dynamically add shop purchase buttons
 function refreshShop() {
+	// Items currently in shop
+	const shopItems = [
+		{ name: "Darksteel Leggings", id: 1, price: 25 },
+		{ name: "Radiant Glass Helm", id: 2, price: 65 },
+		{ name: "The Pencil Blade", id: 3, price: 75 }
+	];
 	// Clear any existing buttons
 	shopButtonDisplay.innerHTML = "";
 	for (let i = 0; i < shopItems.length; i++) {
@@ -146,46 +186,83 @@ function refreshShop() {
 	}
 }
 
-// ------------------------ REFRESH DISPLAY HELPER METHODS ------------------------------------------------------------------------------------------------------
-
-function refreshDialogBox() {
-	dialogBox.innerHTML = "";
-	gameState.listMessages.forEach((message) => {
-		const logDiv = document.createElement("div");
-		logDiv.textContent = message; //Instantly show cached messages
-		dialogBox.appendChild(logDiv);
-	});
-	//Update message cache
-	cachedMessages = gameState.listMessages;
-	//Scroll to bottom to show new messages
-	dialogBox.scrollTop = dialogBox.scrollHeight;
+function refreshActionBtnDisplay() {
+	let combatEnableDelay = 1500;//Delayed to allow time for enemy turn/damage animations.
+	if (gameState.inCombat && gameState.enemy.currentHealth == gameState.enemy.maxHealth) {
+		combatEnableDelay = 0;//Combat just started so there is no animation to wait for.
+	}
+	attackBtn.syncButtonState(gameState.inCombat && gameState.isPlayersTurn && !gameState.isLocationComplete && gameState.player.currentHealth > 0, combatEnableDelay);
+	healBtn.syncButtonState(gameState.inCombat && gameState.isPlayersTurn && !gameState.isLocationComplete && gameState.player.currentHealth > 0, combatEnableDelay);
+	abilityBtn.syncButtonState(gameState.inCombat && gameState.isPlayersTurn && !gameState.isLocationComplete && gameState.player.currentHealth > 0 && gameState.player.abilityCooldown == 0, combatEnableDelay);
 }
 
+//------------------------ HELPER METHODS --------------------------------------------------------------------------------------------------------------
 
-function refreshPlayerDisplay() {
-	document.querySelectorAll(".player-name").forEach(el => { el.textContent = gameState.player.name; });
-	document.querySelectorAll(".player-image").forEach(el => { el.src = `/Game/GetCharacterImage`; }); // Placeholder image for now.
-	document.querySelectorAll(".player-image").forEach(el => { el.alt = gameState.player.name; });
-	document.querySelectorAll(".player-attack").forEach(el => { el.textContent = gameState.player.attackStat ?? 0; });
-	document.querySelectorAll(".player-defense").forEach(el => { el.textContent = gameState.player.defenseStat ?? 0; });
-	document.querySelectorAll(".player-hp").forEach(el => { el.textContent = gameState.player.currentHealth + "/" + gameState.player.maxHealth + " HP"; });
-	document.getElementById("player-health-potions").textContent = gameState.player.healthPotions;
-	document.getElementById("player-passive").textContent = getPassiveDescription(gameState.player.passive);
-	abilityCooldownIcon.src = "/images/" + gameState.player.abilityCooldown + "_6_Clock.png";
-	document.getElementById("player-health-bar").style.height = ((gameState.player.currentHealth / gameState.player.maxHealth) * 100) + "%";
+function handleDeath(characterDisplay, currentHealth, characterHealthBar) {
+	if (!characterDisplay) {
+		return;
+	}
+	if (currentHealth > 0) {
+		characterDisplay.style.opacity = "1"; // Fade in
+	}
+	else {
+		characterHealthBar.style.height = "0%";//Ensure health bar reaches zero before fading out
+		characterDisplay.style.transition = "opacity 3.0s ease-out";
+		characterDisplay.style.opacity = "0";
+	}
 }
 
-function refreshEnemyDisplay() {
-	document.getElementById("enemy-name").textContent = gameState.enemy.name;
-	document.getElementById("enemy-image").src = gameState.enemy.imageUrl;
-	document.getElementById("enemy-image").alt = gameState.enemy.name;
-	document.getElementById("enemy-attack").textContent = gameState.enemy.attack;
-	document.getElementById("enemy-defense").textContent = gameState.enemy.defense;
-	//document.getElementById("enemy-hp").textContent = gameState.enemy.currentHealth + "/" + gameState.enemy.maxHealth + " HP";
-	document.getElementById("enemy-health-bar").style.height = ((gameState.enemy.currentHealth / gameState.enemy.maxHealth) * 100) + "%";
+function triggerShake(elementId) {
+	let element = document.getElementById(elementId);
+	if (!element) return;
+	element.style.animation = "shake 0.5s ease-in-out";
+	// Remove animation after it completes
+	setTimeout(() => {
+		element.style.animation = "";
+	}, 500);
 }
 
-//------------------------ OVERLOADS --------------------------------------------------------------------------------------------------------------
+function showDamageIndicator(elementId, damageAmount) {
+	const damageElement = document.getElementById(elementId);
+	if (!damageElement) return;
+	// Update text and make it visible
+	if (damageAmount < 0) {
+		damageElement.textContent = `${damageAmount}`;
+		damageElement.style.color = 'red';
+	}
+	else {
+		damageElement.textContent = `+${damageAmount}`;
+		damageElement.style.color = '#39FF14';
+	}
+	damageElement.style.opacity = "1"; // Fully visible
+	damageElement.style.transform = "translateY(0px)"; // Reset movement
+	// Gradually fade out after a short delay
+	setTimeout(() => {
+		damageElement.style.opacity = "0"; // Fade out
+		damageElement.style.transform = "translateY(-20px)"; // Move upwards
+	}, 800); // Adjust time as needed
+}
+
+// Function to show the respawn modal
+function showRespawnModal() {
+	const respawnModal = document.getElementById('respawnModal');
+	let modalInstance = bootstrap.Modal.getInstance(respawnModal);
+	if (!modalInstance) {
+		modalInstance = new bootstrap.Modal(document.getElementById('respawnModal'));
+	}
+	modalInstance.show();
+}
+
+// Function to hide the respawn modal
+function hideRespawnModal() {
+	const respawnModalElement = document.getElementById('respawnModal');
+	const modalInstance = bootstrap.Modal.getInstance(respawnModalElement);
+	if (modalInstance) {
+		modalInstance.hide();
+	}
+}
+
+//------------------------ EXTENSION METHODS --------------------------------------------------------------------------------------------------------------
 
 //Shows/Hides an html element according to the given condition. If the condition is true, the element is shown, if not, it is hidden. Only updates if necessary to avoid UI flicker.
 HTMLElement.prototype.syncVisibility = function (condition) {
@@ -208,10 +285,12 @@ HTMLButtonElement.prototype.attachPlayerAction = function (action, getActionValu
 };
 
 //Enables/disables a button according to the given condition. If condition is true, button is enabled, if not, it is disabled. Only updates if necessary to avoid UI flicker.
-HTMLButtonElement.prototype.syncButtonState = function (condition) {
+HTMLButtonElement.prototype.syncButtonState = function (condition, delay = 0) {
 	if (condition && this.disabled) {
 		//Button should be enabled but is currently disabled. Enable it.
-		this.disabled = false;
+		setTimeout(() => {
+			this.disabled = false;
+		}, delay);//Wait for delay number of miliseconds before button is renabled.
 	}
 	if (!condition && this.disabled == false) {
 		//Button should not be enabled but is currently enabled. Disable it.

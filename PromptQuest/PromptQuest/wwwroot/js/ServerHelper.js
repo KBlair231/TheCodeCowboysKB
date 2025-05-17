@@ -1,5 +1,8 @@
 ﻿// Cached GameState. Each server request returns a diff that is merged into this. Only get completely refreshed on page relod.
 let gameState;
+//Keep track of the player and enemy's previous health so we can use it to calculate damage indicators.
+let previousPlayerHealth;
+let previousEnemyHealth;
 
 document.addEventListener("DOMContentLoaded", async function () {
 	// Page loaded, get current game state and cache it. 
@@ -14,6 +17,9 @@ async function loadGame() {
 	if (gameState.inTutorial) {
 			StartTutorial();
 	}
+	//Cache player and enemy health values locally so we can use it to calculate damage indicator values.
+	previousPlayerHealth = gameState.player.currentHealth;
+	previousEnemyHealth = gameState.enemy.currentHealth;
 	// Update display with loaded data.
 	refreshDisplay();
 }
