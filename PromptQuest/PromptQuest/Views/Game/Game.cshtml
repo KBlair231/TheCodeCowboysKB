@@ -14,7 +14,7 @@
 <div class="pq-container">
 	<img class="bg-image" id="bg-image" src="~/images/campsite.png" style="display:none; position: absolute; top: 50%; left: 50%; height: 50%; width: auto; transform: translate(-50%, -10%);" />
 	<!-- Menu Button -->
-	<button class="pq-button" id="menu-open" style="top:0; right:0; height: 7vmin; width: 14vmin;"> Menu </button>
+	<button class="pq-button" id="menu-open" style="top:1vmin; right:1vmin; height: 7vmin; width: 14vmin;">Menu</button>
 	<!-- Login Display -->
 	<div class="login-display" style="top: 0; left: 0; height: 8vmin; width: 20vmin;">
 		@if (isUserLoggedIn)
@@ -33,13 +33,19 @@
 	<div class="pq-container" id="player-display" style="bottom: 0; left: 0; width: 50vmin; height: 50vmin; opacity: 0;">
 		<!-- Player Damage Indicator -->
 		<div id="player-damage-indicator"
-				 style="top: 10%; left: 90%; height: 70%; width: auto; 
+				 style="top: 10%; left: 90%; height: 70%; width: auto;
 						font-size: 50px; font-weight: bold; font-family: 'texture', sans-serif;
 						text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.7);
 						opacity: 0; transition: opacity 1.0s ease-out, transform 2.0s ease-out;">
 		</div>
 		<div class="player-name" style="top: 2%; left: 4%;"></div>
-		<img class="player-image pq-border" id="player-image" src="~/images/LoadingImage.png" style="top: 10%; left: 3%; height: 75%; width: auto;" />
+		<img class="player-image pq-border" id="player-image" src="~/images/BlankImage.png" style="top: 10%; left: 3%; height: 75%; width: auto;" />
+		<button id="open-map-btn" class="map-btn" style="bottom: 18%; left: 5%; height: 10%; width: 10%; background: none; border: none; padding: 0; cursor: pointer;">
+			<img src="~/images/MapIcon.png" alt="Alternate Text" style="max-height:100%; " />
+		</button>
+		<button id="open-inventory-btn" class="map-btn" style="bottom: 30%; left: 5%; height: 10%; width: 10%; background: none; border: none; padding: 0; cursor: pointer;">
+			<img src="~/images/InventoryIcon.png" alt="Alternate Text" style="max-height:100%; " />
+		</button>
 		<div id="player-health-bar-container" class="pq-border" style="top: 10%; left: 81%; width: 5%; height: 55%; position: relative; overflow: hidden;">
 			<div id="player-health-bar" style="width: 100%; background-color: darkred; position: absolute; bottom: 0; transition: height 1.0s ease-in-out;"></div>
 		</div>
@@ -91,7 +97,7 @@
 						opacity: 0; transition: opacity 1.0s ease-out, transform 2.0s ease-out;">
 		</div>
 		<div class="enemy-name" id="enemy-name" style="top: 2%; right: 4%;"></div>
-		<img class="enemy-image" id="enemy-image" src="~/images/LoadingImage.png" style="top: 10%; right: 3%; height: 75%; width: auto;" />
+		<img class="enemy-image" id="enemy-image" src="~/images/BlankImage.png" style="top: 10%; right: 3%; height: 75%; width: auto;" />
 		<img class="enemy-attack-icon" src="~/images/SwordIcon.png" alt="Attack Icon" style="bottom: 0; right: 46%; height: 15%; width: auto;">
 		<span class="enemy-attack stat-text" id="enemy-attack" style="bottom: 1%; right: 46%;"></span>
 		<img class="enemy-defense-icon" src="~/images/ShieldIcon.png" alt="Shield Icon" style="bottom: 0; right: 24%; height: 15%; width: auto;">
@@ -102,10 +108,11 @@
 	</div>
 </div>
 
-<div class="pq-modal-fullscreen" id="menu" style="display: none;">
+<!-- Invetory Window -->
+<div class="pq-modal-fullscreen" id="inventory" style="display: none;">
 	<div class="pq-container">
 		<!-- Player display on the left -->
-		<button class="pq-button" id="menu-close" style="top:0; right:2vmin; height: 8vmin; width: 17vmin;"> Close </button>
+		<button class="pq-button" id="close-inventory-btn" style="top:0; right:2vmin; height: 8vmin; width: 17vmin;"> Close </button>
 		<div class="player-name" style="top:15vmin; left:5vmin; height:6vmin; width:40vmin"></div>
 		<img class="player-image" style="top:20vmin; left:5vmin; height: 40vmin; width: auto; max-width:25%; max-height:auto;" src="~/images/LoadingImage.png" alt="Alternate Text" />
 		<!-- Stats box label -->
@@ -122,13 +129,10 @@
 			<span class="stat-text" id="gold-display" style="top:66%; left:20%; height: 19%;"></span>
 			<span class="pq-font" id="player-passive" style="top:19%; left:30%; height: 20%; width:auto">nothing yet</span>
 		</div>
-		<!-- Tab Menu -->
+		<!-- Main Group Box -->
 		<div class="pq-tab-window pq-border" style="bottom:0; right:0vmin; height:85vmin; width:150vmin; max-width: 70%;">
-			<!-- Tab Buttons -->
-			<button class="pq-tab" id="inventory-btn" style="top:-4.5vmin; left:1vmin; height: 4vmin; width: 12vmin;"> Inventory </button>
-			<button class="pq-tab" id="map-btn" style="top:-4.5vmin; left:14vmin; height: 4vmin; width: 12vmin;"> Map </button>
-			<!-- Inventory window -->
-			<div id="inventory" class="pq-container">
+			<!-- Inventory slots window -->
+			<div class="pq-container">
 				<div id="equipped-weapon" class="pq-inventory-slot" style="top:15%; height:15%; left:1%;"></div>  <!-- Weapon Slot -->
 				<div id="equipped-helm" class="pq-inventory-slot" style="top:0%; height:15%; left:11%;"></div>  <!-- Helm Slot -->
 				<div id="equipped-chest" class="pq-inventory-slot" style="top:15%; height:15%; left:11%;"></div>  <!-- Chest Slot -->
@@ -157,14 +161,20 @@
 					}
 				</div>
 			</div>
-			<!-- Map window -->
-			<div id="map" class="pq-container">
-				<div class="pq-font text-center" id="floor-tracker" style="top:5%; left:5%; height:15%; width:90%; font-size:8vmin;"></div>
-				<button class="pq-button" id="floor-btn" style="top:25%; left:40%; height:10%; width:20%; font-size:2vmin; ">Move to Next Floor</button>
-				<div class="pq-map-display" id="map-container" style="bottom:0; left:0; height: 35%; width: 100%">
-				</div>
-			</div>
 		</div>
+	</div>
+</div>
+
+<!-- Map Overlay -->
+<div id="map" class="pq-container" style="display: none; position:absolute; top:5%; left:5%; width:90%; height: 90%; border: 3px solid black;">
+	<!-- Map Background -->
+	<img src="~/images/BackgroundMap.png" alt="Alternate Text" style="height:100%;width:100%;" />
+	<button id="close-map-btn" class="map-btn" style="top: 2vmin; right: 2vmin; height: 50px; width: 50px; background: none; border: none; padding: 0;">
+		<img src="~/images/MapCloseIcon.png" alt="Alternate Text" style="max-height:100%; " />
+	</button>
+	<div class="pq-font text-center" id="floor-tracker" style="top:5%; left:5%; height:15%; width:90%; color: black; font-size:8vmin; font-family: 'texture', sans-serif"></div>
+	<button class="pq-button" id="floor-btn" style="top:25%; left:40%; height:10%; width:20%; font-size:2vmin;">Move to Next Floor</button>
+	<div class="pq-map-display" id="map-container" style="bottom:0; left:0; height: 40%; width: 100%">
 	</div>
 </div>
 

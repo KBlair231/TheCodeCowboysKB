@@ -10,14 +10,15 @@ let equippedLegsSlot;
 let equippedBootsSlot;
 let itemDetails;
 //Menu buttons
-let openMenuBtn;
-let closeMenuBtn;
+let openInventoryBtn;
+let closeInventoryBtn;
 let inventoryBtn;
 let equipBtn;
-let mapBtn;
+let openMapBtn;
 let floorBtn;
 //Client side state tracking variables
-let tabCurrent = 'inventory'; //Set inventory as the default tab.
+let isMapOpen = false; //Keep track of whether or not the map is open so we don't refresh it constantly.
+let isInventoryOpen = false; //Keep track of whether or not the inventory is open so we don't refresh it constantly.
 let selectedItemIndex = -1; //No item selected on load.
 //Cached map object that is defined server side so we grab it on load and then it never needs to be updated.
 let mapDef;
@@ -25,7 +26,6 @@ let mapDef;
 
 document.addEventListener("DOMContentLoaded", async () => {
 	//Grab the commonly used UI elements on load.
-	menu = document.getElementById("menu");
 	inventory = document.getElementById("inventory");
 	equippedWeaponSlot = document.getElementById("equipped-weapon");
 	equippedHelmSlot = document.getElementById("equipped-helm");
@@ -35,47 +35,29 @@ document.addEventListener("DOMContentLoaded", async () => {
 	itemDetails = document.getElementById("item-details");
 	map = document.getElementById("map");
 	//Grab all menu buttons from the DOM on load.
-	openMenuBtn = document.getElementById("menu-open");
-	closeMenuBtn = document.getElementById("menu-close");
-	inventoryBtn = document.getElementById("inventory-btn");
+	openInventoryBtn = document.getElementById("open-inventory-btn");
+	closeInventoryBtn = document.getElementById("close-inventory-btn");
 	equipBtn = document.getElementById("equip-btn");
-	mapBtn = document.getElementById("map-btn");
+	openMapBtn = document.getElementById("open-map-btn");
+	closeMapBtn = document.getElementById("close-map-btn");
 	floorBtn = document.getElementById("floor-btn");
 	//Add all menu buttons button event listeners on load
-	openMenuBtn.addEventListener("click", () => { menu.syncVisibility(true); refreshMenu(); }); 
-	closeMenuBtn.addEventListener("click", () => { menu.syncVisibility(false); });//Force menu to hide on click.
-	inventoryBtn.addEventListener("click", () => { tabCurrent = 'inventory'; refreshMenu(); });//Set tab and refresh menu
+	openInventoryBtn.addEventListener("click", () => { inventory.syncVisibility(true); isInventoryOpen = true; refreshInventory(); }); 
+	closeInventoryBtn.addEventListener("click", () => { inventory.syncVisibility(false); isInventoryOpen = false; });//Force menu to hide on click.
 	equipBtn.attachPlayerAction('equip', () => selectedItemIndex);
-	mapBtn.addEventListener("click", () => { tabCurrent = 'map'; refreshMenu(); });//Set tab and refresh menu
+	openMapBtn.addEventListener("click", () => { map.syncVisibility(true); isMapOpen = true;  refreshMap(); });//Set tab and refresh menu
+	closeMapBtn.addEventListener("click", () => { map.syncVisibility(false); isMapOpen = false; });//Set tab and refresh menu
 	floorBtn.attachPlayerAction('move', () => 1);
 });
 
-//------------------------ REFRESH DISPLAY --------------------------------------------------------------------------------------------------------
-
-//This is the only method here that gets called outside of this file. It gets called by refreshDisplay() Game.js. This means this runs everytime we refresh after an action.
-function refreshMenu() {
-	//Show currently selected tab. 
-	inventory.syncVisibility(tabCurrent === 'inventory');
-	map.syncVisibility(tabCurrent === "map");
-	//item details doesn't inheirit visibility from inventory so do it manually. Find a fix for this someday.
-	itemDetails.syncVisibility(selectedItemIndex != -1);
-	//Clear highlight on all tab buttons.
-	inventoryBtn.classList.remove('pq-tab-current');
-	mapBtn.classList.remove('pq-tab-current');
-	//Highlight currently selected tab and refresh its contents
-	if (tabCurrent === "inventory") {
-		inventoryBtn.classList.add('pq-tab-current');
-		refreshInventory();
-	}
-	if (tabCurrent === "map") {
-		mapBtn.classList.add('pq-tab-current');
-		refreshMap();
-	}
-	// Update the gold display with the current amount of gold.
-	document.getElementById("gold-display").textContent = gameState.player.gold;
-}
+//------------------------ REFRESH DISPLAY METHODS --------------------------------------------------------------------------------------------------------
 
 function refreshInventory() {
+	if (!isInventoryOpen) {
+		return; // Inventory isn't open, so don't refresh
+	}
+	itemDetails.syncVisibility(selectedItemIndex != -1);
+	document.getElementById("gold-display").textContent = gameState.player.gold;
 	const items = gameState.player.items;
 	//Clear all inventory slots.
 	for (let i = 1; i <= 20; i++) {
@@ -111,94 +93,76 @@ function refreshInventory() {
 }
 
 async function refreshMap() {
-	//Fetch map from server.
+	if (!isMapOpen) {
+		return; // Map isn't open, so don't refresh
+	}
+	// Fetch map from the server
 	mapDef = await sendGetRequest("/Game/GetMap");
 	const mapContainer = document.getElementById("map-container");
 	mapContainer.innerHTML = ""; // Clear previous map
-	// Updates the floor counter
-	const floorTracker = document.getElementById("floor-tracker");
-	floorTracker.textContent = "Floor " + gameState.floor;
-	// Adds a check for if the player has defeated the boss to enable next floor button
+	// Update floor counter
+	document.getElementById("floor-tracker").textContent = "Floor " + gameState.floor;
+	// Enable next floor button if the boss is defeated
 	floorBtn.syncButtonState(gameState.playerLocation == 18 && gameState.isLocationComplete);
-	// Draw the map nodes and edges
-	for (let i = 0; i < mapDef.listMapNodes.length; i++) {
-		// node.removeEventListener("click", movePlayerToNode());
+	// Store node elements for edge calculations
+	let nodeElements = [];
+	// Draw map nodes
+	mapDef.listMapNodes.forEach((node, index) => {
 		const nodeElement = document.createElement("button");
 		nodeElement.className = "map-node";
-		nodeElement.setAttribute("data-node-id", mapDef.listMapNodes[i].mapNodeId);
-		// Adjust the position of the node based on the nodeHeight value
-		if (mapDef.listMapNodes[i].nodeHeight) {
-			nodeElement.style.position = "absolute"; // Ensure the node is positioned absolutely
-			nodeElement.style.top = `${mapDef.listMapNodes[i].nodeHeight * -100 + 200}px`; // Adjust the vertical position
+		nodeElement.setAttribute("data-node-id", node.mapNodeId);
+
+		// Set position dynamically
+		if (node.nodeHeight) {
+			nodeElement.style.position = "absolute";
+			nodeElement.style.top = `${(node.nodeHeight - 2) * 30}%`;
 		}
-		if (mapDef.listMapNodes[i].nodeDistance) {
-			nodeElement.style.left = `${mapDef.listMapNodes[i].nodeDistance * 100}px`; // Adjust the horizontal position
+		if (node.nodeDistance) {
+			nodeElement.style.left = `${node.nodeDistance * 9}%`;
 		}
+		// Append node and store it for edge calculations
 		mapContainer.appendChild(nodeElement);
-		// Check for NodeType and add image if it is "Boss"
-		if (mapDef.listMapNodes[i].nodeType === "Boss") {
+		nodeElements.push({ id: node.mapNodeId, element: nodeElement });
+		// Add appropriate images/icons
+		const iconMap = {
+			"Boss": "/images/BossIcon.png",
+			"Elite": "/images/EliteEnemyIcon.png",
+			"Campsite": "/images/campsite.png",
+			"Event": "/images/event.png",
+			"Treasure": "/images/treasure.png",
+			"Shop": "/images/shop.png"
+		};
+		if (iconMap[node.nodeType]) {
 			const imgElement = document.createElement("img");
-			imgElement.src = "/images/boss.png";
+			imgElement.src = iconMap[node.nodeType];
 			imgElement.className = "map-image";
 			nodeElement.appendChild(imgElement);
 		}
-		// Check for NodeType and add image if it is "Campsite"
-		if (mapDef.listMapNodes[i].nodeType === "Campsite") {
-			const imgElement = document.createElement("img");
-			imgElement.src = "/images/campsite.png";
-			imgElement.className = "map-image";
-			nodeElement.appendChild(imgElement);
+		// Player's current location
+		if ((index + 1) === gameState.playerLocation) {
+			const playerIcon = document.createElement("img");
+			playerIcon.src = "/images/PlayerIcon.png";
+			playerIcon.className = "player-icon";
+			nodeElement.appendChild(playerIcon);
+			nodeElement.classList.add(gameState.isLocationComplete ? "map-node-completed" : "map-node-current");
 		}
-		// Check for NodeType and add image if it is "Event"
-		if (mapDef.listMapNodes[i].nodeType === "Event") {
-			const imgElement = document.createElement("img");
-			imgElement.src = "/images/event.png";
-			imgElement.className = "map-image";
-			nodeElement.appendChild(imgElement);
-		}
-		// Check for NodeType and add image if it is "Treasure"
-		if (mapDef.listMapNodes[i].nodeType === "Treasure") {
-			const imgElement = document.createElement("img");
-			imgElement.src = "/images/treasure.png";
-			imgElement.className = "map-image";
-			nodeElement.appendChild(imgElement);
-		}
-		// Check for NodeType and add image if it is "Shop"
-		if (mapDef.listMapNodes[i].nodeType === "Shop") {
-			const imgElement = document.createElement("img");
-			imgElement.src = "/images/shop.png";
-			imgElement.className = "map-image";
-			nodeElement.appendChild(imgElement);
-		}
-		// Show player which node they are on
-		if ((i + 1) == gameState.playerLocation) {
-			nodeElement.classList.add("map-node-current");
-		}
-		// gameState.isLocationComplete
-		if (gameState.listMapNodeIdsVisited.includes((i + 1).toString())) {
+		// Mark visited nodes
+		if (gameState.listMapNodeIdsVisited.includes((index + 1).toString())) {
 			nodeElement.classList.add("map-node-completed");
 		}
-		// Enable the nodes in connectedNodes
-		if (mapDef.listMapNodes[gameState.playerLocation - 1].connectedNodes.includes(i + 1) && gameState.isLocationComplete) {
-			const connectedNode = mapContainer.querySelector(`[data-node-id="${i + 1}"]`);
-			if (connectedNode) {
+		// Enable nodes the player can move to
+		if (mapDef.listMapNodes[gameState.playerLocation - 1].connectedNodes.includes(index + 1) && gameState.isLocationComplete) {
+			const connectedNode = mapContainer.querySelector(`[data-node-id="${index + 1}"]`);
+			if (connectedNode && node.mapNodeId != 1) {
 				connectedNode.classList.add("map-node-enabled");
-				// Add event listener for node click on enabled nodes
-				connectedNode.attachPlayerAction('move', () => (i + 1));
+				connectedNode.attachPlayerAction('move', () => index + 1);
 			}
-		}
-		else {
+		} else {
 			nodeElement.classList.add("map-node-disabled");
 		}
-		// Don't create a map edge for the last node
-		//if (i == mapDef.listMapEdges.length) {
-		//	continue;
-		//}
-		// Create a map edge between nodes
-		//const nodeEdgeElement = document.createElement("div");
-		//nodeEdgeElement.className = "map-edge";
-		//mapContainer.appendChild(nodeEdgeElement);
-	}
+	});
+	//Add all the edges and between the nodes.
+	calculateMapEdges(mapDef, nodeElements, mapContainer);
 }
 
 //------------------------ MORE COMPLEX CLICK HANDLERS --------------------------------------------------------------------------------------------------------
@@ -293,4 +257,61 @@ async function equipItem() {
 	}
 	await sendPostRequest(`/Game/EquipItem?itemIndex=${selectedItemIndex}`);
 	refreshMenu();
+}
+
+//------------------------ HELPER METHODS --------------------------------------------------------------------------------------------------------
+
+function calculateMapEdges(mapDef, nodeElements, mapContainer) {
+	// Draw edges between connected nodes
+	mapDef.listMapNodes.forEach((node) => {
+		const currentNode = nodeElements.find(n => n.id === node.mapNodeId);
+		if (!currentNode) return;
+		node.connectedNodes.forEach((connectedId) => {
+			const connectedNode = nodeElements.find(n => n.id === connectedId);
+			if (!connectedNode) return;
+			if (connectedId == 1) return; // Prevent drawing an edge from the last node to the first
+			// Create edge
+			const edgeElement = document.createElement("div");
+			edgeElement.className = "map-edge";
+			//Check if this is the last visited node -> Apply amber color
+			if (connectedId == gameState.playerLocation && gameState.listMapNodeIdsVisited.includes(node.mapNodeId.toString())) {
+				edgeElement.style.borderColor = "#EAAB11"; // Amber color
+			}
+			//Check if the connected node is completed
+			if (currentNode.element.classList.contains("map-node-completed") && connectedNode.element.classList.contains("map-node-completed")) {
+				edgeElement.style.borderColor = "darkgreen"; // Apply green styling
+			}
+			//Get center positions
+			const startX = currentNode.element.offsetLeft + currentNode.element.offsetWidth / 2;
+			const startY = currentNode.element.offsetTop + currentNode.element.offsetHeight / 2;
+			const endX = connectedNode.element.offsetLeft + connectedNode.element.offsetWidth / 2;
+			const endY = connectedNode.element.offsetTop + connectedNode.element.offsetHeight / 2;
+			//Calculate angle and distance
+			const deltaX = endX - startX;
+			const deltaY = endY - startY;
+			const distance = Math.sqrt(deltaX * deltaX + deltaY * deltaY);
+			const angleRad = Math.atan2(deltaY, deltaX);
+			//Account for elliptical node borders
+			const startWidthOffset = currentNode.element.offsetWidth / 2 * Math.cos(angleRad);
+			const startHeightOffset = currentNode.element.offsetHeight / 2 * Math.sin(angleRad);
+			const endWidthOffset = connectedNode.element.offsetWidth / 2 * Math.cos(angleRad);
+			const endHeightOffset = connectedNode.element.offsetHeight / 2 * Math.sin(angleRad);
+			//Adjust start & end positions to stop at the ellipse borders
+			const adjustedStartX = startX + startWidthOffset;
+			const adjustedStartY = startY + startHeightOffset;
+			const adjustedEndX = endX - endWidthOffset;
+			const adjustedEndY = endY - endHeightOffset;
+			//Adjust final edge width
+			const adjustedDistance = Math.sqrt(
+				(adjustedEndX - adjustedStartX) ** 2 + (adjustedEndY - adjustedStartY) ** 2
+			);
+			//Apply styles
+			edgeElement.style.width = `${adjustedDistance}px`;
+			edgeElement.style.left = `${adjustedStartX}px`;
+			edgeElement.style.top = `${adjustedStartY}px`;
+			edgeElement.style.transform = `rotate(${angleRad * (180 / Math.PI)}deg)`;
+			//Append edge
+			mapContainer.appendChild(edgeElement);
+		});
+	});
 }

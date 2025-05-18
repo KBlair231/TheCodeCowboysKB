@@ -30,8 +30,9 @@ namespace PromptQuest.Services {
 			gameState.Player.AbilityCooldown = 0; //reset player ability, may be removed down the line
 			gameState.Player.DefenseBuff = 0; //reset player defense buff
 			if(gameState.PlayerLocation == 11) {
+				//Elite enemies are on map node 11.
 				gameState.Enemy = GetElite(gameState);
-				gameState.AddMessage($"You have encountered the {gameState.Enemy.Name}!"); // Let the user know that combat started.
+				gameState.AddMessage($"You have encountered an elite enemy, the {gameState.Enemy.Name}!"); // Let the user know that combat started.
 				return;
 			}
 			if(gameState.PlayerLocation != 18) {
@@ -41,7 +42,7 @@ namespace PromptQuest.Services {
 			}
 			// If the player is in the boss room, spawn a boss.
 			gameState.Enemy = GetBoss(gameState);
-			gameState.AddMessage($"You have encountered the {gameState.Enemy.Name}! Defeat the boss! "); // Let the user know that combat started.
+			gameState.AddMessage($"You have encountered a boss enemy, the {gameState.Enemy.Name}!"); // Let the user know that combat started.
 		}
 
 		#region Player Action Methods
@@ -145,6 +146,7 @@ namespace PromptQuest.Services {
 
 		/// <summary>Calculates the amount healed by Resting, updates the game state, then returns a message.</summary>
 		public void PlayerRest(GameState gameState) {
+			string message = "You feel well rested and are ready to continue on your journey.";
 			// Set potions to 2 if they are less than 2.
 			if(gameState.Player.HealthPotions < 2) {
 				gameState.Player.HealthPotions = 2;
@@ -153,6 +155,7 @@ namespace PromptQuest.Services {
 			if(gameState.Player.CurrentHealth >= gameState.Player.MaxHealth) {
 				//gameState.AddMessage("You are already at max health!"); Not sure if this is necessary or not with the new health change indicators
 				gameState.IsLocationComplete = true;
+				gameState.AddMessage(message);
 				return;
 			}
 			// Update player health (+30% of max health)
@@ -161,8 +164,10 @@ namespace PromptQuest.Services {
 			if(gameState.Player.CurrentHealth >= gameState.Player.MaxHealth) {
 				gameState.Player.CurrentHealth = gameState.Player.MaxHealth;
 				gameState.IsLocationComplete = true;
+			gameState.AddMessage(message);
 				return;
 			}
+			gameState.AddMessage(message);
 			// Ensure player can leave
 			gameState.IsLocationComplete = true;
 		}

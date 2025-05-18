@@ -75,7 +75,8 @@ function refreshDisplay() {
 	refreshPlayerDisplay();
 	refreshEnemyDisplay();
 	refreshDialogBox();
-	refreshMenu();
+	refreshInventory();//kick out if the menu isn't open
+	refreshMap();//kick out if the menu isn't open
 	refreshShop();
 	refreshActionBtnDisplay();
 	//Sync button states (disabled/enabled).
