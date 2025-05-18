@@ -14,7 +14,7 @@
 <div class="pq-container">
 	<img class="bg-image" id="bg-image" src="~/images/campsite.png" style="display:none; position: absolute; top: 50%; left: 50%; height: 50%; width: auto; transform: translate(-50%, -10%);" />
 	<!-- Menu Button -->
-	<button class="pq-button" id="menu-open" style="top:1vmin; right:1vmin; height: 7vmin; width: 14vmin;">Menu</button>
+	<button class="pq-button" id="menu-btn" style="top:1vmin; right:1vmin; height: 7vmin; width: 14vmin;">Menu</button>
 	<!-- Login Display -->
 	<div class="login-display" style="top: 0; left: 0; height: 8vmin; width: 20vmin;">
 		@if (isUserLoggedIn)
@@ -165,7 +165,10 @@
 	</div>
 </div>
 
-<!-- Map Overlay -->
+<!-- Overlay to make the background behind window's dark and not clickable -->
+<div id="overlay" style="display: none;"></div>
+
+<!-- Map -->
 <div id="map" class="pq-container" style="display: none; position:absolute; top:5%; left:5%; width:90%; height: 90%; border: 3px solid black;">
 	<!-- Map Background -->
 	<img src="~/images/BackgroundMap.png" alt="Alternate Text" style="height:100%;width:100%;" />
@@ -192,6 +195,16 @@
 				<button type="button" id="respawn-btn" class="btn pq-button pq-font">Respawn</button>
 			</div>
 		</div>
+	</div>
+</div>
+
+<!-- Game Menu -->
+<div id="menu" class="pq-container BackgroundColorDark" style="display: none;">
+	<div class="pq-center-element" id="" style="top: 50%; left: 50%; height: fit-content; width: fit-content; max-height: 100%; max-width: 100%">
+		<button class="pq-button" id="continue-btn" style="margin-bottom:2vmin; width: 100%;">Continue</button>
+		<button class="pq-button" id="tutorial-btn" style="margin-bottom:2vmin; width: 100%;">View Tutorial</button>
+		<button class="pq-button" id="options-btn" style="margin-bottom:2vmin; width: 100%;">Options</button>
+		<button class="pq-button" id="quit-btn" style="margin-bottom:2vmin; width: 100%;">Return to Main Menu</button>
 	</div>
 </div>
 

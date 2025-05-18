@@ -9,12 +9,8 @@ let equippedChestSlot;
 let equippedLegsSlot;
 let equippedBootsSlot;
 let itemDetails;
-//Menu buttons
-let openInventoryBtn;
-let closeInventoryBtn;
-let inventoryBtn;
+//Buttons
 let equipBtn;
-let openMapBtn;
 let floorBtn;
 //Client side state tracking variables
 let isMapOpen = false; //Keep track of whether or not the map is open so we don't refresh it constantly.
@@ -25,28 +21,27 @@ let mapDef;
 //----------- LOAD UI ELEMENTS AND ADD EVENT LISTENERS ---------------------------------------------------------------------------------------
 
 document.addEventListener("DOMContentLoaded", async () => {
-	//Grab the commonly used UI elements on load.
+	menu = document.getElementById('menu');
 	inventory = document.getElementById("inventory");
+	map = document.getElementById("map");
 	equippedWeaponSlot = document.getElementById("equipped-weapon");
 	equippedHelmSlot = document.getElementById("equipped-helm");
 	equippedChestSlot = document.getElementById("equipped-chest");
 	equippedLegsSlot = document.getElementById("equipped-legs");
 	equippedBootsSlot = document.getElementById("equipped-boots");
 	itemDetails = document.getElementById("item-details");
-	map = document.getElementById("map");
-	//Grab all menu buttons from the DOM on load.
-	openInventoryBtn = document.getElementById("open-inventory-btn");
-	closeInventoryBtn = document.getElementById("close-inventory-btn");
+	//Grab all the buttons that need to be cached from the DOM on load.
 	equipBtn = document.getElementById("equip-btn");
-	openMapBtn = document.getElementById("open-map-btn");
-	closeMapBtn = document.getElementById("close-map-btn");
 	floorBtn = document.getElementById("floor-btn");
 	//Add all menu buttons button event listeners on load
-	openInventoryBtn.addEventListener("click", () => { inventory.syncVisibility(true); isInventoryOpen = true; refreshInventory(); }); 
-	closeInventoryBtn.addEventListener("click", () => { inventory.syncVisibility(false); isInventoryOpen = false; });//Force menu to hide on click.
+	document.getElementById("menu-btn").addEventListener("click", () => { overlay.syncVisibility(true); menu.syncVisibility(true); }); //Show overlay to blur background and show meny on top of it.
+	document.getElementById("continue-btn").addEventListener("click", () => { overlay.syncVisibility(false); menu.syncVisibility(false); }); //Hide overlay and menu.
+	document.getElementById("quit-btn").addEventListener("click", () => {window.location.replace("/Home"); }); // Redirect to /Home and clear history
+	document.getElementById("open-inventory-btn").addEventListener("click", () => { overlay.syncVisibility(true); inventory.syncVisibility(true); isInventoryOpen = true; refreshInventory(); }); 
+	document.getElementById("close-inventory-btn").addEventListener("click", () => { overlay.syncVisibility(false); inventory.syncVisibility(false); isInventoryOpen = false; });//Force menu to hide on click.
+	document.getElementById("open-map-btn").addEventListener("click", () => { overlay.syncVisibility(true); map.syncVisibility(true); isMapOpen = true;  refreshMap(); });//Set tab and refresh menu
+	document.getElementById("close-map-btn").addEventListener("click", () => { overlay.syncVisibility(false); map.syncVisibility(false); isMapOpen = false; });//Set tab and refresh menu
 	equipBtn.attachPlayerAction('equip', () => selectedItemIndex);
-	openMapBtn.addEventListener("click", () => { map.syncVisibility(true); isMapOpen = true;  refreshMap(); });//Set tab and refresh menu
-	closeMapBtn.addEventListener("click", () => { map.syncVisibility(false); isMapOpen = false; });//Set tab and refresh menu
 	floorBtn.attachPlayerAction('move', () => 1);
 });
 
