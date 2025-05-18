@@ -1,57 +1,80 @@
 @model PromptQuest.Models.Player
 
 @{
-	ViewData["Title"] = "Character Creation";
+	ViewData["Title"] = "Create Character";
 	bool isUserLoggedIn = User.Identity?.IsAuthenticated == true;
-	// Get User's profile image
-	string userProfileImage = User.FindFirst("GoogleProfileImageUrl")?.Value;
-	// Something went wrong, show the default image.
-	if(userProfileImage == null) {
-		userProfileImage = "";
-	}
+	string userProfileImage = User.FindFirst("GoogleProfileImageUrl")?.Value ?? "";
 }
 
-<div class="pq-container">
-	<!-- Login Display -->
-	<div class="login-display" style="top: 0; left: 0; height: 8vmin; width: 20vmin;">
-		@if(isUserLoggedIn) {
-			<img src="@userProfileImage"/>
-		<a class="pq-link" href="/Account/SignOutFromGoogleLogin">Logout</a>
-		}
-		else {
-			<a class="pq-link" href="/Account/GoogleLogin">Login with Google</a>
-		}
-	</div>
-	<div class="pq-container pq-center-element-x" style="height: 100%; width: 60%; top: 0; left: 50%; border: .1vmin solid white; border-radius: 50px;">
-		<div class="pq-container pq-center-element-x" style="height: 60%; width: 95%; top: 5%; left: 50%;">
-			<div id="player-image-loader" class="loader pq-center-element-x" style="display:none; top: 40%; left: 22%;"></div>
-			<img src="/images/DefaultPlayerImage.png" alt="Image of your character" id="player-image" style="height: auto; width: 50%; top:0; left: 0%; border: .1vmin solid white; max-height: 100%;">
-			<textarea class="pq-form-control" id="description" placeholder="What does your character look like?" style="height: 85%; width: 45%; top:0; left: 52%; resize: none; border: .1vmin solid white; max-height: 100%; margin-top:0;"></textarea>
-			<button id="preview-btn" class="pq-button" style="width: auto; bottom:0; left: 52%; background-color:darkgreen;">Take a look</button>
+<!-- Linking the CSS file for better maintainability -->
+<link rel="stylesheet" href="~/css/CreateCharacter.css">
+
+<div class="container-fluid">
+
+	<!-- Top Row -->
+	<div class="row">
+		<div class="login-display p-2">
+			@if(isUserLoggedIn) {
+				<img src="@userProfileImage" alt="User Profile" class="profile-image" />
+				<a class="pq-link" href="/Account/SignOutFromGoogleLogin">Logout</a>
+			}
+			else {
+				<a class="pq-link" href="/Account/GoogleLogin">Login with Google</a>
+			}
 		</div>
-		<form asp-controller="Game" asp-action="CreateCharacter" method="POST" class="pq-form" style="height: 35%; width: 70%; bottom:0; left: 1%;">
-			<input asp-for="Name" type="text" minlength="1" maxlength="25" class="pq-form-control" id="name" name="name" placeholder="Enter Character's Name" />
-			<span asp-validation-for="Name" class="pq-validation-text"></span>
-			<select asp-for="Class" id="class-select" class="pq-form-control">
-				<option value="Warrior">Warrior</option>
-				<option value="Mage">Mage</option>
-				<option value="Archer">Archer</option>
-			</select>
-			<span asp-validation-for="Class" class="text-danger"></span>
-			<select asp-for="Passive" id="passive-select" class="pq-form-control">
-				<option value="1">Heavy Smash</option>
-				<option value="2">Spiked Bulwark</option>
-				<option value="3">Arcane Recovery</option>
-				<option value=4>Mana Burn</option>
-				<option value=5>Quick Shot</option>
-				<option value=6>Poison Weapons</option>
-			</select>
-			<span asp-validation-for="Passive" class="text-danger"></span>
-			<div class="pq-font" id="passive-description">No Passive</div>
-			<span asp-validation-for="Image" class="text-danger"></span>
-			<button type="submit" id="create-character-btn" class="pq-button" style="background-color:darkgreen; margin-top:20px;">Start Adventure</button>
-		</form>
-		
+	</div>
+
+	<!-- Main Content -->
+	<div class="row align-items-stretch justify-content-center">
+		<div class="col-xxl-7 col-xl-8 col-lg-9 col-md-9 col-sm-10 col-xs-12">
+			<div class="row pb-2">
+				<!-- Image -->
+				<div class="col-xxl-5 col-xl-5 col-lg-6 col-md-6 position-relative mt-2">
+					<div id="player-image-loader" class="pq-loader"
+							 style="display:none; position: absolute; top: 40%; left: 42%;">
+					</div>
+					<img id="player-image" src="/images/BlankImage.png" alt="Character Image" class="img-fluid pq-border">
+				</div>
+				<!-- Text & Button -->
+				<div class="col-xxl-7 col-xl-7 col-lg-6 col-md-6 d-flex flex-column mt-2">
+					<textarea id="description" class="pq-form-control mb-2 flex-grow-1" placeholder="Describe your character"></textarea>
+					<div class="d-flex">
+						<button id="preview-btn" class="btn text-light pq-border" style="background-color: darkgreen;">Take a look</button>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<!-- Form Controls -->
+	<div class="row justify-content-center">
+		<div class="col-xxl-7 col-xl-8 col-lg-9 col-md-9 col-sm-10 col-xs-12">
+			<form asp-controller="Game" asp-action="CreateCharacter" method="POST" class="pq-form">
+				<input asp-for="Name" type="text" minlength="1" maxlength="25" class="pq-form-control mt-3" id="name" name="name" placeholder="Enter Character's Name" />
+				<span asp-validation-for="Name" class="pq-validation-text" style="font-size: 1rem;"></span>
+
+				<select asp-for="Class" id="class-select" class="pq-form-control mt-3">
+					<option value="Warrior">Warrior</option>
+					<option value="Mage">Mage</option>
+					<option value="Archer">Archer</option>
+				</select>
+				<span asp-validation-for="Class" class="text-danger" style="font-size: 1rem;"></span>
+
+				<select asp-for="Passive" id="passive-select" class="pq-form-control mt-3">
+					<option value="1">Heavy Smash</option>
+					<option value="2">Spiked Bulwark</option>
+					<option value="3">Arcane Recovery</option>
+					<option value="4">Mana Burn</option>
+					<option value="5">Quick Shot</option>
+					<option value="6">Poison Weapons</option>
+				</select>
+				<span asp-validation-for="Passive" class="text-danger"></span>
+
+				<div class="text-light mt-1" id="passive-description" style="font-size: 1rem;"></div>
+
+				<button type="submit" id="create-character-btn" class="btn text-light pq-border my-3" style="background-color: darkgreen;">Start Adventure</button>
+			</form>
+		</div>
 	</div>
 </div>
 

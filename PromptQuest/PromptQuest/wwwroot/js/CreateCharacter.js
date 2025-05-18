@@ -8,7 +8,7 @@ document.addEventListener("DOMContentLoaded", async () => { //currently only inc
 	playerImage = document.getElementById('player-image');
 	playerImage.src = `/Game/GetCharacterImage?isPreview=${true}`;
 	playerImageLoader = document.getElementById('player-image-loader');
-	description = document.getElementById("description");
+	description = document.getElementById('description');
 	previewBtn = document.getElementById('preview-btn');
 	createCharacterBtn = document.getElementById('create-character-btn');
 	passiveDescription = document.getElementById("passive-description");
@@ -61,8 +61,8 @@ async function generatePlayerImage(prompt) {
 	};
 }
 
-	function loadPassiveDescription() {
-		let passiveSelect = document.getElementById("passive-select");
-		let selectedPassive = passiveSelect.options[passiveSelect.selectedIndex].value;
-		passiveDescription.innerHTML = getPassiveDescription(selectedPassive);
-	}
+function loadPassiveDescription() {
+	let passiveSelect = document.getElementById("passive-select");
+	let selectedPassive = passiveSelect.options[passiveSelect.selectedIndex].value;
+	passiveDescription.innerHTML = getPassiveDescription(selectedPassive);
+}

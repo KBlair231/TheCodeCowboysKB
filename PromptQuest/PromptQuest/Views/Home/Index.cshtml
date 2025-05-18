@@ -1,4 +1,5 @@
 ﻿@{
+	ViewData["Title"] = "Main Menu";
 	bool isUserLoggedIn = User.Identity?.IsAuthenticated == true;
 	// Get User's profile image
 	string userProfileImage = User.FindFirst("GoogleProfileImageUrl")?.Value;

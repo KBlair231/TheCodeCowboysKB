@@ -1,0 +1,39 @@
+﻿/* Extra small (xs) */
+html {
+	font-size: 12px;
+}
+
+/* Small (sm: ≥576px) */
+@media (min-width: 576px) {
+	html {
+		font-size: 14px;
+	}
+}
+
+/* Medium (md: ≥768px) */
+@media (min-width: 768px) {
+	html {
+		font-size: 16px;
+	}
+}
+
+/* Large (lg: ≥992px) */
+@media (min-width: 992px) {
+	html {
+		font-size: 18px;
+	}
+}
+
+/* Extra large (xl: ≥1200px) */
+@media (min-width: 1200px) {
+	html {
+		font-size: 20px;
+	}
+}
+
+/* Super large (xxl: ≥1400px) */
+/*@media (min-width: 1400px) {
+	html {
+		font-size: 22px;
+	}
+}*/
