@@ -66,6 +66,23 @@ body {
 	z-index: 1000; /* Ensures it's above everything. Nothing should ever be in front of the menu */
 }
 
+#active-popup {
+	position: absolute;
+	top: 100%;
+	left: 50%;
+	width: 60%;
+	height: 200%;
+	border: 3px solid white;
+	border-radius: 50px;
+	background-color: var(--background-color-primary); /* notmal color */
+	z-index: 9000; /* Ensures it's above everythingexcept the menu */
+		padding: 10px;
+	background-color: var(--background-color-primary);
+	font-size: var(--pq-font-normal);
+	color: var(--pq-font-color);
+	border: var(--pq-border);
+}
+
 /* Style for map container */
 .pq-map-display {
 	display: flex;

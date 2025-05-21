@@ -4,6 +4,7 @@ let createCharacterBtn;//The button used to create your character and start the 
 let playerImage;//A picture of the player's character at the top of the screen.
 let playerImageLoader;//A loading icon that shows while openAi is generating the iamge.
 let passiveDescription; // description for passive abilities
+let activeDescription; // description for active abilities
 document.addEventListener("DOMContentLoaded", async () => { //currently only included in CreateCharacter.cshtml
 	playerImage = document.getElementById('player-image');
 	playerImage.src = `/Game/GetCharacterImage?isPreview=${true}`;
@@ -12,8 +13,11 @@ document.addEventListener("DOMContentLoaded", async () => { //currently only inc
 	previewBtn = document.getElementById('preview-btn');
 	createCharacterBtn = document.getElementById('create-character-btn');
 	passiveDescription = document.getElementById("passive-description");
+	activeDescription = document.getElementById("active-description");
 	document.getElementById("passive-select").addEventListener("change", loadPassiveDescription, false);
 	loadPassiveDescription();
+	document.getElementById("class-select").addEventListener("change", loadActiveDescription, false);
+	loadActiveDescription();
 	previewBtn.addEventListener('click', async (e) => {
 		e.preventDefault();//Stops the form from being submitted.
 		previewBtn.disabled = true; //This button click costs Ben money, lets make damn sure it doesn't get spammed.
@@ -64,5 +68,11 @@ async function generatePlayerImage(prompt) {
 function loadPassiveDescription() {
 	let passiveSelect = document.getElementById("passive-select");
 	let selectedPassive = passiveSelect.options[passiveSelect.selectedIndex].value;
-	passiveDescription.innerHTML = getPassiveDescription(selectedPassive);
+	passiveDescription.innerHTML = "Passive: " + getPassiveDescription(selectedPassive);
+}
+
+function loadActiveDescription() {
+	let classSelect = document.getElementById("class-select");
+	let selectedClass = classSelect.options[classSelect.selectedIndex].value;
+	activeDescription.innerHTML = selectedClass + " active ability: " + getActiveDescription(selectedClass);
 }
