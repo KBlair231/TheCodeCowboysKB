@@ -193,8 +193,8 @@ namespace PromptQuest.Controllers {
 		}
 
 		[HttpGet]
-		public IActionResult GetMap() {
-			Map map = _mapService.GetMap();
+		public IActionResult GetMap(int floor) {
+			Map map = _mapService.GetMap(floor);
 			return Json(map);
 		}
 

@@ -4,35 +4,178 @@ using PromptQuest.Models;
 namespace PromptQuest.Services {
 	public interface IMapService {
 		public void MovePlayer(GameState gameState, int mapNodeId = 0, bool admin = false);
-		public Map GetMap();
+		public Map GetMap(int floor);
 	}
 	public class MapService : IMapService {
 
-		private static readonly List<MapNode> _mapNodes = new List<MapNode>
-		{
-			new MapNode { MapNodeId = 1, NodeType = "Enemy", ConnectedNodes = {2, 3}, NodeHeight = 2, NodeDistance = 1},
-			new MapNode { MapNodeId = 2, NodeType = "Enemy", ConnectedNodes = {4, 5}, NodeHeight = 1, NodeDistance = 2},
-			new MapNode { MapNodeId = 3, NodeType = "Event", ConnectedNodes = {5, 6}, NodeHeight = 3, NodeDistance = 2},
-			new MapNode { MapNodeId = 4, NodeType = "Enemy", ConnectedNodes = {7}, NodeHeight = 1, NodeDistance = 3},
-			new MapNode { MapNodeId = 5, NodeType = "Campsite", ConnectedNodes = {7}, NodeHeight = 2, NodeDistance = 3},
-			new MapNode { MapNodeId = 6, NodeType = "Treasure", ConnectedNodes = {8}, NodeHeight = 4, NodeDistance = 3},
-			new MapNode { MapNodeId = 7, NodeType = "Enemy", ConnectedNodes = {9}, NodeHeight = 1, NodeDistance = 4},
-			new MapNode { MapNodeId = 8, NodeType = "Campsite", ConnectedNodes = {9}, NodeHeight = 3, NodeDistance = 4},
-			new MapNode { MapNodeId = 9, NodeType = "Enemy", ConnectedNodes = {10, 11}, NodeHeight = 2, NodeDistance = 5},
-			new MapNode { MapNodeId = 10, NodeType = "Shop", ConnectedNodes = {12}, NodeHeight = 1, NodeDistance = 6},
-			new MapNode { MapNodeId = 11, NodeType = "Elite", ConnectedNodes = {12}, NodeHeight = 3, NodeDistance = 6},
-			new MapNode { MapNodeId = 12, NodeType = "Enemy", ConnectedNodes = {13, 14, 15}, NodeHeight = 2, NodeDistance = 7},
-			new MapNode { MapNodeId = 13, NodeType = "Treasure", ConnectedNodes = {16}, NodeHeight = 1, NodeDistance = 8},
-			new MapNode { MapNodeId = 14, NodeType = "Campsite", ConnectedNodes = {17}, NodeHeight = 2, NodeDistance = 8},
-			new MapNode { MapNodeId = 15, NodeType = "Event", ConnectedNodes = {17}, NodeHeight = 3, NodeDistance = 8},
-			new MapNode { MapNodeId = 16, NodeType = "Shop", ConnectedNodes = {18}, NodeHeight = 1, NodeDistance = 9},
-			new MapNode { MapNodeId = 17, NodeType = "Enemy", ConnectedNodes = {18}, NodeHeight = 2, NodeDistance = 9},
-			new MapNode { MapNodeId = 18, NodeType = "Boss", ConnectedNodes = {1}, NodeHeight = 2, NodeDistance = 10}
-		};
-		private static readonly Map _map = new Map() { ListMapNodes = _mapNodes };
+		#region GetMapNodes
+		// Funtion to get the correct map nodes for the current floor
+		private List<MapNode> GetMapNodesForFloor(int floor) {
+			switch(floor) {
+				case 1:
+					return new List<MapNode>
+					{
+						new MapNode { MapNodeId = 1, NodeType = "Enemy", ConnectedNodes = {2, 3}, NodeHeight = 2, NodeDistance = 1},
+						new MapNode { MapNodeId = 2, NodeType = "Enemy", ConnectedNodes = {4, 5}, NodeHeight = 1, NodeDistance = 2},
+						new MapNode { MapNodeId = 3, NodeType = "Event", ConnectedNodes = {5, 6}, NodeHeight = 3, NodeDistance = 2},
+						new MapNode { MapNodeId = 4, NodeType = "Campsite", ConnectedNodes = {7}, NodeHeight = 1, NodeDistance = 3},
+						new MapNode { MapNodeId = 5, NodeType = "Enemy", ConnectedNodes = {7}, NodeHeight = 2, NodeDistance = 3},
+						new MapNode { MapNodeId = 6, NodeType = "Treasure", ConnectedNodes = {8}, NodeHeight = 4, NodeDistance = 3},
+						new MapNode { MapNodeId = 7, NodeType = "Enemy", ConnectedNodes = {9}, NodeHeight = 1, NodeDistance = 4},
+						new MapNode { MapNodeId = 8, NodeType = "Campsite", ConnectedNodes = {9}, NodeHeight = 3, NodeDistance = 4},
+						new MapNode { MapNodeId = 9, NodeType = "Enemy", ConnectedNodes = {10, 11}, NodeHeight = 2, NodeDistance = 5},
+						new MapNode { MapNodeId = 10, NodeType = "Shop", ConnectedNodes = {12}, NodeHeight = 1, NodeDistance = 6},
+						new MapNode { MapNodeId = 11, NodeType = "Elite", ConnectedNodes = {12}, NodeHeight = 3, NodeDistance = 6},
+						new MapNode { MapNodeId = 12, NodeType = "Enemy", ConnectedNodes = {13, 14, 15}, NodeHeight = 2, NodeDistance = 7},
+						new MapNode { MapNodeId = 13, NodeType = "Treasure", ConnectedNodes = {16}, NodeHeight = 1, NodeDistance = 8},
+						new MapNode { MapNodeId = 14, NodeType = "Campsite", ConnectedNodes = {17}, NodeHeight = 2, NodeDistance = 8},
+						new MapNode { MapNodeId = 15, NodeType = "Event", ConnectedNodes = {17}, NodeHeight = 3, NodeDistance = 8},
+						new MapNode { MapNodeId = 16, NodeType = "Shop", ConnectedNodes = {18}, NodeHeight = 1, NodeDistance = 9},
+						new MapNode { MapNodeId = 17, NodeType = "Enemy", ConnectedNodes = {18}, NodeHeight = 2, NodeDistance = 9},
+						new MapNode { MapNodeId = 18, NodeType = "Boss", ConnectedNodes = {1}, NodeHeight = 2, NodeDistance = 10}
+					};
+				case 2:
+					return new List<MapNode>
+					{
+						new MapNode { MapNodeId = 1, NodeType = "Enemy", ConnectedNodes = {2, 3}, NodeHeight = 3, NodeDistance = 1},
+						new MapNode { MapNodeId = 2, NodeType = "Enemy", ConnectedNodes = {4}, NodeHeight = 2, NodeDistance = 2},
+						new MapNode { MapNodeId = 3, NodeType = "Event", ConnectedNodes = {5}, NodeHeight = 4, NodeDistance = 2},
+						new MapNode { MapNodeId = 4, NodeType = "Enemy", ConnectedNodes = {6}, NodeHeight = 2, NodeDistance = 3},
+						new MapNode { MapNodeId = 5, NodeType = "Enemy", ConnectedNodes = {7}, NodeHeight = 4, NodeDistance = 3},
+						new MapNode { MapNodeId = 6, NodeType = "Treasure", ConnectedNodes = {8, 9}, NodeHeight = 2, NodeDistance = 4},
+						new MapNode { MapNodeId = 7, NodeType = "Enemy", ConnectedNodes = {9, 10}, NodeHeight = 4, NodeDistance = 4},
+						new MapNode { MapNodeId = 8, NodeType = "Event", ConnectedNodes = {11}, NodeHeight = 1, NodeDistance = 5},
+						new MapNode { MapNodeId = 9, NodeType = "Campsite", ConnectedNodes = {11}, NodeHeight = 3, NodeDistance = 5},
+						new MapNode { MapNodeId = 10, NodeType = "Treasure", ConnectedNodes = {11}, NodeHeight = 5, NodeDistance = 5},
+						new MapNode { MapNodeId = 11, NodeType = "Elite", ConnectedNodes = {12, 13}, NodeHeight = 3, NodeDistance = 6},
+						new MapNode { MapNodeId = 12, NodeType = "Enemy", ConnectedNodes = {15}, NodeHeight = 2, NodeDistance = 7},
+						new MapNode { MapNodeId = 13, NodeType = "Enemy", ConnectedNodes = {14}, NodeHeight = 4, NodeDistance = 7},
+						new MapNode { MapNodeId = 14, NodeType = "Event", ConnectedNodes = {17}, NodeHeight = 2, NodeDistance = 8},
+						new MapNode { MapNodeId = 15, NodeType = "Shop", ConnectedNodes = {16}, NodeHeight = 4, NodeDistance = 8},
+						new MapNode { MapNodeId = 16, NodeType = "Enemy", ConnectedNodes = {18}, NodeHeight = 2, NodeDistance = 9},
+						new MapNode { MapNodeId = 17, NodeType = "Enemy", ConnectedNodes = {18}, NodeHeight = 4, NodeDistance = 9},
+						new MapNode { MapNodeId = 18, NodeType = "Boss", ConnectedNodes = {1}, NodeHeight = 3, NodeDistance = 10}
+					};
+				case 3:
+					return new List<MapNode>
+					{
+						new MapNode { MapNodeId = 1, NodeType = "Enemy", ConnectedNodes = {2, 3}, NodeHeight = 2, NodeDistance = 1 },
+						new MapNode { MapNodeId = 2, NodeType = "Event", ConnectedNodes = {4}, NodeHeight = 1, NodeDistance = 2 },
+						new MapNode { MapNodeId = 3, NodeType = "Enemy", ConnectedNodes = {5, 6}, NodeHeight = 3, NodeDistance = 2 },
+						new MapNode { MapNodeId = 4, NodeType = "Enemy", ConnectedNodes = {7}, NodeHeight = 1, NodeDistance = 3 },
+						new MapNode { MapNodeId = 5, NodeType = "Treasure", ConnectedNodes = {7}, NodeHeight = 2, NodeDistance = 3 },
+						new MapNode { MapNodeId = 6, NodeType = "Campsite", ConnectedNodes = {8}, NodeHeight = 4, NodeDistance = 3 },
+						new MapNode { MapNodeId = 7, NodeType = "Enemy", ConnectedNodes = {9}, NodeHeight = 1, NodeDistance = 4 },
+						new MapNode { MapNodeId = 8, NodeType = "Enemy", ConnectedNodes = {9, 10}, NodeHeight = 3, NodeDistance = 4 },
+						new MapNode { MapNodeId = 9, NodeType = "Enemy", ConnectedNodes = {11}, NodeHeight = 2, NodeDistance = 5 },
+						new MapNode { MapNodeId = 10, NodeType = "Treasure", ConnectedNodes = {11, 12}, NodeHeight = 4, NodeDistance = 5 },
+						new MapNode { MapNodeId = 11, NodeType = "Elite", ConnectedNodes = {13}, NodeHeight = 1, NodeDistance = 6 },
+						new MapNode { MapNodeId = 12, NodeType = "Enemy", ConnectedNodes = {13}, NodeHeight = 4, NodeDistance = 6 },
+						new MapNode { MapNodeId = 13, NodeType = "Campsite", ConnectedNodes = {14, 15}, NodeHeight = 2, NodeDistance = 7 },
+						new MapNode { MapNodeId = 14, NodeType = "Event", ConnectedNodes = {16}, NodeHeight = 1, NodeDistance = 8 },
+						new MapNode { MapNodeId = 15, NodeType = "Enemy", ConnectedNodes = {16, 17}, NodeHeight = 3, NodeDistance = 8 },
+						new MapNode { MapNodeId = 16, NodeType = "Shop", ConnectedNodes = {18}, NodeHeight = 2, NodeDistance = 9 },
+						new MapNode { MapNodeId = 17, NodeType = "Treasure", ConnectedNodes = {18}, NodeHeight = 4, NodeDistance = 9 },
+						new MapNode { MapNodeId = 18, NodeType = "Boss", ConnectedNodes = {1}, NodeHeight = 2, NodeDistance = 10 }
+					};
+				case 4:
+					return new List<MapNode>
+					{
+						new MapNode { MapNodeId = 1, NodeType = "Enemy", ConnectedNodes = {2, 3}, NodeHeight = 2, NodeDistance = 1 },
+						new MapNode { MapNodeId = 2, NodeType = "Event", ConnectedNodes = {4, 5}, NodeHeight = 1, NodeDistance = 2 },
+						new MapNode { MapNodeId = 3, NodeType = "Campsite", ConnectedNodes = {5, 6}, NodeHeight = 3, NodeDistance = 2 },
+						new MapNode { MapNodeId = 4, NodeType = "Treasure", ConnectedNodes = {7}, NodeHeight = 1, NodeDistance = 3 },
+						new MapNode { MapNodeId = 5, NodeType = "Enemy", ConnectedNodes = {7}, NodeHeight = 2, NodeDistance = 3 },
+						new MapNode { MapNodeId = 6, NodeType = "Enemy", ConnectedNodes = {8}, NodeHeight = 4, NodeDistance = 3 },
+						new MapNode { MapNodeId = 7, NodeType = "Enemy", ConnectedNodes = {9}, NodeHeight = 1, NodeDistance = 4 },
+						new MapNode { MapNodeId = 8, NodeType = "Event", ConnectedNodes = {9, 10}, NodeHeight = 3, NodeDistance = 4 },
+						new MapNode { MapNodeId = 9, NodeType = "Enemy", ConnectedNodes = {11}, NodeHeight = 2, NodeDistance = 5 },
+						new MapNode { MapNodeId = 10, NodeType = "Treasure", ConnectedNodes = {12}, NodeHeight = 4, NodeDistance = 5 },
+						new MapNode { MapNodeId = 11, NodeType = "Elite", ConnectedNodes = {13}, NodeHeight = 2, NodeDistance = 6 },
+						new MapNode { MapNodeId = 12, NodeType = "Campsite", ConnectedNodes = {13}, NodeHeight = 4, NodeDistance = 6 },
+						new MapNode { MapNodeId = 13, NodeType = "Enemy", ConnectedNodes = {14, 15}, NodeHeight = 3, NodeDistance = 7 },
+						new MapNode { MapNodeId = 14, NodeType = "Shop", ConnectedNodes = {16}, NodeHeight = 2, NodeDistance = 8 },
+						new MapNode { MapNodeId = 15, NodeType = "Event", ConnectedNodes = {16, 17}, NodeHeight = 4, NodeDistance = 8 },
+						new MapNode { MapNodeId = 16, NodeType = "Enemy", ConnectedNodes = {18}, NodeHeight = 2, NodeDistance = 9 },
+						new MapNode { MapNodeId = 17, NodeType = "Treasure", ConnectedNodes = {18}, NodeHeight = 4, NodeDistance = 9 },
+						new MapNode { MapNodeId = 18, NodeType = "Boss", ConnectedNodes = {1}, NodeHeight = 3, NodeDistance = 10 }
+					};
+				case 5:
+					return new List<MapNode>
+					{
+						new MapNode { MapNodeId = 1, NodeType = "Enemy", ConnectedNodes = {2, 3}, NodeHeight = 2, NodeDistance = 1 },
+						new MapNode { MapNodeId = 2, NodeType = "Treasure", ConnectedNodes = {4, 5}, NodeHeight = 1, NodeDistance = 2 },
+						new MapNode { MapNodeId = 3, NodeType = "Event", ConnectedNodes = {6}, NodeHeight = 3, NodeDistance = 2 },
+						new MapNode { MapNodeId = 4, NodeType = "Enemy", ConnectedNodes = {7}, NodeHeight = 1, NodeDistance = 3 },
+						new MapNode { MapNodeId = 5, NodeType = "Enemy", ConnectedNodes = {8}, NodeHeight = 2, NodeDistance = 3 },
+						new MapNode { MapNodeId = 6, NodeType = "Campsite", ConnectedNodes = {8}, NodeHeight = 4, NodeDistance = 3 },
+						new MapNode { MapNodeId = 7, NodeType = "Event", ConnectedNodes = {9}, NodeHeight = 1, NodeDistance = 4 },
+						new MapNode { MapNodeId = 8, NodeType = "Enemy", ConnectedNodes = {9, 10}, NodeHeight = 3, NodeDistance = 4 },
+						new MapNode { MapNodeId = 9, NodeType = "Enemy", ConnectedNodes = {11}, NodeHeight = 2, NodeDistance = 5 },
+						new MapNode { MapNodeId = 10, NodeType = "Shop", ConnectedNodes = {12}, NodeHeight = 4, NodeDistance = 5 },
+						new MapNode { MapNodeId = 11, NodeType = "Elite", ConnectedNodes = {13}, NodeHeight = 1, NodeDistance = 6 },
+						new MapNode { MapNodeId = 12, NodeType = "Enemy", ConnectedNodes = {13}, NodeHeight = 4, NodeDistance = 6 },
+						new MapNode { MapNodeId = 13, NodeType = "Enemy", ConnectedNodes = {14, 15}, NodeHeight = 2, NodeDistance = 7 },
+						new MapNode { MapNodeId = 14, NodeType = "Event", ConnectedNodes = {16}, NodeHeight = 1, NodeDistance = 8 },
+						new MapNode { MapNodeId = 15, NodeType = "Enemy", ConnectedNodes = {16, 17}, NodeHeight = 3, NodeDistance = 8 },
+						new MapNode { MapNodeId = 16, NodeType = "Treasure", ConnectedNodes = {18}, NodeHeight = 2, NodeDistance = 9 },
+						new MapNode { MapNodeId = 17, NodeType = "Campsite", ConnectedNodes = {18}, NodeHeight = 4, NodeDistance = 9 },
+						new MapNode { MapNodeId = 18, NodeType = "Boss", ConnectedNodes = {1}, NodeHeight = 3, NodeDistance = 10 }
+					};
+				case 6:
+					return new List<MapNode>
+					{
+						new MapNode { MapNodeId = 1, NodeType = "Enemy", ConnectedNodes = {2, 3, 4}, NodeHeight = 2, NodeDistance = 1 },
+						new MapNode { MapNodeId = 2, NodeType = "Event", ConnectedNodes = {5}, NodeHeight = 1, NodeDistance = 2 },
+						new MapNode { MapNodeId = 3, NodeType = "Enemy", ConnectedNodes = {5, 6}, NodeHeight = 2, NodeDistance = 2 },
+						new MapNode { MapNodeId = 4, NodeType = "Enemy", ConnectedNodes = {6}, NodeHeight = 4, NodeDistance = 2 },
+						new MapNode { MapNodeId = 5, NodeType = "Enemy", ConnectedNodes = {7, 8}, NodeHeight = 1, NodeDistance = 3 },
+						new MapNode { MapNodeId = 6, NodeType = "Campsite", ConnectedNodes = {8, 9}, NodeHeight = 3, NodeDistance = 3 },
+						new MapNode { MapNodeId = 7, NodeType = "Shop", ConnectedNodes = {10}, NodeHeight = 1, NodeDistance = 4 },
+						new MapNode { MapNodeId = 8, NodeType = "Enemy", ConnectedNodes = {10, 11}, NodeHeight = 2, NodeDistance = 4 },
+						new MapNode { MapNodeId = 9, NodeType = "Event", ConnectedNodes = {11}, NodeHeight = 4, NodeDistance = 4 },
+						new MapNode { MapNodeId = 10, NodeType = "Enemy", ConnectedNodes = {12}, NodeHeight = 1, NodeDistance = 5 },
+						new MapNode { MapNodeId = 11, NodeType = "Elite", ConnectedNodes = {12, 13}, NodeHeight = 3, NodeDistance = 5 },
+						new MapNode { MapNodeId = 12, NodeType = "Enemy", ConnectedNodes = {14}, NodeHeight = 2, NodeDistance = 6 },
+						new MapNode { MapNodeId = 13, NodeType = "Enemy", ConnectedNodes = {14, 15}, NodeHeight = 4, NodeDistance = 6 },
+						new MapNode { MapNodeId = 14, NodeType = "Campsite", ConnectedNodes = {16}, NodeHeight = 1, NodeDistance = 7 },
+						new MapNode { MapNodeId = 15, NodeType = "Event", ConnectedNodes = {16, 17}, NodeHeight = 3, NodeDistance = 7 },
+						new MapNode { MapNodeId = 16, NodeType = "Enemy", ConnectedNodes = {18}, NodeHeight = 2, NodeDistance = 8 },
+						new MapNode { MapNodeId = 17, NodeType = "Treasure", ConnectedNodes = {18}, NodeHeight = 4, NodeDistance = 8 },
+						new MapNode { MapNodeId = 18, NodeType = "Boss", ConnectedNodes = {1}, NodeHeight = 1, NodeDistance = 9 }
+					};
+				case 7:
+					return new List<MapNode>
+					{
+						new MapNode { MapNodeId = 1, NodeType = "Enemy", ConnectedNodes = {2, 3, 4}, NodeHeight = 3, NodeDistance = 1 },
+						new MapNode { MapNodeId = 2, NodeType = "Event", ConnectedNodes = {5, 6}, NodeHeight = 1, NodeDistance = 2 },
+						new MapNode { MapNodeId = 3, NodeType = "Enemy", ConnectedNodes = {6, 7}, NodeHeight = 3, NodeDistance = 2 },
+						new MapNode { MapNodeId = 4, NodeType = "Enemy", ConnectedNodes = {8}, NodeHeight = 4, NodeDistance = 2 },
+						new MapNode { MapNodeId = 5, NodeType = "Enemy", ConnectedNodes = {9}, NodeHeight = 1, NodeDistance = 3 },
+						new MapNode { MapNodeId = 6, NodeType = "Campsite", ConnectedNodes = {9, 10}, NodeHeight = 2, NodeDistance = 3 },
+						new MapNode { MapNodeId = 7, NodeType = "Shop", ConnectedNodes = {10, 11}, NodeHeight = 4, NodeDistance = 3 },
+						new MapNode { MapNodeId = 8, NodeType = "Event", ConnectedNodes = {11}, NodeHeight = 3, NodeDistance = 3 },
+						new MapNode { MapNodeId = 9, NodeType = "Enemy", ConnectedNodes = {12}, NodeHeight = 1, NodeDistance = 4 },
+						new MapNode { MapNodeId = 10, NodeType = "Enemy", ConnectedNodes = {12, 13}, NodeHeight = 3, NodeDistance = 4 },
+						new MapNode { MapNodeId = 11, NodeType = "Elite", ConnectedNodes = {13, 14}, NodeHeight = 4, NodeDistance = 4 },
+						new MapNode { MapNodeId = 12, NodeType = "Treasure", ConnectedNodes = {15}, NodeHeight = 2, NodeDistance = 5 },
+						new MapNode { MapNodeId = 13, NodeType = "Event", ConnectedNodes = {15}, NodeHeight = 3, NodeDistance = 5 },
+						new MapNode { MapNodeId = 14, NodeType = "Campsite", ConnectedNodes = {16}, NodeHeight = 4, NodeDistance = 5 },
+						new MapNode { MapNodeId = 15, NodeType = "Enemy", ConnectedNodes = {17}, NodeHeight = 2, NodeDistance = 6 },
+						new MapNode { MapNodeId = 16, NodeType = "Treasure", ConnectedNodes = {17, 18}, NodeHeight = 4, NodeDistance = 7 },
+						new MapNode { MapNodeId = 17, NodeType = "Event", ConnectedNodes = {18}, NodeHeight = 3, NodeDistance = 8 },
+						new MapNode { MapNodeId = 18, NodeType = "Boss", ConnectedNodes = {1}, NodeHeight = 4, NodeDistance = 10 }
+					};
+				default:
+					int nextFloor = (floor % 7) + 1; // Cycles 1-7
+					return GetMapNodesForFloor(nextFloor);
+			}
+		}
+		#endregion GetMapNodes - End
 
 		// Moves the player to the mapNode with the given mapNodeId, if mapNodeId isn't provided, the player's location (mapNodeId) increases by 1.
 		public void MovePlayer(GameState gameState, int mapNodeId = 0, bool admin = false) {
+			var _mapNodes = GetMapNodesForFloor(gameState.Floor);
 			MapNode? mapNodeCur = _mapNodes.Find(mn => mn.MapNodeId == gameState.PlayerLocation);
 			if(mapNodeCur == null) {
 				gameState.AddMessage("You are lost in the void.");
@@ -144,8 +287,8 @@ namespace PromptQuest.Services {
 			}
 		}
 
-		public Map GetMap() {
-			return _map;
+		public Map GetMap(int floor) {
+			return new Map() { ListMapNodes = GetMapNodesForFloor(floor) };
 		}
 	}
 }

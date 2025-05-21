@@ -92,7 +92,7 @@ async function refreshMap() {
 		return; // Map isn't open, so don't refresh
 	}
 	// Fetch map from the server
-	mapDef = await sendGetRequest("/Game/GetMap");
+	mapDef = await sendGetRequest(`/Game/GetMap?floor=${gameState.floor}`);
 	const mapContainer = document.getElementById("map-container");
 	mapContainer.innerHTML = ""; // Clear previous map
 	// Update floor counter
