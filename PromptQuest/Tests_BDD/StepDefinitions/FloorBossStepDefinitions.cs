@@ -46,13 +46,10 @@ namespace Tests_BDD.StepDefinitions {
 		[Then("I should be given a boss item")]
 		public void ThenIShouldBeGivenABossItem() {
 			// Open Inventory
-			IWebElement menuButton = webDriver.FindElement(By.XPath("//button[normalize-space(text()='Menu')]"));
-			menuButton.Click();
-			// Click the inventory tab
-			IWebElement inventoryTab = webDriver.FindElement(By.Id("inventory-btn"));
-			inventoryTab.Click();
+			IWebElement inventoryButton = webDriver.FindElement(By.Id("open-inventory-btn"));
+			inventoryButton.Click();
 			// Wait for the menu modal to show
-			PromptQuestTestMethods.WaitForElementToLoad(webDriver, "menu");
+			PromptQuestTestMethods.WaitForElementToLoad(webDriver, "inventory-slot-1");
 			// Check for an item with the DarkStaff image
 			IWebElement bossItem = webDriver.FindElement(By.XPath("//img[@src='/images/DarkStaff.png']"));	
 		}

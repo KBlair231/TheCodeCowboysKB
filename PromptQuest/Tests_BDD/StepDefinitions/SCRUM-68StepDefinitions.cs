@@ -24,7 +24,7 @@ namespace Tests_BDD {
 		[Given(@"I am on the inventory screen")]
 		public void GivenIAmOnTheInventoryScreen() {
 			// Navigate to the inventory screen in the application
-			IWebElement menuButton = webDriver.FindElement(By.Id("menu-open"));
+			IWebElement menuButton = webDriver.FindElement(By.Id("open-inventory-btn"));
 			menuButton.Click();
 			PromptQuestTestMethods.WaitForElementToLoad(webDriver, "menu");
 		}
@@ -38,7 +38,7 @@ namespace Tests_BDD {
 		[When(@"I click the map button")]
 		public void WhenIClickTheMapButton() {
 			// Click the map button to change to the map tab
-			IWebElement mapButton = webDriver.FindElement(By.Id("map-btn"));
+			IWebElement mapButton = webDriver.FindElement(By.Id("open-map-btn"));
 			mapButton.Click();
 			PromptQuestTestMethods.WaitForElementToLoad(webDriver, "map");
 		}
@@ -53,7 +53,7 @@ namespace Tests_BDD {
 
 		[When("I close the menu")]
 		public void WhenICloseTheMenu() {
-			IWebElement closeButton = webDriver.FindElement(By.Id("menu-close"));
+			IWebElement closeButton = webDriver.FindElement(By.Id("close-map-btn"));
 			closeButton.Click();
 		}
 

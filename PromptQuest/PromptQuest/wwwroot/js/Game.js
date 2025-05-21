@@ -110,7 +110,12 @@ function refreshPlayerDisplay() {
 	document.querySelectorAll(".player-name").forEach(el => { el.textContent = gameState.player.name; });
 	document.querySelectorAll(".player-image").forEach(el => { el.src = `/Game/GetCharacterImage`; }); // Placeholder image for now.
 	document.querySelectorAll(".player-image").forEach(el => { el.alt = gameState.player.name; });
-	document.querySelectorAll(".player-attack").forEach(el => { el.textContent = gameState.player.attackStat ?? 0; });
+	document.querySelectorAll(".player-attack").forEach(el => {
+		const attackStat = gameState.player.attackStat ?? 0;
+		const min = Math.floor(attackStat * 0.8);
+		const max = Math.ceil(attackStat * 1.3);
+		el.textContent = `${min}-${max}`;
+	});
 	document.querySelectorAll(".player-defense").forEach(el => { el.textContent = gameState.player.defenseStat ?? 0; });
 	document.querySelectorAll(".player-hp").forEach(el => { el.textContent = gameState.player.currentHealth + "/" + gameState.player.maxHealth + " HP"; });
 	document.getElementById("player-health-potions").textContent = gameState.player.healthPotions;
@@ -142,7 +147,10 @@ function refreshEnemyDisplay() {
 	document.getElementById("enemy-name").textContent = gameState.enemy.name;
 	document.getElementById("enemy-image").src = gameState.enemy.imageUrl;
 	document.getElementById("enemy-image").alt = gameState.enemy.name;
-	document.getElementById("enemy-attack").textContent = gameState.enemy.attack;
+	const enemyAttack = gameState.enemy.attack ?? 0;
+	const minEnemy = Math.floor(enemyAttack * 0.8);
+	const maxEnemy = Math.ceil(enemyAttack * 1.3);
+	document.getElementById("enemy-attack").textContent = `${minEnemy}-${maxEnemy}`;
 	document.getElementById("enemy-defense").textContent = gameState.enemy.defense;
 	//document.getElementById("enemy-hp").textContent = gameState.enemy.currentHealth + "/" + gameState.enemy.maxHealth + " HP";
 	enemyHealthBar.style.height = ((gameState.enemy.currentHealth / gameState.enemy.maxHealth) * 100) + "%";

@@ -62,7 +62,16 @@ namespace Tests_BDD {
 			EquipItem(webDriver, 4);
 			// Click on the attack button until the enemy is dead.
 			while (webDriver.FindElement(By.Id("enemy-display")).Displayed && webDriver.FindElement(By.Id("action-button-display")).Displayed) {
-				if (int.Parse(webDriver.FindElement(By.Id("player-hp")).Text.Split("/")[0]) <= 10) {
+				IWebElement healthBar = webDriver.FindElement(By.Id("player-health-bar"));
+				string heightStyle = healthBar.GetAttribute("style"); // e.g., "height: 42%;"
+				double percent = 100; // Default to 100% if not found
+
+				// Try to extract the percentage from the style string
+				var match = System.Text.RegularExpressions.Regex.Match(heightStyle, @"height:\s*(\d+)%");
+				if (match.Success) {
+					percent = double.Parse(match.Groups[1].Value);
+				}
+				if (percent < 50) { 
 					IWebElement healthPotionButton = webDriver.FindElement(By.Id("health-potion-btn"));
 					healthPotionButton.Click();
 				}
@@ -72,13 +81,10 @@ namespace Tests_BDD {
 		/// <summary> Equip item in slot X. </summary>
 		public static void EquipItem(IWebDriver webDriver, int slot) {
 			// Equip better weapon from inventory
-			IWebElement menuButton = webDriver.FindElement(By.XPath("//button[normalize-space(text()='Menu')]"));
-			menuButton.Click();
+			IWebElement inventoryButton = webDriver.FindElement(By.Id("open-inventory-btn"));
+			inventoryButton.Click();
 			// Wait for the menu modal to show
-			WaitForElementToLoad(webDriver, "menu");
-			// Make sure the inventory tab is selected
-			IWebElement inventoryTab = webDriver.FindElement(By.Id("inventory-btn"));
-			inventoryTab.Click();
+			WaitForElementToLoad(webDriver, "inventory-slot-1");
 			// Click weapon
 			IWebElement weaponSlot = webDriver.FindElement(By.Id($"inventory-slot-{slot}"));
 			weaponSlot.Click();
@@ -86,7 +92,7 @@ namespace Tests_BDD {
 			IWebElement equipButton = webDriver.FindElement(By.Id("equip-btn"));
 			equipButton.Click();
 			// Close the menu
-			IWebElement closeButton = webDriver.FindElement(By.Id("menu-close"));
+			IWebElement closeButton = webDriver.FindElement(By.Id("close-inventory-btn"));
 			closeButton.Click();
 		}
 		/// <summary> Attack Enemy</summary>
