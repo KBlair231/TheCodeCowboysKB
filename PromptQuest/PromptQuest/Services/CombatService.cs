@@ -26,7 +26,7 @@ namespace PromptQuest.Services {
 		/// <summary>Initiates combat between the player and an enemy and updates the game state. </summary>
 		public void StartCombat(GameState gameState) {
 			gameState.InCombat = true;
-			gameState.IsPlayersTurn = true; // Player always goes first, for now.
+			gameState.IsPlayersTurn = true; // Player attacks first
 			gameState.Player.AbilityCooldown = 0; //reset player ability, may be removed down the line
 			gameState.Player.DefenseBuff = 0; //reset player defense buff
 			if(gameState.PlayerLocation == 11) {
@@ -35,14 +35,24 @@ namespace PromptQuest.Services {
 				gameState.AddMessage($"You have encountered an elite enemy, the {gameState.Enemy.Name}!"); // Let the user know that combat started.
 				return;
 			}
-			if(gameState.PlayerLocation != 18) {
-				gameState.Enemy = GetEnemy(gameState);
-				gameState.AddMessage($"You have encountered the {gameState.Enemy.Name}!"); // Let the user know that combat started.
+			if(gameState.PlayerLocation == 18) {
+				// If the player is in the boss room, spawn a boss.
+				gameState.Enemy = GetBoss(gameState);
+				gameState.AddMessage($"You have encountered a boss enemy, the {gameState.Enemy.Name}!"); // Let the user know that combat started.
 				return;
 			}
-			// If the player is in the boss room, spawn a boss.
-			gameState.Enemy = GetBoss(gameState);
-			gameState.AddMessage($"You have encountered a boss enemy, the {gameState.Enemy.Name}!"); // Let the user know that combat started.
+			gameState.Enemy = GetEnemy(gameState);
+			// Give the enemy a 5% chance to attack first
+			Random random = new Random();
+			int chance = random.Next(1, 101); // Generate a number between 1 and 100
+			if (chance <= 5) {
+				gameState.IsPlayersTurn = false; // Enemy attacks first
+				gameState.AddMessage($"You were ambushed by the {gameState.Enemy.Name}!");
+			}
+			else {
+				gameState.IsPlayersTurn = true; // Player attacks first
+				gameState.AddMessage($"You have encountered the {gameState.Enemy.Name}!"); // Let the user know that combat started.
+			}
 		}
 
 		#region Player Action Methods
