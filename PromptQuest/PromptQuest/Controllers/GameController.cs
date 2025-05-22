@@ -36,12 +36,11 @@ namespace PromptQuest.Controllers {
 		[HttpPost]
 		public async Task<IActionResult> CreateCharacter(Player player) {
 			// Default stats for now.
-			player.MaxHealth = 15;
-			player.CurrentHealth = 15;
+			player.MaxHealth = 75;
+			player.CurrentHealth = 75;
 			player.HealthPotions = 2;
 			player.BaseAttack = 3;
-			player.BaseDefense = 1;
-			player.Class = player.Class;
+			player.BaseDefense = 0;
 			player.Image=_dallEApiService.GetImageDataFromSession();//Grab the Player's generated image data. Returns "" if there is none.
 			if(ModelState.IsValid) { // Character created succesfully
 				GameState gameState = await _gameStateService.StartNewGame(player); // Start a new game. If the user already has one it will be overwritten.

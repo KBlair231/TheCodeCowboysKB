@@ -596,27 +596,27 @@ namespace PromptQuest.Services {
 				switch(enemyType) {
 					case 1:
 						enemy.Name = "Ancient Orc";
-						enemy.ImageUrl = "/images/PlaceholderAncientOrc.png";
-						enemy.MaxHealth = 10;
-						enemy.CurrentHealth = 10;
-						enemy.Attack = 2;
-						enemy.Defense = 1;
+						enemy.ImageUrl = "/images/AncientOrc.png";
+						enemy.MaxHealth = 25;
+						enemy.CurrentHealth = 25;
+						enemy.Attack = 10;
+						enemy.Defense = 3;
 						break;
 					case 2:
 						enemy.Name = "Decrepit Centaur";
-						enemy.ImageUrl = "/images/PlaceholderDecrepitCentaur.png";
-						enemy.MaxHealth = 10;
-						enemy.CurrentHealth = 10;
-						enemy.Attack = 3;
-						enemy.Defense = 0;
+						enemy.ImageUrl = "/images/DecrepitCentaur.png";
+						enemy.MaxHealth = 30;
+						enemy.CurrentHealth = 30;
+						enemy.Attack = 8;
+						enemy.Defense = 4;
 						break;
 					case 3:
 						enemy.Name = "Rotting Zombie";
-						enemy.ImageUrl = "/images/PlaceholderRottingZombie.png";
-						enemy.MaxHealth = 8;
-						enemy.CurrentHealth = 8;
-						enemy.Attack = 2;
-						enemy.Defense = 2;
+						enemy.ImageUrl = "/images/RottingZombie.png";
+						enemy.MaxHealth = 25;
+						enemy.CurrentHealth = 25;
+						enemy.Attack = 6;
+						enemy.Defense = 1;
 						break;
 				}
 			}
@@ -625,26 +625,26 @@ namespace PromptQuest.Services {
 					case 1:
 						enemy.Name = "Evil Elven Mage";
 						enemy.ImageUrl = "/images/EvilElvenMage.png";
-						enemy.MaxHealth = 15;
-						enemy.CurrentHealth = 15;
-						enemy.Attack = 6;
-						enemy.Defense = 1;
+						enemy.MaxHealth = 40;
+						enemy.CurrentHealth = 40;
+						enemy.Attack = 15;
+						enemy.Defense = 2;
 						break;
 					case 2:
 						enemy.Name = "Treant Guard";
 						enemy.ImageUrl = "/images/TreantGuard.png";
-						enemy.MaxHealth = 20;
-						enemy.CurrentHealth = 20;
-						enemy.Attack = 3;
-						enemy.Defense = 5;
+						enemy.MaxHealth = 35;
+						enemy.CurrentHealth = 35;
+						enemy.Attack = 8;
+						enemy.Defense = 8;
 						break;
 					case 3:
 						enemy.Name = "Forest Wisp";
 						enemy.ImageUrl = "/images/MysticalWisp.png";
-						enemy.MaxHealth = 25;
-						enemy.CurrentHealth = 25;
-						enemy.Attack = 2;
-						enemy.Defense = 0;
+						enemy.MaxHealth = 35;
+						enemy.CurrentHealth = 35;
+						enemy.Attack = 12;
+						enemy.Defense = 5;
 						break;
 				}
 			}
@@ -654,26 +654,26 @@ namespace PromptQuest.Services {
 					case 1:
 						enemy.Name = "Goblin Archer";
 						enemy.ImageUrl = "/images/GobArcher.png";
-						enemy.MaxHealth = 30;
-						enemy.CurrentHealth = 30;
-						enemy.Attack = 8;
-						enemy.Defense = 3;
+						enemy.MaxHealth = 50;
+						enemy.CurrentHealth = 50;
+						enemy.Attack = 16;
+						enemy.Defense = 8;
 						break;
 					case 2:
 						enemy.Name = "Goblin Assassin";
 						enemy.ImageUrl = "/images/GobAssassin.png";
-						enemy.MaxHealth = 25;
-						enemy.CurrentHealth = 25;
-						enemy.Attack = 7;
-						enemy.Defense = 2;
+						enemy.MaxHealth = 40;
+						enemy.CurrentHealth = 40;
+						enemy.Attack = 18;
+						enemy.Defense = 4;
 						break;
 					case 3:
 						enemy.Name = "Drunk Orc";
 						enemy.ImageUrl = "/images/LazyDrunkOrc.png";
-						enemy.MaxHealth = 35;
-						enemy.CurrentHealth = 35;
-						enemy.Attack = 7;
-						enemy.Defense = 3;
+						enemy.MaxHealth = 45;
+						enemy.CurrentHealth = 45;
+						enemy.Attack = 14;
+						enemy.Defense = 10;
 						break;
 				}
 			}
@@ -745,30 +745,30 @@ namespace PromptQuest.Services {
 				Enemy elite = new Enemy();
 				elite.Name = "Spectral Orc Berserker";
 				elite.ImageUrl = "/images/SpectralOrc.png";
-				elite.MaxHealth = 15;
-				elite.CurrentHealth = 15;
-				elite.Attack = 4;
-				elite.Defense = 3;
+				elite.MaxHealth = 35;
+				elite.CurrentHealth = 35;
+				elite.Attack = 12;
+				elite.Defense = 5;
 				return elite;
 			}
 			else if(gameState.Floor == 2) {
 				Enemy elite = new Enemy();
 				elite.Name = "Corrupted Plant";
 				elite.ImageUrl = "/images/EvilPlant.png";
-				elite.MaxHealth = 20;
-				elite.CurrentHealth = 20;
-				elite.Attack = 6;
-				elite.Defense = 2;
+				elite.MaxHealth = 40;
+				elite.CurrentHealth = 40;
+				elite.Attack = 15;
+				elite.Defense = 8;
 				return elite;
 			}
 			else {
 				Enemy elite = new Enemy();
 				elite.Name = "Demon Knight";
 				elite.ImageUrl = "/images/DemonKnight.png";
-				elite.MaxHealth = 40;
-				elite.CurrentHealth = 40;
-				elite.Attack = 7;
-				elite.Defense = 5;
+				elite.MaxHealth = 50;
+				elite.CurrentHealth = 50;
+				elite.Attack = 18;
+				elite.Defense = 13;
 				return elite;
 			}
 		}
@@ -778,30 +778,30 @@ namespace PromptQuest.Services {
 				Enemy boss = new Enemy();
 				boss.Name = "Dark Orc Warlock";
 				boss.ImageUrl = "/images/OrcWarlock.png";
-				boss.MaxHealth = 20;
-				boss.CurrentHealth = 20;
-				boss.Attack = 5;
-				boss.Defense = 4;
+				boss.MaxHealth = 40;
+				boss.CurrentHealth = 40;
+				boss.Attack = 12;
+				boss.Defense = 3;
 				return boss;
 			}
 			else if(gameState.Floor == 2) {
 				Enemy boss = new Enemy();
 				boss.Name = "Dark Elven King";
 				boss.ImageUrl = "/images/DarkElfWarrior.png";
-				boss.MaxHealth = 25;
-				boss.CurrentHealth = 25;
-				boss.Attack = 6;
-				boss.Defense = 6;
+				boss.MaxHealth = 55;
+				boss.CurrentHealth = 55;
+				boss.Attack = 15;
+				boss.Defense = 7;
 				return boss;
 			}
 			else {
 				Enemy boss = new Enemy();
 				boss.Name = "Eldritch Horror";
 				boss.ImageUrl = "/images/EldritchHorror.png";
-				boss.MaxHealth = 50;
-				boss.CurrentHealth = 50;
-				boss.Attack = 8;
-				boss.Defense = 8;
+				boss.MaxHealth = 70;
+				boss.CurrentHealth = 70;
+				boss.Attack = 20;
+				boss.Defense = 14;
 				return boss;
 			}
 		}

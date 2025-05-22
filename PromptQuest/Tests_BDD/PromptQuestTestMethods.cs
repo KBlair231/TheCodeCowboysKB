@@ -55,7 +55,7 @@ namespace Tests_BDD {
 		}
 		/// <summary> Repeatedly clicks attack until the enemy is defeated. </summary>
 		public static void ClearRoom(IWebDriver webDriver) {
-			EquipItem(webDriver, 7);
+			EquipItem(webDriver, 5);
 			EquipItem(webDriver, 1);
 			EquipItem(webDriver, 2);
 			EquipItem(webDriver, 3);

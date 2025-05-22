@@ -100,12 +100,10 @@ namespace PromptQuest.Services {
 			//Give the player the default Items. This will go away eventually.
 			player.Items.AddRange(new List<Item>{
 				new Item { Name = "Jeweled Boots", Attack = 0, Defense = 1, itemType = ItemType.Boots, ImageSrc = "/images/BaseBoots.png"},
-				new Item { Name = "Jeweled Chestplate", Attack = 0, Defense = 2, itemType = ItemType.Chest, ImageSrc = "/images/BaseChest.png"},
+				new Item { Name = "Jeweled Chestplate", Attack = 0, Defense = 1, itemType = ItemType.Chest, ImageSrc = "/images/BaseChest.png"},
 				new Item { Name = "Jeweled Leggings", Attack = 0, Defense = 1, itemType = ItemType.Legs, ImageSrc = "/images/BaseLegs.png"},
 				new Item { Name = "Jeweled Helmet", Attack = 0, Defense = 1, itemType = ItemType.Helm, ImageSrc = "/images/BaseHelm.png"},
-				new Item { Name = "Fiery Sword", Attack = 2, Defense = 0, StatusEffects = StatusEffect.Burning, ImageSrc = "/images/PlaceholderItem2.png"},
-				new Item { Name = "Frozen Shield", Attack = 1, Defense = 3, ImageSrc = "/images/PlaceholderItem3.png"},
-				new Item { Name = "Warded Sword", Attack = 3, Defense = 2, ImageSrc = "/images/PlaceholderItem4.png"}
+				new Item { Name = "Warded Sword", Attack = 5, Defense = 0, ImageSrc = "/images/WardedSword.png"}
 			});
 			gameState.UserGoogleId = GetGoogleAccountId();//Store their id in the gamestate (blank if user isn't authenticated).
 			gameState.InTutorial = true;//New games start with the tutorial
