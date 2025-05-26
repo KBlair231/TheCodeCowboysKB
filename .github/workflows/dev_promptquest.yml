@@ -33,7 +33,7 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: .net-app
-          path: ${{env.DOTNET_ROOT}}/PromptQuest
+          path: ${{env.DOTNET_ROOT}}\PromptQuest
 
   deploy:
     runs-on: windows-latest
