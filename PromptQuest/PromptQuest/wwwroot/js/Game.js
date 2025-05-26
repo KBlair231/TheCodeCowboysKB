@@ -14,7 +14,6 @@ let bleedingIndicator;
 let burningIndicator;
 let playerHealthBar;
 let enemyHealthBar;
-let activePopupWindow;
 //Player action buttons
 let attackBtn;
 let healBtn;
@@ -67,11 +66,6 @@ document.addEventListener("DOMContentLoaded", () => {
 	openTreasureBtn.attachPlayerAction('open-treasure');
 	skipTreasureBtn.attachPlayerAction('skip-treasure');
 	respawnBtn.attachPlayerAction('respawn');
-	//Add hover action on/offs to items
-	activePopupWindow = document.getElementById("active-popup");
-	abilityBtn.addEventListener("mouseover", showActivePopup);
-	abilityBtn.addEventListener("mouseout", hideActivePopup);
-	hideActivePopup();
 });
 
 //----------- REFRESH DISPLAY ---------------------------------------------------------------------------------------
@@ -120,6 +114,7 @@ function refreshPlayerDisplay() {
 	document.querySelectorAll(".player-hp").forEach(el => { el.textContent = gameState.player.currentHealth + "/" + gameState.player.maxHealth + " HP"; });
 	document.getElementById("player-health-potions").textContent = gameState.player.healthPotions;
 	document.getElementById("player-passive").textContent = "Passive: " + getPassiveDescription(gameState.player.passive);
+	document.getElementById("player-active").textContent = "Active: " + getActiveDescription(gameState.player.class);
 	abilityCooldownIcon.src = "/images/" + gameState.player.abilityCooldown + "_6_Clock.png";
 	playerHealthBar.style.height = ((gameState.player.currentHealth / gameState.player.maxHealth) * 100) + "%";
 	let healthDifference = gameState.player.currentHealth - previousPlayerHealth;
@@ -140,7 +135,6 @@ function refreshPlayerDisplay() {
 		hideRespawnModal();
 	}
 	previousPlayerHealth = gameState.player.currentHealth;//Update cached value for next check.
-	activePopupWindow.textContent = getActiveDescription(gameState.player.class);//update active ability description. should only be needed once but whatever.
 }
 
 function refreshEnemyDisplay() {
@@ -277,14 +271,7 @@ function hideRespawnModal() {
 		modalInstance.hide();
 	}
 }
-// Function to show the Active Description Popup window
-function showActivePopup() {
-	activePopupWindow.style.visibility="visible"
-}
-//Function to hide the Active Description Popup window
-function hideActivePopup() {
-	activePopupWindow.style.visibility = "hidden"
-}
+
 
 //------------------------ EXTENSION METHODS --------------------------------------------------------------------------------------------------------------
 

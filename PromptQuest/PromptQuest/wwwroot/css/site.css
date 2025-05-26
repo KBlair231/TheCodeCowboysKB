@@ -254,6 +254,10 @@ body {
 	font-size: var(--pq-font-large);
 	color: var(--pq-font-color);
 }
+.ability-text {
+	font-size: var(--pq-font-normal);
+	color: var(--pq-font-color);
+}
 
 /*----------- Reusable Enemy Displays ---------------------------------------------------------------------------------  */
 
