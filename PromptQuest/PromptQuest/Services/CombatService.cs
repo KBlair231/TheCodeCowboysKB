@@ -1,5 +1,7 @@
 ﻿using System.ComponentModel;
 using Microsoft.AspNetCore.Authorization.Infrastructure;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using PromptQuest.Models;
 
 namespace PromptQuest.Services {
@@ -29,18 +31,6 @@ namespace PromptQuest.Services {
 			gameState.IsPlayersTurn = true; // Player attacks first
 			gameState.Player.AbilityCooldown = 0; //reset player ability, may be removed down the line
 			gameState.Player.DefenseBuff = 0; //reset player defense buff
-			if(gameState.PlayerLocation == 11) {
-				//Elite enemies are on map node 11.
-				gameState.Enemy = GetElite(gameState);
-				gameState.AddMessage($"You have encountered an elite enemy, the {gameState.Enemy.Name}!"); // Let the user know that combat started.
-				return;
-			}
-			if(gameState.PlayerLocation == 18) {
-				// If the player is in the boss room, spawn a boss.
-				gameState.Enemy = GetBoss(gameState);
-				gameState.AddMessage($"You have encountered a boss enemy, the {gameState.Enemy.Name}!"); // Let the user know that combat started.
-				return;
-			}
 			gameState.Enemy = GetEnemy(gameState);
 			// Give the enemy a 5% chance to attack first
 			Random random = new Random();
@@ -589,95 +579,64 @@ namespace PromptQuest.Services {
 
 		/// <summary>Generatees an Enemy, updates the game state, then returns the Enemy.</summary>
 		public Enemy GetEnemy(GameState gameState) {
-			Enemy enemy = new Enemy();
-			Random random = new Random();
-			int enemyType = random.Next(1, 4); // Generates a number between 1 and 3
-			if(gameState.Floor == 1) {
-				switch(enemyType) {
-					case 1:
-						enemy.Name = "Ancient Orc";
-						enemy.ImageUrl = "/images/AncientOrc.png";
-						enemy.MaxHealth = 25;
-						enemy.CurrentHealth = 25;
-						enemy.Attack = 10;
-						enemy.Defense = 3;
-						break;
-					case 2:
-						enemy.Name = "Decrepit Centaur";
-						enemy.ImageUrl = "/images/DecrepitCentaur.png";
-						enemy.MaxHealth = 30;
-						enemy.CurrentHealth = 30;
-						enemy.Attack = 8;
-						enemy.Defense = 4;
-						break;
-					case 3:
-						enemy.Name = "Rotting Zombie";
-						enemy.ImageUrl = "/images/RottingZombie.png";
-						enemy.MaxHealth = 25;
-						enemy.CurrentHealth = 25;
-						enemy.Attack = 6;
-						enemy.Defense = 1;
-						break;
-				}
+			// Read the enemies from a file and deserialize them into a list of enemies.
+			string filePath = "wwwroot\\data\\Enemies.txt";
+			if (!File.Exists(filePath)) {
+				Console.WriteLine("File not found.");
+				return new Enemy {
+					Name = "Unknown Enemy",
+					MaxHealth = 10,
+					CurrentHealth = 10,
+					Attack = 1,
+					Defense = 1
+				};
 			}
-			else if(gameState.Floor == 2) {
-				switch(enemyType) {
-					case 1:
-						enemy.Name = "Evil Elven Mage";
-						enemy.ImageUrl = "/images/EvilElvenMage.png";
-						enemy.MaxHealth = 40;
-						enemy.CurrentHealth = 40;
-						enemy.Attack = 15;
-						enemy.Defense = 2;
-						break;
-					case 2:
-						enemy.Name = "Treant Guard";
-						enemy.ImageUrl = "/images/TreantGuard.png";
-						enemy.MaxHealth = 35;
-						enemy.CurrentHealth = 35;
-						enemy.Attack = 8;
-						enemy.Defense = 8;
-						break;
-					case 3:
-						enemy.Name = "Forest Wisp";
-						enemy.ImageUrl = "/images/MysticalWisp.png";
-						enemy.MaxHealth = 35;
-						enemy.CurrentHealth = 35;
-						enemy.Attack = 12;
-						enemy.Defense = 5;
-						break;
+			// Read the file and deserialize the JSON into a list of enemies.
+			string json = File.ReadAllText(filePath);
+			// Parse JSON into JObject
+			JObject gameData = JObject.Parse(json);
+			// Fixing the type mismatch by converting the integer 'Floor' to a string using the ToString() method.
+			string floor = gameState.Floor.ToString();
+			// Loop the 4 floors with a modulo operation to get the correct floor.
+			if (gameState.Floor > 4) {
+				floor = (gameState.Floor % 4).ToString(); // Floors are 1-4, so we use modulo to wrap around.
+				if (floor == "0") {
+					floor = "4"; // If modulo is 0, it means it's the 4th floor.
 				}
+			} 
+			string enemyType = "Enemies"; // Default enemy type
+			if (gameState.PlayerLocation == 11) {
+				// If the player is in the elite room, return an elite 
+				enemyType = "Elite";
+			} else if (gameState.PlayerLocation == 18) {
+				// If the player is in the boss room, return a boss
+				enemyType = "Boss";
 			}
-			else {
-				// Floor 3
-				switch(enemyType) {
-					case 1:
-						enemy.Name = "Goblin Archer";
-						enemy.ImageUrl = "/images/GobArcher.png";
-						enemy.MaxHealth = 50;
-						enemy.CurrentHealth = 50;
-						enemy.Attack = 16;
-						enemy.Defense = 8;
-						break;
-					case 2:
-						enemy.Name = "Goblin Assassin";
-						enemy.ImageUrl = "/images/GobAssassin.png";
-						enemy.MaxHealth = 40;
-						enemy.CurrentHealth = 40;
-						enemy.Attack = 18;
-						enemy.Defense = 4;
-						break;
-					case 3:
-						enemy.Name = "Drunk Orc";
-						enemy.ImageUrl = "/images/LazyDrunkOrc.png";
-						enemy.MaxHealth = 45;
-						enemy.CurrentHealth = 45;
-						enemy.Attack = 14;
-						enemy.Defense = 10;
-						break;
-				}
+			var randomEnemy = GetRandomEnemy(gameData, floor, enemyType);
+			Console.WriteLine(JsonConvert.SerializeObject(randomEnemy, Formatting.Indented));
+			int multiplier = gameState.Floor - 1;
+			return randomEnemy != null ? new Enemy {
+				Name = randomEnemy["name"]?.ToString(),
+				ImageUrl = randomEnemy["imageUrl"]?.ToString(),
+				MaxHealth = (int)randomEnemy["maxHealth"] + 5 * multiplier,
+				CurrentHealth = (int)randomEnemy["currentHealth"] + 5 * multiplier,
+				Attack = (int)randomEnemy["attack"] + 2 * multiplier,
+				Defense = (int)randomEnemy["defense"] + 1 * multiplier,
+				StatusEffects = StatusEffect.None // Default, can be set later if needed
+			} : new Enemy {
+				Name = "Unknown Enemy",
+				MaxHealth = 10,
+				CurrentHealth = 10,
+				Attack = 1,
+				Defense = 1
+			};
+		}
+		static JObject GetRandomEnemy(JObject jsonData, string floor, string entityType) {
+			if (jsonData[floor]?[entityType] is JArray entityList && entityList.Count > 0) {
+				Random random = new Random();
+				return (JObject)entityList[random.Next(entityList.Count)];
 			}
-			return enemy;
+			return null; // Handles cases where floor or type doesn't exist
 		}
 		#region Boss and Elite Item Generation
 		public Item GetBossItem(GameState gameState) {
@@ -804,8 +763,8 @@ namespace PromptQuest.Services {
 				boss.Defense = 14;
 				return boss;
 			}
-		}
-		#endregion Boss and Elite Enemy Generation - End
-		#endregion Helper Methods - End
 	}
+	#endregion Boss and Elite Enemy Generation - End
+	#endregion Helper Methods - End
+}
 }

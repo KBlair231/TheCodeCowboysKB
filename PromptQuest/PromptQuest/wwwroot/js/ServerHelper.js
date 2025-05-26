@@ -7,6 +7,7 @@ let previousEnemyHealth;
 document.addEventListener("DOMContentLoaded", async function () {
 	// Page loaded, get current game state and cache it. 
 	await loadGame();
+	refreshMap();
 });
 
 async function loadGame() {

@@ -288,7 +288,18 @@ namespace PromptQuest.Services {
 		}
 
 		public Map GetMap(int floor) {
-			return new Map() { ListMapNodes = GetMapNodesForFloor(floor) };
+			Map map = new Map() { ListMapNodes = GetMapNodesForFloor(floor) };
+			int moduloFloor = floor % 4;
+			if (moduloFloor == 0) {
+				moduloFloor = 4; // Adjust for 1-4 range
+			}
+			map.BackgroundImage = moduloFloor switch {
+				1 => "/images/BackgroundCandyNightmare.png",
+				2 => "/images/BackgroundHauntedKitchen.png",
+				3 => "/images/BackgroundAlienCity.png",
+				4 => "/images/BackgroundGloomyDarkForest.png"
+			};
+			return map;
 		}
 	}
 }

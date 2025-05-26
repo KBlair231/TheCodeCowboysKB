@@ -2,6 +2,7 @@ namespace PromptQuest.Models {
 	public class Map {
 		public List<MapNode> ListMapNodes { get; set; } = new List<MapNode>();
 		public List<int> ListMapNodeIdsVisited { get; set; } = new List<int>();
+		public string BackgroundImage { get; set; } = "~/images/BackgroundCandyNightmare.png";
 	}
 	public class MapNode {
 		public int MapNodeId { get; set; }
