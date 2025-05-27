@@ -57,7 +57,8 @@ jobs:
           client-id: ${{ secrets.AZUREAPPSERVICE_CLIENTID_CCB81C7539C84D158D70E78F11B55745 }}
           tenant-id: ${{ secrets.AZUREAPPSERVICE_TENANTID_5AF8E811C7184C4E9C9F6887E41D6D20 }}
           subscription-id: ${{ secrets.AZUREAPPSERVICE_SUBSCRIPTIONID_DB104A9F2F7A493DBD6B4ACF5A125B47 }}
-          auth-type: 'OIDC'
+          auth-type: 'SERVICE_PRINCIPAL'
+          client-secret: ${{ secrets.AZURE_CLIENT_SECRET }}
 
       - name: Deploy to Azure Web App
         id: deploy-to-webapp
