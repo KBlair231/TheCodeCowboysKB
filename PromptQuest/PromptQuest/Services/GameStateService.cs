@@ -106,7 +106,8 @@ namespace PromptQuest.Services {
 				new Item { Name = "Warded Sword", Attack = 5, Defense = 0, ImageSrc = "/images/WardedSword.png"}
 			});
 			gameState.UserGoogleId = GetGoogleAccountId();//Store their id in the gamestate (blank if user isn't authenticated).
-			gameState.InTutorial = true;//New games start with the tutorial
+			// commenting this out to remove tutorial until it is reworked
+			// gameState.InTutorial = true;//New games start with the tutorial
 			gameState.Enemy = new Enemy();
 			return gameState;
 		}
