@@ -56,10 +56,16 @@ namespace PromptQuest.Services {
 												 //Checking for the Quick Shot passive
 			int numberOfAttacks = 1;
 			numberOfAttacks += gameState.Player.QuickShot(random.Next(0, 100));
+			if(numberOfAttacks > 1) {
+				gameState.AddMessage("Quick Shot: You quickly attack again!");
+			}
 			for(int i = 0; i < numberOfAttacks; i++) {
 				//beggining of damage calc
 				// Checking for Heavy Smash passive
 				attackBuff = gameState.Player.HeavySmash(random.Next(0, 100));
+				if(attackBuff == 3) {
+					gameState.AddMessage("Heavy Smash: You attack with extra strength!");
+				}
 				// Make damage into a range of 0.8-1.30x the attack stat picking a random number between these values of the damage
 				int lowerBound = (int)Math.Floor((gameState.Player.AttackStat + attackBuff) * 0.8);
 				int upperBound = (int)Math.Ceiling((gameState.Player.AttackStat + attackBuff) * 1.3);
@@ -70,15 +76,27 @@ namespace PromptQuest.Services {
 					damage = 1;
 				}
 				//Checking for Mana Burn passive
-				damage += gameState.Player.ManaBurn(random.Next(0, 100));
+				int manaBurn = gameState.Player.ManaBurn(random.Next(0, 100));
+				damage += manaBurn; // Add the mana burn damage to the total damage
+				if(manaBurn > 0) {
+					gameState.AddMessage("Mana Burn: Magical flames singe your enemy!");
+				}
+				int currentEnemyDefense = gameState.Enemy.Defense; // Store the current enemy defense for the message
 				gameState.Enemy.Defense -= gameState.Player.PoisonWeapons(random.Next(0, 100));
+				if(gameState.Enemy.Defense < currentEnemyDefense) {
+					gameState.AddMessage("Poison Weapons: The poison on your weapon reduced the defense of the enemy!");
+				}
 				// Update enemy health.
 				gameState.Enemy.CurrentHealth -= damage;
 				//end of damage calc
 				//decrement ability cooldown if ability was not used
 				if(decrementAbility && gameState.Player.AbilityCooldown > 0) {
+					int currentCooldown = gameState.Player.AbilityCooldown; // Store the current cooldown for the message
 					gameState.Player.AbilityCooldown -= 1;
 					gameState.Player.ArcaneRecovery(random.Next(0, 100));
+					if(currentCooldown == gameState.Player.AbilityCooldown + 2) { 
+						gameState.AddMessage("Arcane Recovery: Your magic speeds up your ability cooldown!");
+					}
 				}
 				// Get the player's equipped item
 				Item item = gameState.Player.EquippedWeapon;
@@ -690,7 +708,7 @@ namespace PromptQuest.Services {
 		public Enemy GetEnemy(GameState gameState) {
 			// Read the enemies from a file and deserialize them into a list of enemies.
 			string filePath = "wwwroot\\data\\Enemies.txt";
-			if (!File.Exists(filePath)) {
+			if(!File.Exists(filePath)) {
 				Console.WriteLine("File not found.");
 				return new Enemy {
 					Name = "Unknown Enemy",
@@ -707,17 +725,18 @@ namespace PromptQuest.Services {
 			// Fixing the type mismatch by converting the integer 'Floor' to a string using the ToString() method.
 			string floor = gameState.Floor.ToString();
 			// Loop the 4 floors with a modulo operation to get the correct floor.
-			if (gameState.Floor > 4) {
+			if(gameState.Floor > 4) {
 				floor = (gameState.Floor % 4).ToString(); // Floors are 1-4, so we use modulo to wrap around.
-				if (floor == "0") {
+				if(floor == "0") {
 					floor = "4"; // If modulo is 0, it means it's the 4th floor.
 				}
-			} 
+			}
 			string enemyType = "Enemies"; // Default enemy type
-			if (gameState.PlayerLocation == 11) {
+			if(gameState.PlayerLocation == 11) {
 				// If the player is in the elite room, return an elite 
 				enemyType = "Elite";
-			} else if (gameState.PlayerLocation == 18) {
+			}
+			else if(gameState.PlayerLocation == 18) {
 				// If the player is in the boss room, return a boss
 				enemyType = "Boss";
 			}
@@ -741,7 +760,7 @@ namespace PromptQuest.Services {
 			};
 		}
 		static JObject GetRandomEnemy(JObject jsonData, string floor, string entityType) {
-			if (jsonData[floor]?[entityType] is JArray entityList && entityList.Count > 0) {
+			if(jsonData[floor]?[entityType] is JArray entityList && entityList.Count > 0) {
 				Random random = new Random();
 				return (JObject)entityList[random.Next(entityList.Count)];
 			}
@@ -872,8 +891,8 @@ namespace PromptQuest.Services {
 				boss.Defense = 14;
 				return boss;
 			}
+		}
+		#endregion Boss and Elite Enemy Generation - End
+		#endregion Helper Methods - End
 	}
-	#endregion Boss and Elite Enemy Generation - End
-	#endregion Helper Methods - End
-}
 }
