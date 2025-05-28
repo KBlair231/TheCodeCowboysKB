@@ -66,23 +66,6 @@ body {
 	z-index: 1000; /* Ensures it's above everything. Nothing should ever be in front of the menu */
 }
 
-#active-popup {
-	position: absolute;
-	top: 100%;
-	left: 50%;
-	width: 60%;
-	height: 200%;
-	border: 3px solid white;
-	border-radius: 50px;
-	background-color: var(--background-color-primary); /* notmal color */
-	z-index: 9000; /* Ensures it's above everythingexcept the menu */
-		padding: 10px;
-	background-color: var(--background-color-primary);
-	font-size: var(--pq-font-normal);
-	color: var(--pq-font-color);
-	border: var(--pq-border);
-}
-
 /* Style for map container */
 .pq-map-display {
 	display: flex;
@@ -484,3 +467,40 @@ button:disabled {
 		.pq-scrollbar::-webkit-scrollbar-thumb:hover {
 			background-color: black !important; /* Changes on hover */
 		}
+#player-health-bar-container,
+#enemy-health-bar-container {
+	cursor: pointer;
+	transition: opacity 0.2s ease;
+}
+
+	#player-health-bar-container:hover,
+	#enemy-health-bar-container:hover {
+		opacity: 0.8;
+	}
+
+/* Custom popover styling */
+.popover {
+	--bs-popover-max-width: 300px; /* Increased width for more content */
+	--bs-popover-border-color: #666;
+	--bs-popover-header-bg: #333;
+	--bs-popover-header-color: #fff;
+	--bs-popover-body-padding-x: 1rem;
+	--bs-popover-body-padding-y: 0.5rem;
+}
+
+	/* Dark theme for popovers to match your game UI */
+	.popover.bs-popover-right .popover-arrow::before,
+	.popover.bs-popover-auto[data-popper-placement^="right"] .popover-arrow::before {
+		border-right-color: #666;
+	}
+
+	.popover.bs-popover-top .popover-arrow::before,
+	.popover.bs-popover-auto[data-popper-placement^="top"] .popover-arrow::before {
+		border-top-color: #666;
+	}
+
+.popover-body {
+	background-color: var(--background-color-primary) !important;
+	color: var(--pq-font-color) !important;
+	border: var(--pq-border);
+}
