@@ -43,6 +43,13 @@ document.addEventListener("DOMContentLoaded", async () => {
 	document.getElementById("close-map-btn").addEventListener("click", () => { overlay.syncVisibility(false); map.syncVisibility(false); isMapOpen = false; });//Set tab and refresh menu
 	equipBtn.attachPlayerAction('equip', () => selectedItemIndex);
 	floorBtn.attachPlayerAction('move', () => 1);
+	floorBtn.addEventListener("click", async () => {
+		await executePlayerAction('move', 1);
+		let data = await sendGetRequest(`/Game/GetBackground?floor=${gameState.floor}`);
+		document.getElementById("main-background-image").src = data;
+	});
+	// Fetch map from the server
+	mapDef = await sendGetRequest("/Game/GetMap");
 });
 
 //------------------------ REFRESH DISPLAY METHODS --------------------------------------------------------------------------------------------------------
@@ -95,7 +102,7 @@ async function refreshMap() {
 	mapDef = await sendGetRequest(`/Game/GetMap?floor=${gameState.floor}`);
 	const mapContainer = document.getElementById("map-container");
 	mapContainer.innerHTML = ""; // Clear previous map
-	// Update floor counter
+	// Update floor counter & background
 	document.getElementById("floor-tracker").textContent = "Floor " + gameState.floor;
 	// Enable next floor button if the boss is defeated
 	floorBtn.syncButtonState(gameState.playerLocation == 18 && gameState.isLocationComplete);

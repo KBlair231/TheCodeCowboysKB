@@ -1,0 +1,546 @@
+{
+  "1": {
+    "Enemies": [
+      {
+        "name": "Ancient Orc",
+        "imageUrl": "/images/enemies/AncientOrc.png",
+        "maxHealth": 25,
+	"currentHealth": 25,
+        "attack": 10,
+        "defense": 3
+      },
+      {
+        "name": "Decrepit Centaur",
+        "imageUrl": "/images/enemies/DecrepitCentaur.png",
+        "maxHealth": 30,
+	"currentHealth": 30,
+        "attack": 8,
+        "defense": 4
+      },
+      {
+        "name": "Rotting Zombie",
+        "imageUrl": "/images/enemies/RottingZombie.png",
+        "maxHealth": 25,
+	"currentHealth": 25,
+        "attack": 6,
+        "defense": 1
+      },
+      {
+        "name": "Evil Elven Mage",
+        "imageUrl": "/images/enemies/EvilElvenMage.png",
+        "maxHealth": 30,
+	"currentHealth": 30,
+        "attack": 9,
+        "defense": 2
+      },
+      {
+        "name": "Treant Guard",
+        "imageUrl": "/images/enemies/TreantGuard.png",
+        "maxHealth": 30,
+	"currentHealth": 30,
+        "attack": 8,
+        "defense": 4
+      },
+      {
+        "name": "Forest Wisp",
+        "imageUrl": "/images/enemies/MysticalWisp.png",
+        "maxHealth": 25,
+	"currentHealth": 25,
+        "attack": 6,
+        "defense": 1
+      },
+      {
+        "name": "Goblin Archer",
+        "imageUrl": "/images/enemies/GobArcher.png",
+        "maxHealth": 25,
+	"currentHealth": 25,
+        "attack": 8,
+        "defense": 4
+      },
+      {
+        "name": "Goblin Assassin",
+        "imageUrl": "/images/enemies/GobAssassin.png",
+        "maxHealth": 25,
+	"currentHealth": 25,
+        "attack": 10,
+        "defense": 1
+      },
+      {
+        "name": "Drunk Orc",
+        "imageUrl": "/images/enemies/LazyDrunkOrc.png",
+        "maxHealth": 30,
+	"currentHealth": 30,
+        "attack": 10,
+        "defense": 3
+      },
+      {
+        "name": "Demon Knight",
+        "imageUrl": "/images/enemies/DemonKnight.png",
+        "maxHealth": 30,
+	"currentHealth": 30,
+        "attack": 10,
+        "defense": 3
+      }
+    ],
+    "Elite": [
+      {
+        "name": "Spectral Orc Berserker",
+        "imageUrl": "/images/enemies/SpectralOrc.png",
+        "maxHealth": 35,
+	"currentHealth": 35,
+        "attack": 10,
+        "defense": 5
+      },
+      {
+        "name": "Corrupted Plant",
+        "imageUrl": "/images/enemies/EvilPlant.png",
+        "maxHealth": 40,
+	"currentHealth": 40,
+        "attack": 8,
+        "defense": 6
+      },
+      {
+        "name": "Dark Elven King",
+        "imageUrl": "/images/enemies/DarkElfWarrior.png",
+        "maxHealth": 35,
+	"currentHealth": 35,
+        "attack": 10,
+        "defense": 5
+      },
+      {
+        "name": "Eldritch Horror",
+        "imageUrl": "/images/enemies/EldritchHorror.png",
+        "maxHealth": 40,
+	"currentHealth": 40,
+        "attack": 8,
+        "defense": 6
+      }
+    ],
+    "Boss": [
+      {
+        "name": "Dark Orc Warlock",
+        "imageUrl": "/images/enemies/OrcWarlock.png",
+        "maxHealth": 40,
+	"currentHealth": 40,
+        "attack": 12,
+        "defense": 3
+      },
+      {
+        "name": "HornedHydra",
+        "imageUrl": "/images/enemies/HornedHydra.png",
+        "maxHealth": 40,
+	"currentHealth": 40,
+        "attack": 10,
+        "defense": 5
+      }
+    ]
+  },
+  "2": {
+    "Enemies": [
+      {
+        "name": "Demonic Cookbook",
+        "imageUrl": "/images/enemies/DemonicCookbook.png",
+        "maxHealth": 25,
+	"currentHealth": 25,
+        "attack": 10,
+        "defense": 3
+      },
+      {
+        "name": "Evil Air Fryer",
+        "imageUrl": "/images/enemies/EvilAirFryer.png",
+        "maxHealth": 30,
+	"currentHealth": 30,
+        "attack": 8,
+        "defense": 4
+      },
+      {
+        "name": "Hellforged Rice Cooker",
+        "imageUrl": "/images/enemies/HellforgedRiceCooker.png",
+        "maxHealth": 25,
+	"currentHealth": 25,
+        "attack": 6,
+        "defense": 1
+      },
+      {
+        "name": "Horrific Coffee Maker",
+        "imageUrl": "/images/enemies/HorrificCoffeeMaker.png",
+        "maxHealth": 30,
+	"currentHealth": 30,
+        "attack": 9,
+        "defense": 2
+      },
+      {
+        "name": "Midnight Snack Demon",
+        "imageUrl": "/images/enemies/MidnightSnackDemon.png",
+        "maxHealth": 30,
+	"currentHealth": 30,
+        "attack": 8,
+        "defense": 4
+      },
+      {
+        "name": "Mounted Beast",
+        "imageUrl": "/images/enemies/MountedBeast.png",
+        "maxHealth": 25,
+	"currentHealth": 25,
+        "attack": 6,
+        "defense": 1
+      },
+      {
+        "name": "Spatula Demon",
+        "imageUrl": "/images/enemies/SpatulaDemon.png",
+        "maxHealth": 25,
+	"currentHealth": 25,
+        "attack": 8,
+        "defense": 4
+      },
+      {
+        "name": "Spooky Chef",
+        "imageUrl": "/images/enemies/SpookyChef.png",
+        "maxHealth": 25,
+	"currentHealth": 25,
+        "attack": 10,
+        "defense": 1
+      },
+      {
+        "name": "Underworld Toaster",
+        "imageUrl": "/images/enemies/UnderworldToaster.png",
+        "maxHealth": 30,
+	"currentHealth": 30,
+        "attack": 10,
+        "defense": 3
+      },
+      {
+        "name": "Wraith Wok",
+        "imageUrl": "/images/enemies/WraithWok.png",
+        "maxHealth": 30,
+	"currentHealth": 30,
+        "attack": 10,
+        "defense": 3
+      }
+    ],
+    "Elite": [
+      {
+        "name": "Evil Spoon Sorcerer",
+        "imageUrl": "/images/enemies/EvilSpoonSorcerer.png",
+        "maxHealth": 25,
+	"currentHealth": 25,
+        "attack": 8,
+        "defense": 4
+      },
+      {
+        "name": "SlenderWave",
+        "imageUrl": "/images/enemies/SlenderWave.png",
+        "maxHealth": 25,
+	"currentHealth": 25,
+        "attack": 10,
+        "defense": 1
+      },
+      {
+        "name": "Termixer",
+        "imageUrl": "/images/enemies/Termixer.png",
+        "maxHealth": 30,
+	"currentHealth": 30,
+        "attack": 10,
+        "defense": 3
+      },
+      {
+        "name": "Little Armed Lou",
+        "imageUrl": "/images/enemies/LittleArmedLou.png",
+        "maxHealth": 30,
+	"currentHealth": 30,
+        "attack": 10,
+        "defense": 3
+      }
+    ],
+    "Boss": [
+      {
+        "name": "Albert",
+        "imageUrl": "/images/enemies/Albert.png",
+        "maxHealth": 40,
+	"currentHealth": 40,
+        "attack": 12,
+        "defense": 3
+      },
+      {
+        "name": "Bob",
+        "imageUrl": "/images/enemies/Bob.png",
+        "maxHealth": 40,
+	"currentHealth": 40,
+        "attack": 10,
+        "defense": 5
+      }
+    ]
+  },
+  "3": {
+    "Enemies": [
+      {
+        "name": "Alien Assassin",
+        "imageUrl": "/images/enemies/AlienAssassin.png",
+        "maxHealth": 25,
+	"currentHealth": 25,
+        "attack": 10,
+        "defense": 3
+      },
+      {
+        "name": "Alien Bounty Hunter",
+        "imageUrl": "/images/enemies/AlienBountyHunter.png",
+        "maxHealth": 30,
+	"currentHealth": 30,
+        "attack": 8,
+        "defense": 4
+      },
+      {
+        "name": "Alien Duelist",
+        "imageUrl": "/images/enemies/AlienDuelist.png",
+        "maxHealth": 25,
+	"currentHealth": 25,
+        "attack": 6,
+        "defense": 1
+      },
+      {
+        "name": "Alien Gunner",
+        "imageUrl": "/images/enemies/AlienGunner.png",
+        "maxHealth": 30,
+	"currentHealth": 30,
+        "attack": 9,
+        "defense": 2
+      },
+      {
+        "name": "Alien Lancer",
+        "imageUrl": "/images/enemies/AlienLancer.png",
+        "maxHealth": 30,
+	"currentHealth": 30,
+        "attack": 8,
+        "defense": 4
+      },
+      {
+        "name": "Alien Parasite",
+        "imageUrl": "/images/enemies/AlienParasite.png",
+        "maxHealth": 25,
+	"currentHealth": 25,
+        "attack": 6,
+        "defense": 1
+      },
+      {
+        "name": "Alien Pup",
+        "imageUrl": "/images/enemies/AlienPup.png",
+        "maxHealth": 25,
+	"currentHealth": 25,
+        "attack": 8,
+        "defense": 4
+      },
+      {
+        "name": "Alien Seer",
+        "imageUrl": "/images/enemies/AlienSeer.png",
+        "maxHealth": 25,
+	"currentHealth": 25,
+        "attack": 10,
+        "defense": 1
+      },
+      {
+        "name": "Alien Serpent",
+        "imageUrl": "/images/enemies/AlienSerpent.png",
+        "maxHealth": 30,
+	"currentHealth": 30,
+        "attack": 10,
+        "defense": 3
+      },
+      {
+        "name": "Alien Witch",
+        "imageUrl": "/images/enemies/AlienWitch.png",
+        "maxHealth": 30,
+	"currentHealth": 30,
+        "attack": 10,
+        "defense": 3
+      }
+    ],
+    "Elite": [
+      {
+        "name": "Alien King's Kid",
+        "imageUrl": "/images/enemies/AlienKingsKid.png",
+        "maxHealth": 25,
+	"currentHealth": 25,
+        "attack": 8,
+        "defense": 4
+      },
+      {
+        "name": "Alien Royal Guard",
+        "imageUrl": "/images/enemies/AlienRoyalGuard.png",
+        "maxHealth": 25,
+	"currentHealth": 25,
+        "attack": 10,
+        "defense": 1
+      },
+      {
+        "name": "Alien Defense Titan",
+        "imageUrl": "/images/enemies/AlienDefenseTitan.png",
+        "maxHealth": 30,
+	"currentHealth": 30,
+        "attack": 10,
+        "defense": 3
+      },
+      {
+        "name": "Alien Monk",
+        "imageUrl": "/images/enemies/AlienMonk.png",
+        "maxHealth": 30,
+	"currentHealth": 30,
+        "attack": 10,
+        "defense": 3
+      }
+    ],
+    "Boss": [
+      {
+        "name": "Alien Psychic",
+        "imageUrl": "/images/enemies/AlienPsychic.png",
+        "maxHealth": 40,
+	"currentHealth": 40,
+        "attack": 12,
+        "defense": 3
+      },
+      {
+        "name": "Alien King",
+        "imageUrl": "/images/enemies/AlienKing.png",
+        "maxHealth": 40,
+	"currentHealth": 40,
+        "attack": 10,
+        "defense": 5
+      }
+    ]
+  },
+  "4": {
+    "Enemies": [
+      {
+        "name": "Black Licorice Bishop",
+        "imageUrl": "/images/enemies/BlackLicoriceBishop.png",
+        "maxHealth": 25,
+	"currentHealth": 25,
+        "attack": 10,
+        "defense": 3
+      },
+      {
+        "name": "Candy Cane Warrior",
+        "imageUrl": "/images/enemies/CandyCaneWarrior.png",
+        "maxHealth": 30,
+	"currentHealth": 30,
+        "attack": 8,
+        "defense": 4
+      },
+      {
+        "name": "Candy Corn Scuttlers",
+        "imageUrl": "/images/enemies/CandyCornScuttler.png",
+        "maxHealth": 25,
+	"currentHealth": 25,
+        "attack": 6,
+        "defense": 1
+      },
+      {
+        "name": "Candy Gryphon",
+        "imageUrl": "/images/enemies/CandyGryphon.png",
+        "maxHealth": 30,
+	"currentHealth": 30,
+        "attack": 9,
+        "defense": 2
+      },
+      {
+        "name": "Chocolate Giant",
+        "imageUrl": "/images/enemies/ChocolateGiant.png",
+        "maxHealth": 30,
+	"currentHealth": 30,
+        "attack": 8,
+        "defense": 4
+      },
+      {
+        "name": "Gummy Worm Leech",
+        "imageUrl": "/images/enemies/GummyWormLeech.png",
+        "maxHealth": 25,
+	"currentHealth": 25,
+        "attack": 6,
+        "defense": 1
+      },
+      {
+        "name": "Gingerbread Zombie",
+        "imageUrl": "/images/enemies/GingerbreadZombie.png",
+        "maxHealth": 25,
+	"currentHealth": 25,
+        "attack": 8,
+        "defense": 4
+      },
+      {
+        "name": "Dark Chocolate Archer",
+        "imageUrl": "/images/enemies/DarkChocolateArcher.png",
+        "maxHealth": 25,
+	"currentHealth": 25,
+        "attack": 10,
+        "defense": 1
+      },
+      {
+        "name": "Honeycomb HellHound",
+        "imageUrl": "/images/enemies/HoneycombHellHound.png",
+        "maxHealth": 30,
+	"currentHealth": 30,
+        "attack": 10,
+        "defense": 3
+      },
+      {
+        "name": "Gumdrop Gremlin",
+        "imageUrl": "/images/enemies/GumdropGremlin.png",
+        "maxHealth": 30,
+	"currentHealth": 30,
+        "attack": 10,
+        "defense": 3
+      }
+    ],
+    "Elite": [
+      {
+        "name": "Cotton Candy Wraith",
+        "imageUrl": "/images/enemies/CottonCandyWraith.png",
+        "maxHealth": 25,
+	"currentHealth": 25,
+        "attack": 8,
+        "defense": 4
+      },
+      {
+        "name": "Evil Santa",
+        "imageUrl": "/images/enemies/EvilSanta.png",
+        "maxHealth": 25,
+	"currentHealth": 25,
+        "attack": 10,
+        "defense": 1
+      },
+      {
+        "name": "Nougat Nightmare",
+        "imageUrl": "/images/enemies/NougatNightmare.png",
+        "maxHealth": 30,
+	"currentHealth": 30,
+        "attack": 10,
+        "defense": 3
+      },
+      {
+        "name": "Sour Gargoyle",
+        "imageUrl": "/images/enemies/SourGargoyle.png",
+        "maxHealth": 30,
+	"currentHealth": 30,
+        "attack": 10,
+        "defense": 3
+      }
+    ],
+    "Boss": [
+      {
+        "name": "Licorice Lich",
+        "imageUrl": "/images/enemies/LicoriceLich.png",
+        "maxHealth": 40,
+	"currentHealth": 40,
+        "attack": 12,
+        "defense": 3
+      },
+      {
+        "name": "Marshmallow Golem",
+        "imageUrl": "/images/enemies/MarshmallowGolem.png",
+        "maxHealth": 40,
+	"currentHealth": 40,
+        "attack": 10,
+        "defense": 5
+      }
+    ]
+  }
+}

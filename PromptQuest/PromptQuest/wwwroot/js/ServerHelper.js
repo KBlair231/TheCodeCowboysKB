@@ -22,6 +22,8 @@ async function loadGame() {
 	previousEnemyHealth = gameState.enemy.currentHealth;
 	// Update display with loaded data.
 	refreshDisplay();
+	let data = await sendGetRequest(`/Game/GetBackground?floor=${gameState.floor}`);
+	document.getElementById("main-background-image").src = data;
 }
 
 // ----------------------------------- SERVER INTERACTION METHODS ----------------------------------------------------------------------

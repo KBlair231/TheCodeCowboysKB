@@ -1,10 +1,13 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using System.Drawing;
+using Microsoft.AspNetCore.Mvc;
 using PromptQuest.Models;
+using Newtonsoft.Json.Serialization;
 
 namespace PromptQuest.Services {
 	public interface IMapService {
 		public void MovePlayer(GameState gameState, int mapNodeId = 0, bool admin = false);
 		public Map GetMap(int floor);
+		public string GetBackground(int floor);
 	}
 	public class MapService : IMapService {
 
@@ -288,7 +291,27 @@ namespace PromptQuest.Services {
 		}
 
 		public Map GetMap(int floor) {
-			return new Map() { ListMapNodes = GetMapNodesForFloor(floor) };
+			Map map = new Map() { ListMapNodes = GetMapNodesForFloor(floor) };
+			return map;
+		}
+		public string GetBackground(int Floor) {
+			int moduloFloor = ((Floor - 1) % 4) + 1;
+			string backgroundImage = "";
+			switch (moduloFloor) {
+				case 1:
+					backgroundImage = "/images/BackgroundGloomyDarkForest.png";
+					break;
+				case 2:
+					backgroundImage = "/images/BackgroundHauntedKitchen.png";
+					break;
+				case 3:
+					backgroundImage = "/images/BackgroundAlienCity.png";
+					break;
+				case 4:
+					backgroundImage = "/images/BackgroundCandyNightmare.png";
+					break;
+			}
+			return backgroundImage;
 		}
 	}
 }
