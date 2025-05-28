@@ -35,7 +35,7 @@ namespace PromptQuest.Services {
 			// Give the enemy a 5% chance to attack first
 			Random random = new Random();
 			int chance = random.Next(1, 101); // Generate a number between 1 and 100
-			if (chance <= 5) {
+			if(chance <= 5) {
 				gameState.IsPlayersTurn = false; // Enemy attacks first
 				gameState.AddMessage($"You were ambushed by the {gameState.Enemy.Name}!");
 			}
@@ -52,38 +52,38 @@ namespace PromptQuest.Services {
 			Random random = new Random();//for any random rolls
 			int attackBuff = 0;//for any attack buffs
 												 // Get the player's equipped item
-			//beggining of attack portion
-			//Checking for the Quick Shot passive
+												 //beggining of attack portion
+												 //Checking for the Quick Shot passive
 			int numberOfAttacks = 1;
-			numberOfAttacks += gameState.Player.QuickShot(random.Next(0,100));
-			for (int i = 0; i < numberOfAttacks; i++) {
+			numberOfAttacks += gameState.Player.QuickShot(random.Next(0, 100));
+			for(int i = 0; i < numberOfAttacks; i++) {
 				//beggining of damage calc
 				// Checking for Heavy Smash passive
-				attackBuff = gameState.Player.HeavySmash(random.Next(0,100));
+				attackBuff = gameState.Player.HeavySmash(random.Next(0, 100));
 				// Make damage into a range of 0.8-1.30x the attack stat picking a random number between these values of the damage
 				int lowerBound = (int)Math.Floor((gameState.Player.AttackStat + attackBuff) * 0.8);
 				int upperBound = (int)Math.Ceiling((gameState.Player.AttackStat + attackBuff) * 1.3);
 				// Generate a random number between the lower and upper bounds
 				int damage = random.Next(lowerBound, upperBound + 1) * attackMult - gameState.Enemy.Defense;
 				// If attack is less than one make it one.
-				if (damage < 1) {
+				if(damage < 1) {
 					damage = 1;
 				}
 				//Checking for Mana Burn passive
-				damage += gameState.Player.ManaBurn(random.Next(0,100));
-				gameState.Enemy.Defense -= gameState.Player.PoisonWeapons(random.Next(0,100));
+				damage += gameState.Player.ManaBurn(random.Next(0, 100));
+				gameState.Enemy.Defense -= gameState.Player.PoisonWeapons(random.Next(0, 100));
 				// Update enemy health.
 				gameState.Enemy.CurrentHealth -= damage;
 				//end of damage calc
 				//decrement ability cooldown if ability was not used
 				if(decrementAbility && gameState.Player.AbilityCooldown > 0) {
 					gameState.Player.AbilityCooldown -= 1;
-					gameState.Player.ArcaneRecovery(random.Next(0,100));
+					gameState.Player.ArcaneRecovery(random.Next(0, 100));
 				}
 				// Get the player's equipped item
 				Item item = gameState.Player.EquippedWeapon;
 				if(item.StatusEffects != StatusEffect.None) {
-					int statusEffectChance = random.Next(0,5); // 25% chance to apply status effect
+					int statusEffectChance = random.Next(0, 5); // 25% chance to apply status effect
 					if(statusEffectChance == 1) {
 						if(!gameState.Enemy.StatusEffects.HasFlag(item.StatusEffects)) {
 							gameState.AddMessage($"The {gameState.Enemy.Name} is now affected by {item.StatusEffects.ToString()}!");
@@ -138,7 +138,7 @@ namespace PromptQuest.Services {
 			}
 			// Update player health and number of potions.
 			gameState.Player.HealthPotions -= 1;
-			gameState.Player.CurrentHealth += 5;
+			gameState.Player.CurrentHealth += (int)Math.Ceiling(gameState.Player.MaxHealth * 0.2);
 			// If the potion put the player's health above maximum, set it to maximum.
 			if(gameState.Player.CurrentHealth >= gameState.Player.MaxHealth) {
 				gameState.Player.CurrentHealth = gameState.Player.MaxHealth;
@@ -150,10 +150,6 @@ namespace PromptQuest.Services {
 		/// <summary>Calculates the amount healed by Resting, updates the game state, then returns a message.</summary>
 		public void PlayerRest(GameState gameState) {
 			string message = "You feel well rested and are ready to continue on your journey.";
-			// Set potions to 2 if they are less than 2.
-			if(gameState.Player.HealthPotions < 2) {
-				gameState.Player.HealthPotions = 2;
-			}
 			// If player is already at max health, don't let them rest.
 			if(gameState.Player.CurrentHealth >= gameState.Player.MaxHealth) {
 				//gameState.AddMessage("You are already at max health!"); Not sure if this is necessary or not with the new health change indicators
@@ -162,12 +158,12 @@ namespace PromptQuest.Services {
 				return;
 			}
 			// Update player health (+30% of max health)
-			gameState.Player.CurrentHealth += gameState.Player.MaxHealth / 3;
+			gameState.Player.CurrentHealth += (int)Math.Ceiling(gameState.Player.MaxHealth * 0.35);
 			// If the potion put the player's health above maximum, set it to maximum.
 			if(gameState.Player.CurrentHealth >= gameState.Player.MaxHealth) {
 				gameState.Player.CurrentHealth = gameState.Player.MaxHealth;
 				gameState.IsLocationComplete = true;
-			gameState.AddMessage(message);
+				gameState.AddMessage(message);
 				return;
 			}
 			gameState.AddMessage(message);
@@ -211,10 +207,11 @@ namespace PromptQuest.Services {
 					else if(randItem == 2) {
 						// If 2, give them a treasure specific item.
 						treasureItem.Name = "Inflatable Hammer";
-						treasureItem.Attack = 8;
+						treasureItem.Attack = 5;
 						treasureItem.Defense = -2;
 						treasureItem.ImageSrc = "/images/InflatableHammer.png";
 						treasureItem.itemType = ItemType.Weapon;
+						treasureItem.Passive = Passives.HeavySmash; // Give the player the Heavy Smash passive
 						gameState.Player.Items.Add(treasureItem);
 					}
 					else {
@@ -224,6 +221,7 @@ namespace PromptQuest.Services {
 						treasureItem.Defense = 8;
 						treasureItem.ImageSrc = "/images/RainbowTreads.png";
 						treasureItem.itemType = ItemType.Boots;
+						treasureItem.Passive = Passives.QuickShot; // Give the player the Quick Shot passive
 						gameState.Player.Items.Add(treasureItem);
 					}
 					// Tell player what happened
@@ -239,7 +237,7 @@ namespace PromptQuest.Services {
 					bloodThornAxe.StatusEffects = StatusEffect.Bleeding;
 					gameState.Player.Items.Add(bloodThornAxe);
 					gameState.AddMessage("You pick up the BloodThorn Axe. It's thorns poke you.");
-					gameState.Player.CurrentHealth -= 5; // Damage the player
+					gameState.Player.CurrentHealth -= 25; // Damage the player
 					if(gameState.Player.CurrentHealth <= 0) {
 						gameState.AddMessage("By some miracle, you live...");
 						gameState.Player.CurrentHealth = 1; // Prevent death
@@ -252,9 +250,10 @@ namespace PromptQuest.Services {
 					poisonChestPlate.Defense = 7;
 					poisonChestPlate.ImageSrc = "/images/PoisonChestplate.png";
 					poisonChestPlate.itemType = ItemType.Chest;
+					poisonChestPlate.Passive = Passives.PoisonWeapons; // Give the player the Poison Weapons passive
 					gameState.Player.Items.Add(poisonChestPlate);
-					gameState.AddMessage("You pick up the Plate of the Poisoned. It's toxins cause you to feel sick.");
-					gameState.Player.CurrentHealth -= 10; // Damage the player
+					gameState.AddMessage("You pick up the Plate of the Poisoned. It's toxins cause you to feel incredibly sick.");
+					gameState.Player.CurrentHealth -= 40; // Damage the player
 					if(gameState.Player.CurrentHealth <= 0) {
 						gameState.AddMessage("By some miracle, you live...");
 						gameState.Player.CurrentHealth = 1; // Prevent death
@@ -304,7 +303,7 @@ namespace PromptQuest.Services {
 					}
 					break;
 				case 6:
-					gameState.AddMessage("You scoop up the small pile of gold!");
+					gameState.AddMessage("You scoop up the small pile of gold! You gained 20 gold!");
 					gameState.Player.Gold += 20; // Grant gold
 					break;
 				case 7:
@@ -326,6 +325,30 @@ namespace PromptQuest.Services {
 					gameState.AddMessage("You feel stronger! Your base attack has increased by 2 points.");
 					gameState.Player.BaseAttack += 2; // Increase attack by 2 permanently
 					break;
+				case 9:
+					gameState.AddMessage("You feel like nothing can scratch you! Your base defense has increased by 2 points.");
+					gameState.Player.BaseDefense += 2; // Increase defense by 2 permanently
+					break;
+				case 10:
+					if(gameState.Player.AttackStat == gameState.Player.DefenseStat) {
+						gameState.AddMessage("The scale remains perfectly centered. You are rewarded for your dedication to a balanced lifestyle.");
+						gameState.AddMessage("Your base attack and defense increase by 3 points!");
+						gameState.Player.BaseAttack += 3; // Increase attack by 3 permanently
+						gameState.Player.BaseDefense += 3; // Increase defense by 3 permanently
+					}
+					else if(gameState.Player.AttackStat > gameState.Player.DefenseStat) {
+						gameState.AddMessage("The scale is weighed down by the bag with the sword symbol. It is clear that you value power over cowering from your foes behind a shield.");
+						gameState.AddMessage("Your base attack increases by 3 and your base defense decreases by 2!");
+						gameState.Player.BaseAttack += 3; // Increase attack by 3 permanently
+						gameState.Player.BaseDefense -= 2; // Decrease defense by 2 permanently
+					}
+					else {
+						gameState.AddMessage("The scale is weighed down by the bag with the shield symbol. It is clear that you value a strategical approach over blind rage.");
+						gameState.AddMessage("Your base defense increases by 3 and your base attack decreases by 2!");
+						gameState.Player.BaseDefense += 3; // Increase defense by 3 permanently
+						gameState.Player.BaseAttack -= 2; // Decrease attack by 2 permanently
+					}
+					break;
 			}
 
 			// Ensure player can leave
@@ -340,50 +363,138 @@ namespace PromptQuest.Services {
 
 		/// <summary>Player opens treasure chest, updates the game state, then returns a message.</summary>
 		public void PlayerOpenTreasure(GameState gameState) {
-			int randPotions = new Random().Next(1, 4); // Randomly give 1 to 3 potions
+			int randPotions = new Random().Next(1, 3); // Randomly give 1 to 2 potions
 			gameState.Player.HealthPotions += randPotions;
-			int randItem = new Random().Next(1, 5); // Randomly give an item from the list below
+			int randItem = 0; // Initialize randItem
+			switch(gameState.Floor) {
+				case 1:
+					randItem = new Random().Next(1, 4); // Randomly give an item from floor 1
+					break;
+				case 2:
+					randItem = new Random().Next(4, 7); // Randomly give an item from floor 2
+					break;
+				case 3:
+					randItem = new Random().Next(7, 10); // Randomly give an item from floor 3
+					break;
+				case 4:
+					randItem = new Random().Next(10, 13); // Randomly give an item from floor 4
+					break;
+				default:
+					randItem = new Random().Next(1, 13); // Default case, randomly give an item from any floor
+					break;
+			}
 			Item treasureItem = new Item();
-			if(randItem == 1) {
-				// If 1, give them a treasure specific item.
-				treasureItem.Name = "Banana Crown";
-				treasureItem.Attack = 2;
-				treasureItem.Defense = 10;
-				treasureItem.ImageSrc = "/images/BananaCrown.png";
-				treasureItem.itemType = ItemType.Helm;
-				gameState.Player.Items.Add(treasureItem);
-			}
-			else if(randItem == 2) {
-				// If 2, give them a treasure specific item.
-				treasureItem.Name = "Gothic T-Shirt";
-				treasureItem.Attack = 7;
-				treasureItem.Defense = 2;
-				treasureItem.ImageSrc = "/images/GothicTShirt.png";
-				treasureItem.itemType = ItemType.Chest;
-				gameState.Player.Items.Add(treasureItem);
-			}
-			else if(randItem == 3) {
-				// If 3, give them a treasure specific item.
-				treasureItem.Name = "Gilded Boots";
-				treasureItem.Attack = 5;
-				treasureItem.Defense = 5;
-				treasureItem.ImageSrc = "/images/GildedBoots.png";
-				treasureItem.itemType = ItemType.Boots;
-				gameState.Player.Items.Add(treasureItem);
-			}
-			else {
-				// Else, give them a treasure specific item.
-				treasureItem.Name = "Elf Hat";
-				treasureItem.Attack = 0;
-				treasureItem.Defense = 12;
-				treasureItem.ImageSrc = "/images/ElfHat.png";
-				treasureItem.itemType = ItemType.Helm;
-				gameState.Player.Items.Add(treasureItem);
-			}
+			treasureItem = GetChestItem(randItem);
+			gameState.Player.Items.Add(treasureItem);
 			// Tell player what happened
 			gameState.AddMessage("You gained: " + randPotions + " Health Potion(s) and " + treasureItem.Name + "!");
 			// Ensure player can leave
 			gameState.IsLocationComplete = true;
+		}
+
+		/// <summary>Gets a chest item and returns it.</summary>
+		public Item GetChestItem(int itemValue) {
+			Item treasureItem = new Item();
+			switch(itemValue) {
+				case 1:
+					treasureItem.Name = "Elf Hat";
+					treasureItem.Attack = 0;
+					treasureItem.Defense = 4;
+					treasureItem.ImageSrc = "/images/ElfHat.png";
+					treasureItem.itemType = ItemType.Helm;
+					break;
+				case 2:
+					treasureItem.Name = "Crystal Leggings";
+					treasureItem.Attack = 3;
+					treasureItem.Defense = 2;
+					treasureItem.ImageSrc = "/images/CrystalLeggings.png";
+					treasureItem.itemType = ItemType.Legs;
+					treasureItem.Passive = Passives.SpikedBulwark; // Give the player the Spiked Bulwark passive
+					break;
+				case 3:
+					treasureItem.Name = "Gilded Boots";
+					treasureItem.Attack = 1;
+					treasureItem.Defense = 3;
+					treasureItem.ImageSrc = "/images/GildedBoots.png";
+					treasureItem.itemType = ItemType.Boots;
+					break;
+				case 4:
+					treasureItem.Name = "Banana Crown";
+					treasureItem.Attack = 2;
+					treasureItem.Defense = 10;
+					treasureItem.ImageSrc = "/images/BananaCrown.png";
+					treasureItem.itemType = ItemType.Helm;
+					treasureItem.Passive = Passives.ArcaneRecovery; // Give the player the Arcane Recovery passive
+					break;
+				case 5:
+					treasureItem.Name = "Gothic T-Shirt";
+					treasureItem.Attack = 6;
+					treasureItem.Defense = 1;
+					treasureItem.ImageSrc = "/images/GothicTShirt.png";
+					treasureItem.itemType = ItemType.Chest;
+					break;
+				case 6:
+					treasureItem.Name = "Spooky Ladle";
+					treasureItem.Attack = 6;
+					treasureItem.Defense = 2;
+					treasureItem.ImageSrc = "/images/SpookyLadle.png";
+					treasureItem.itemType = ItemType.Weapon;
+					break;
+				case 7:
+					treasureItem.Name = "Space Blaster";
+					treasureItem.Attack = 9;
+					treasureItem.Defense = 5;
+					treasureItem.ImageSrc = "/images/SpaceBlaster.png";
+					treasureItem.itemType = ItemType.Weapon;
+					treasureItem.Passive = Passives.ManaBurn; // Give the player the Mana Burn passive
+					break;
+				case 8:
+					treasureItem.Name = "Cosmic Shield";
+					treasureItem.Attack = 2;
+					treasureItem.Defense = 10;
+					treasureItem.ImageSrc = "/images/CosmicShield.png";
+					treasureItem.itemType = ItemType.Weapon;
+					break;
+				case 9:
+					treasureItem.Name = "Space Tracers";
+					treasureItem.Attack = 2;
+					treasureItem.Defense = 7;
+					treasureItem.ImageSrc = "/images/SpaceTracers.png";
+					treasureItem.itemType = ItemType.Boots;
+					break;
+				case 10:
+					treasureItem.Name = "Candy Cane Dagger";
+					treasureItem.Attack = 10;
+					treasureItem.Defense = 3;
+					treasureItem.ImageSrc = "/images/CandyCaneDagger.png";
+					treasureItem.itemType = ItemType.Weapon;
+					treasureItem.Passive = Passives.QuickShot; // Give the player the Quick Shot passive
+					break;
+				case 11:
+					treasureItem.Name = "Gingerbread Chestplate";
+					treasureItem.Attack = 0;
+					treasureItem.Defense = 9;
+					treasureItem.ImageSrc = "/images/GingerbreadChestplate.png";
+					treasureItem.itemType = ItemType.Chest;
+					break;
+				case 12:
+					treasureItem.Name = "Candy Pants";
+					treasureItem.Attack = 1;
+					treasureItem.Defense = 8;
+					treasureItem.ImageSrc = "/images/CandyPants.png";
+					treasureItem.itemType = ItemType.Legs;
+					break;
+				default:
+					treasureItem.Name = "Item.Name not found";
+					treasureItem.Attack = 404;
+					treasureItem.Defense = -404;
+					treasureItem.ImageSrc = "/images/ItemNotFound.png";
+					treasureItem.itemType = ItemType.Weapon;
+					treasureItem.StatusEffects = StatusEffect.Burning;
+					treasureItem.Passive = Passives.PoisonWeapons; // Give the player the Poison Weapons passive
+					break;
+			}
+			return treasureItem;
 		}
 
 		/// <summary>Player skips treasure chest, updates the game state, then returns a message.</summary>
@@ -431,14 +542,14 @@ namespace PromptQuest.Services {
 			}
 			else {
 				// Set item price
-				itemPrice = 1000;
+				itemPrice = 30;
 				if(gameState.Player.Gold < itemPrice) {
 					gameState.AddMessage("You don't have enough gold!");
 					return;
 				}
 				gameState.Player.Gold -= itemPrice; // Deduct gold
-				shopItem = GetShopItem(actionValue);
-				gameState.Player.Items.Add(shopItem);
+				shopItem.Name = "Health Potion"; // Name the item just so it can be messaged
+				gameState.Player.HealthPotions += 1; // Give the player a health potion
 			}
 			// Tell player what happened
 			gameState.AddMessage("You bought: " + shopItem.Name + " for " + itemPrice + " gold!");
@@ -452,8 +563,8 @@ namespace PromptQuest.Services {
 			Item shopItem = new Item();
 			if(actionValue == 1) {
 				shopItem.Name = "Darksteel Leggings";
-				shopItem.Attack = 1;
-				shopItem.Defense = 12;
+				shopItem.Attack = -1;
+				shopItem.Defense = 6;
 				shopItem.ImageSrc = "/images/DarkSteelLeggings.png";
 				shopItem.itemType = ItemType.Legs;
 			}
@@ -506,19 +617,17 @@ namespace PromptQuest.Services {
 			// Generate a random number between the lower and upper bounds and calculate damage
 			Random random = new Random();
 			int damage = random.Next(lowerBound, upperBound + 1) - gameState.Player.DefenseStat - gameState.Player.DefenseBuff; ;
-			if (gameState.Player.DefenseBuff>0) {
+			if(gameState.Player.DefenseBuff > 0) {
 				gameState.AddMessage("Your shield blocked incoming damage");
 			}
 			gameState.Player.DefenseBuff = 0;//reset the defense buff after blocking one hit
-			// If attack is less than one make it one.
+																			 // If attack is less than one make it one.
 			if(damage < 1)
 				damage = 1;
 			// If the player has Spiked Bulwark, deal damage to the enemy.
-			if (gameState.Player.HasPassive(Passives.SpikedBulwark))
-			{
+			if(gameState.Player.HasPassive(Passives.SpikedBulwark)) {
 				int returnDamage = 1;
-				if (gameState.Player.Class.ToLower() == "warrior")
-				{
+				if(gameState.Player.Class.ToLower() == "warrior") {
 					returnDamage = 2;
 				}
 				gameState.Enemy.CurrentHealth -= returnDamage;
@@ -686,7 +795,7 @@ namespace PromptQuest.Services {
 				eliteItem.ImageSrc = "/images/SpikedLeaf.png";
 			}
 			else {
-				
+
 				// If the player is on the third floor, give them an elite specific item.
 				eliteItem.Name = "Demon Cleaver";
 				eliteItem.Attack = 10;

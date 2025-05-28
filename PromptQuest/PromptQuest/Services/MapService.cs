@@ -47,9 +47,9 @@ namespace PromptQuest.Services {
 						new MapNode { MapNodeId = 5, NodeType = "Enemy", ConnectedNodes = {7}, NodeHeight = 4, NodeDistance = 3},
 						new MapNode { MapNodeId = 6, NodeType = "Treasure", ConnectedNodes = {8, 9}, NodeHeight = 2, NodeDistance = 4},
 						new MapNode { MapNodeId = 7, NodeType = "Enemy", ConnectedNodes = {9, 10}, NodeHeight = 4, NodeDistance = 4},
-						new MapNode { MapNodeId = 8, NodeType = "Event", ConnectedNodes = {11}, NodeHeight = 1, NodeDistance = 5},
+						new MapNode { MapNodeId = 8, NodeType = "Event", ConnectedNodes = {11}, NodeHeight = 2, NodeDistance = 5},
 						new MapNode { MapNodeId = 9, NodeType = "Campsite", ConnectedNodes = {11}, NodeHeight = 3, NodeDistance = 5},
-						new MapNode { MapNodeId = 10, NodeType = "Treasure", ConnectedNodes = {11}, NodeHeight = 5, NodeDistance = 5},
+						new MapNode { MapNodeId = 10, NodeType = "Treasure", ConnectedNodes = {11}, NodeHeight = 4, NodeDistance = 5},
 						new MapNode { MapNodeId = 11, NodeType = "Elite", ConnectedNodes = {12, 13}, NodeHeight = 3, NodeDistance = 6},
 						new MapNode { MapNodeId = 12, NodeType = "Enemy", ConnectedNodes = {15}, NodeHeight = 2, NodeDistance = 7},
 						new MapNode { MapNodeId = 13, NodeType = "Enemy", ConnectedNodes = {14}, NodeHeight = 4, NodeDistance = 7},
@@ -216,27 +216,27 @@ namespace PromptQuest.Services {
 			// Check if the player is on a campsite or event node
 			var currentNode = _mapNodes.FirstOrDefault(node => node.MapNodeId == gameState.PlayerLocation);
 			if(currentNode != null && currentNode.NodeType == "Campsite") {
-				gameState.AddMessage("You have found a campsite. Rest here to heal 30% of your maximum HP and refill your health potions.");
+				gameState.AddMessage("You have found a campsite. Rest here to heal 35% of your maximum HP.");
 				gameState.InCampsite = true;
 				return;
 			}
 			if(currentNode != null && currentNode.NodeType == "Event") {
-				gameState.EventNum = new Random().Next(1, 9); // Randomly select an event number
+				gameState.EventNum = new Random().Next(1, 11); // Randomly select an event number
 				switch(gameState.EventNum) {
 					case 1:
 						gameState.AddMessage("A prickly bush lies in your path. A few red objects shimmer from fairly deep inside.");
 						gameState.AddMessage("Reach in and grab them?");
 						break;
 					case 2:
-						gameState.AddMessage("You find a small chest.");
+						gameState.AddMessage("You find a small, colorful chest.");
 						gameState.AddMessage("Open it?");
 						break;
 					case 3:
-						gameState.AddMessage("You find an odd-looking weapon on the ground.");
+						gameState.AddMessage("You find an spiky weapon lying on the ground. The surrounding area is stained in blood.");
 						gameState.AddMessage("Take it?");
 						break;
 					case 4:
-						gameState.AddMessage("You find a piece of armor on a decaying corpse.");
+						gameState.AddMessage("You find a piece of armor on a decaying corpse. Even the air here is sickly.");
 						gameState.AddMessage("Take it off the corpse?");
 						break;
 					case 5:
@@ -264,8 +264,17 @@ namespace PromptQuest.Services {
 					//	gameState.AddMessage("Drink it?");
 					//	break;
 					case 8:
-						gameState.AddMessage("You find a shiny, magical stone on the floor.");
+						gameState.AddMessage("You find a shiny, magical stone on a pedestal. A sword pattern is etched into it.");
 						gameState.AddMessage("Crush it to absorb its power?");
+						break;
+					case 9:
+						gameState.AddMessage("You find a pretty, magical jewel on a pedestal. A shield pattern is etched into it.");
+						gameState.AddMessage("Shatter it to absorb its power?");
+						break;
+					case 10:
+						gameState.AddMessage("You come across a scale encased in magical glass.");
+						gameState.AddMessage("On one side is bag with a shield symbol. On the other, a bag with a sword symbol.");
+						gameState.AddMessage("Do you accept the trial of balance?");
 						break;
 				}
 				gameState.InEvent = true;
@@ -279,7 +288,7 @@ namespace PromptQuest.Services {
 			}
 			if(currentNode != null && currentNode.NodeType == "Shop") {
 				gameState.AddMessage("You find yourself at an ominous shop.");
-				gameState.AddMessage("What would you like to buy?");
+				gameState.AddMessage("What would you like to buy? Current gold: " + gameState.Player.Gold);
 				gameState.InShop = true;
 				// Allow player to leave immediately.
 				gameState.IsLocationComplete = true;

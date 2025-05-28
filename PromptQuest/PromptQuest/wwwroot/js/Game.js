@@ -176,7 +176,8 @@ function refreshShop() {
 	const shopItems = [
 		{ name: "Darksteel Leggings", id: 1, price: 25 },
 		{ name: "Radiant Glass Helm", id: 2, price: 65 },
-		{ name: "The Pencil Blade", id: 3, price: 75 }
+		{ name: "The Pencil Blade", id: 3, price: 75 },
+		{ name: "Health Potion", id: 4, price: 30 }
 	];
 	// Clear any existing buttons
 	shopButtonDisplay.innerHTML = "";
