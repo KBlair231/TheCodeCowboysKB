@@ -90,30 +90,6 @@
 	"currentHealth": 35,
         "attack": 10,
         "defense": 5
-      },
-      {
-        "name": "Corrupted Plant",
-        "imageUrl": "/images/enemies/EvilPlant.png",
-        "maxHealth": 40,
-	"currentHealth": 40,
-        "attack": 8,
-        "defense": 6
-      },
-      {
-        "name": "Dark Elven King",
-        "imageUrl": "/images/enemies/DarkElfWarrior.png",
-        "maxHealth": 35,
-	"currentHealth": 35,
-        "attack": 10,
-        "defense": 5
-      },
-      {
-        "name": "Eldritch Horror",
-        "imageUrl": "/images/enemies/EldritchHorror.png",
-        "maxHealth": 40,
-	"currentHealth": 40,
-        "attack": 8,
-        "defense": 6
       }
     ],
     "Boss": [
@@ -124,14 +100,6 @@
 	"currentHealth": 40,
         "attack": 12,
         "defense": 3
-      },
-      {
-        "name": "HornedHydra",
-        "imageUrl": "/images/enemies/HornedHydra.png",
-        "maxHealth": 40,
-	"currentHealth": 40,
-        "attack": 10,
-        "defense": 5
       }
     ]
   },
@@ -542,5 +510,45 @@
         "defense": 5
       }
     ]
-  }
+  },
+ "5": {
+   "Enemies": [
+      {
+        "name": "HornedHydra",
+        "imageUrl": "/images/enemies/HornedHydra.png",
+        "maxHealth": 40,
+	"currentHealth": 40,
+        "attack": 10,
+        "defense": 5
+      }
+   ],
+   "Elites": [
+      {
+        "name": "Corrupted Plant",
+        "imageUrl": "/images/enemies/EvilPlant.png",
+        "maxHealth": 40,
+	"currentHealth": 40,
+        "attack": 8,
+        "defense": 6
+      },
+      {
+        "name": "Dark Elven King",
+        "imageUrl": "/images/enemies/DarkElfWarrior.png",
+        "maxHealth": 35,
+	"currentHealth": 35,
+        "attack": 10,
+        "defense": 5
+      },
+      {
+        "name": "Eldritch Horror",
+        "imageUrl": "/images/enemies/EldritchHorror.png",
+        "maxHealth": 40,
+	"currentHealth": 40,
+        "attack": 8,
+        "defense": 6
+      }
+    ],
+   "Boss": [
+    ]
+ }
 }
