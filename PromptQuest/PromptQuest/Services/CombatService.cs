@@ -620,7 +620,7 @@ namespace PromptQuest.Services {
 				ImageUrl = randomEnemy["imageUrl"]?.ToString(),
 				MaxHealth = (int)randomEnemy["maxHealth"] + 5 * multiplier,
 				CurrentHealth = (int)randomEnemy["currentHealth"] + 5 * multiplier,
-				Attack = (int)randomEnemy["attack"] + 2 * multiplier,
+				Attack = (int)randomEnemy["attack"] + 3 * multiplier,
 				Defense = (int)randomEnemy["defense"] + 1 * multiplier,
 				StatusEffects = StatusEffect.None // Default, can be set later if needed
 			} : new Enemy {

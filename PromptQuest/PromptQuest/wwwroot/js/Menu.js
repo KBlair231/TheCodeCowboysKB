@@ -43,14 +43,21 @@ document.addEventListener("DOMContentLoaded", async () => {
 	document.getElementById("close-map-btn").addEventListener("click", () => { overlay.syncVisibility(false); map.syncVisibility(false); isMapOpen = false; });//Set tab and refresh menu
 	equipBtn.attachPlayerAction('equip', () => selectedItemIndex);
 	floorBtn.attachPlayerAction('move', () => 1);
+	floorBtn.addEventListener("click", async () => {
+		await executePlayerAction('move', 1);
+		let data = await sendGetRequest(`/Game/GetBackground?floor=${gameState.floor}`);
+		document.getElementById("main-background-image").src = data;
+	});
+	// Fetch map from the server
+	mapDef = await sendGetRequest("/Game/GetMap");
 });
 
 //------------------------ REFRESH DISPLAY METHODS --------------------------------------------------------------------------------------------------------
 
 function refreshInventory() {
-	//if (!isInventoryOpen) {
-	//	return; // Inventory isn't open, so don't refresh
-	//}
+	if (!isInventoryOpen) {
+		return; // Inventory isn't open, so don't refresh
+	}
 	itemDetails.syncVisibility(selectedItemIndex != -1);
 	document.getElementById("gold-display").textContent = gameState.player.gold;
 	const items = gameState.player.items;
@@ -88,16 +95,15 @@ function refreshInventory() {
 }
 
 async function refreshMap() {
-	//if (!isMapOpen) {			This if check is commented out to not refresh the background to default on page refresh
-	//	return; // Map isn't open, so don't refresh
-	//}
+	if (!isMapOpen) {
+		return; // Map isn't open, so don't refresh
+	}
 	// Fetch map from the server
 	mapDef = await sendGetRequest(`/Game/GetMap?floor=${gameState.floor}`);
 	const mapContainer = document.getElementById("map-container");
 	mapContainer.innerHTML = ""; // Clear previous map
 	// Update floor counter & background
 	document.getElementById("floor-tracker").textContent = "Floor " + gameState.floor;
-	document.getElementById("main-background-image").src = mapDef.backgroundImage;
 	// Enable next floor button if the boss is defeated
 	floorBtn.syncButtonState(gameState.playerLocation == 18 && gameState.isLocationComplete);
 	// Store node elements for edge calculations

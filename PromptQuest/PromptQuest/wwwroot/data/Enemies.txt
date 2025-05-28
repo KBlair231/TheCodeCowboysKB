@@ -2,80 +2,80 @@
   "1": {
     "Enemies": [
       {
-        "name": "Black Licorice Bishop",
-        "imageUrl": "/images/enemies/BlackLicoriceBishop.png",
+        "name": "Ancient Orc",
+        "imageUrl": "/images/enemies/AncientOrc.png",
         "maxHealth": 25,
 	"currentHealth": 25,
         "attack": 10,
         "defense": 3
       },
       {
-        "name": "Candy Cane Warrior",
-        "imageUrl": "/images/enemies/CandyCaneWarrior.png",
+        "name": "Decrepit Centaur",
+        "imageUrl": "/images/enemies/DecrepitCentaur.png",
         "maxHealth": 30,
 	"currentHealth": 30,
         "attack": 8,
         "defense": 4
       },
       {
-        "name": "Candy Corn Scuttlers",
-        "imageUrl": "/images/enemies/CandyCornScuttler.png",
+        "name": "Rotting Zombie",
+        "imageUrl": "/images/enemies/RottingZombie.png",
         "maxHealth": 25,
 	"currentHealth": 25,
         "attack": 6,
         "defense": 1
       },
       {
-        "name": "Candy Gryphon",
-        "imageUrl": "/images/enemies/CandyGryphon.png",
+        "name": "Evil Elven Mage",
+        "imageUrl": "/images/enemies/EvilElvenMage.png",
         "maxHealth": 30,
 	"currentHealth": 30,
         "attack": 9,
         "defense": 2
       },
       {
-        "name": "Chocolate Giant",
-        "imageUrl": "/images/enemies/ChocolateGiant.png",
+        "name": "Treant Guard",
+        "imageUrl": "/images/enemies/TreantGuard.png",
         "maxHealth": 30,
 	"currentHealth": 30,
         "attack": 8,
         "defense": 4
       },
       {
-        "name": "Gummy Worm Leech",
-        "imageUrl": "/images/enemies/GummyWormLeech.png",
+        "name": "Forest Wisp",
+        "imageUrl": "/images/enemies/MysticalWisp.png",
         "maxHealth": 25,
 	"currentHealth": 25,
         "attack": 6,
         "defense": 1
       },
       {
-        "name": "Gingerbread Zombie",
-        "imageUrl": "/images/enemies/GingerbreadZombie.png",
+        "name": "Goblin Archer",
+        "imageUrl": "/images/enemies/GobArcher.png",
         "maxHealth": 25,
 	"currentHealth": 25,
         "attack": 8,
         "defense": 4
       },
       {
-        "name": "Dark Chocolate Archer",
-        "imageUrl": "/images/enemies/DarkChocolateArcher.png",
+        "name": "Goblin Assassin",
+        "imageUrl": "/images/enemies/GobAssassin.png",
         "maxHealth": 25,
 	"currentHealth": 25,
         "attack": 10,
         "defense": 1
       },
       {
-        "name": "Honeycomb HellHound",
-        "imageUrl": "/images/enemies/HoneycombHellHound.png",
+        "name": "Drunk Orc",
+        "imageUrl": "/images/enemies/LazyDrunkOrc.png",
         "maxHealth": 30,
 	"currentHealth": 30,
         "attack": 10,
         "defense": 3
       },
       {
-        "name": "Gumdrop Gremlin",
-        "imageUrl": "/images/enemies/GumdropGremlin.png",
+        "name": "Demon Knight",
+        "imageUrl": "/images/enemies/DemonKnight.png",
         "maxHealth": 30,
 	"currentHealth": 30,
         "attack": 10,
@@ -84,50 +84,50 @@
     ],
     "Elite": [
       {
-        "name": "Cotton Candy Wraith",
-        "imageUrl": "/images/enemies/CottonCandyWraith.png",
-        "maxHealth": 25,
-	"currentHealth": 25,
+        "name": "Spectral Orc Berserker",
+        "imageUrl": "/images/enemies/SpectralOrc.png",
+        "maxHealth": 35,
+	"currentHealth": 35,
+        "attack": 10,
+        "defense": 5
+      },
+      {
+        "name": "Corrupted Plant",
+        "imageUrl": "/images/enemies/EvilPlant.png",
+        "maxHealth": 40,
+	"currentHealth": 40,
         "attack": 8,
-        "defense": 4
+        "defense": 6
       },
       {
-        "name": "Evil Santa",
-        "imageUrl": "/images/enemies/EvilSanta.png",
-        "maxHealth": 25,
-	"currentHealth": 25,
+        "name": "Dark Elven King",
+        "imageUrl": "/images/enemies/DarkElfWarrior.png",
+        "maxHealth": 35,
+	"currentHealth": 35,
         "attack": 10,
-        "defense": 1
+        "defense": 5
       },
       {
-        "name": "Nougat Nightmare",
-        "imageUrl": "/images/enemies/NougatNightmare.png",
-        "maxHealth": 30,
-	"currentHealth": 30,
-        "attack": 10,
-        "defense": 3
-      },
-      {
-        "name": "Sour Gargoyle",
-        "imageUrl": "/images/enemies/SourGargoyle.png",
-        "maxHealth": 30,
-	"currentHealth": 30,
-        "attack": 10,
-        "defense": 3
+        "name": "Eldritch Horror",
+        "imageUrl": "/images/enemies/EldritchHorror.png",
+        "maxHealth": 40,
+	"currentHealth": 40,
+        "attack": 8,
+        "defense": 6
       }
     ],
     "Boss": [
       {
-        "name": "Licorice Lich",
-        "imageUrl": "/images/enemies/LicoriceLich.png",
+        "name": "Dark Orc Warlock",
+        "imageUrl": "/images/enemies/OrcWarlock.png",
         "maxHealth": 40,
 	"currentHealth": 40,
         "attack": 12,
         "defense": 3
       },
       {
-        "name": "Marshmallow Golem",
-        "imageUrl": "/images/enemies/MarshmallowGolem.png",
+        "name": "HornedHydra",
+        "imageUrl": "/images/enemies/HornedHydra.png",
         "maxHealth": 40,
 	"currentHealth": 40,
         "attack": 10,
@@ -410,80 +410,80 @@
   "4": {
     "Enemies": [
       {
-        "name": "Ancient Orc",
-        "imageUrl": "/images/enemies/AncientOrc.png",
+        "name": "Black Licorice Bishop",
+        "imageUrl": "/images/enemies/BlackLicoriceBishop.png",
         "maxHealth": 25,
 	"currentHealth": 25,
         "attack": 10,
         "defense": 3
       },
       {
-        "name": "Decrepit Centaur",
-        "imageUrl": "/images/enemies/DecrepitCentaur.png",
+        "name": "Candy Cane Warrior",
+        "imageUrl": "/images/enemies/CandyCaneWarrior.png",
         "maxHealth": 30,
 	"currentHealth": 30,
         "attack": 8,
         "defense": 4
       },
       {
-        "name": "Rotting Zombie",
-        "imageUrl": "/images/enemies/RottingZombie.png",
+        "name": "Candy Corn Scuttlers",
+        "imageUrl": "/images/enemies/CandyCornScuttler.png",
         "maxHealth": 25,
 	"currentHealth": 25,
         "attack": 6,
         "defense": 1
       },
       {
-        "name": "Evil Elven Mage",
-        "imageUrl": "/images/enemies/EvilElvenMage.png",
+        "name": "Candy Gryphon",
+        "imageUrl": "/images/enemies/CandyGryphon.png",
         "maxHealth": 30,
 	"currentHealth": 30,
         "attack": 9,
         "defense": 2
       },
       {
-        "name": "Treant Guard",
-        "imageUrl": "/images/enemies/TreantGuard.png",
+        "name": "Chocolate Giant",
+        "imageUrl": "/images/enemies/ChocolateGiant.png",
         "maxHealth": 30,
 	"currentHealth": 30,
         "attack": 8,
         "defense": 4
       },
       {
-        "name": "Forest Wisp",
-        "imageUrl": "/images/enemies/MysticalWisp.png",
+        "name": "Gummy Worm Leech",
+        "imageUrl": "/images/enemies/GummyWormLeech.png",
         "maxHealth": 25,
 	"currentHealth": 25,
         "attack": 6,
         "defense": 1
       },
       {
-        "name": "Goblin Archer",
-        "imageUrl": "/images/enemies/GobArcher.png",
+        "name": "Gingerbread Zombie",
+        "imageUrl": "/images/enemies/GingerbreadZombie.png",
         "maxHealth": 25,
 	"currentHealth": 25,
         "attack": 8,
         "defense": 4
       },
       {
-        "name": "Goblin Assassin",
-        "imageUrl": "/images/enemies/GobAssassin.png",
+        "name": "Dark Chocolate Archer",
+        "imageUrl": "/images/enemies/DarkChocolateArcher.png",
         "maxHealth": 25,
 	"currentHealth": 25,
         "attack": 10,
         "defense": 1
       },
       {
-        "name": "Drunk Orc",
-        "imageUrl": "/images/enemies/LazyDrunkOrc.png",
+        "name": "Honeycomb HellHound",
+        "imageUrl": "/images/enemies/HoneycombHellHound.png",
         "maxHealth": 30,
 	"currentHealth": 30,
         "attack": 10,
         "defense": 3
       },
       {
-        "name": "Demon Knight",
-        "imageUrl": "/images/enemies/DemonKnight.png",
+        "name": "Gumdrop Gremlin",
+        "imageUrl": "/images/enemies/GumdropGremlin.png",
         "maxHealth": 30,
 	"currentHealth": 30,
         "attack": 10,
@@ -492,50 +492,50 @@
     ],
     "Elite": [
       {
-        "name": "Spectral Orc Berserker",
-        "imageUrl": "/images/enemies/SpectralOrc.png",
-        "maxHealth": 35,
-	"currentHealth": 35,
-        "attack": 10,
-        "defense": 5
-      },
-      {
-        "name": "Corrupted Plant",
-        "imageUrl": "/images/enemies/EvilPlant.png",
-        "maxHealth": 40,
-	"currentHealth": 40,
+        "name": "Cotton Candy Wraith",
+        "imageUrl": "/images/enemies/CottonCandyWraith.png",
+        "maxHealth": 25,
+	"currentHealth": 25,
         "attack": 8,
-        "defense": 6
+        "defense": 4
       },
       {
-        "name": "Dark Elven King",
-        "imageUrl": "/images/enemies/DarkElfWarrior.png",
-        "maxHealth": 35,
-	"currentHealth": 35,
+        "name": "Evil Santa",
+        "imageUrl": "/images/enemies/EvilSanta.png",
+        "maxHealth": 25,
+	"currentHealth": 25,
         "attack": 10,
-        "defense": 5
+        "defense": 1
       },
       {
-        "name": "Eldritch Horror",
-        "imageUrl": "/images/enemies/EldritchHorror.png",
-        "maxHealth": 40,
-	"currentHealth": 40,
-        "attack": 8,
-        "defense": 6
+        "name": "Nougat Nightmare",
+        "imageUrl": "/images/enemies/NougatNightmare.png",
+        "maxHealth": 30,
+	"currentHealth": 30,
+        "attack": 10,
+        "defense": 3
+      },
+      {
+        "name": "Sour Gargoyle",
+        "imageUrl": "/images/enemies/SourGargoyle.png",
+        "maxHealth": 30,
+	"currentHealth": 30,
+        "attack": 10,
+        "defense": 3
       }
     ],
     "Boss": [
       {
-        "name": "Dark Orc Warlock",
-        "imageUrl": "/images/enemies/OrcWarlock.png",
+        "name": "Licorice Lich",
+        "imageUrl": "/images/enemies/LicoriceLich.png",
         "maxHealth": 40,
 	"currentHealth": 40,
         "attack": 12,
         "defense": 3
       },
       {
-        "name": "HornedHydra",
-        "imageUrl": "/images/enemies/HornedHydra.png",
+        "name": "Marshmallow Golem",
+        "imageUrl": "/images/enemies/MarshmallowGolem.png",
         "maxHealth": 40,
 	"currentHealth": 40,
         "attack": 10,

@@ -198,6 +198,12 @@ namespace PromptQuest.Controllers {
 		}
 
 		[HttpGet]
+		public IActionResult GetBackground(int floor) {
+			string backgroundUri = _mapService.GetBackground(floor);
+			return Json(backgroundUri);
+		}
+
+		[HttpGet]
 		public IActionResult SkipToRoom(int targetRoom) {
 			GameState gameState = _gameStateService.GetGameState();
 			// Move the player to the desired room
