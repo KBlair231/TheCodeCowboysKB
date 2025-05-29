@@ -36,8 +36,8 @@ namespace PromptQuest.Services {
 			Random random = new Random();
 			int chance = random.Next(1, 101); // Generate a number between 1 and 100
 			if(chance <= 5) {
-				gameState.IsPlayersTurn = false; // Enemy attacks first
 				gameState.AddMessage($"You were ambushed by the {gameState.Enemy.Name}!");
+				EnemyAttack(gameState); // Enemy attacks the player immediately
 			}
 			else {
 				gameState.IsPlayersTurn = true; // Player attacks first
