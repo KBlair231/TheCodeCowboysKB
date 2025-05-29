@@ -7,24 +7,151 @@
 	--background-color-primary: #171822;
 	--background-color-highlight: #282a3b;
 	--pq-font-color: white;
-	--pq-font-large: 3vmin;
-	--pq-font-normal: 2vmin;
-	--pq-font-small: 1vmin;
+	--pq-font-large: 1.5rem;
+	--pq-font-normal: .8rem;
+	--pq-font-small: 1rem;
 }
 
 /*------------------------- Layout -------------------------*/
 
+/* Default desktop layout */
+.landscape-layout {
+	display: flex;
+	flex-direction: row;
+	justify-content: space-between;
+	height: 100vh;
+	z-index: 2;
+}
+
+.landscape-layout * {
+	z-index: 2;
+}
+
+.portrait-layout {
+	display: flex;
+	flex-direction: column;
+	justify-content: start;
+	height: 100vh;
+	z-index: 2;
+}
+
+	.portrait-layout > * {
+		z-index: 2;
+	}
+
+.container-fluid {
+	max-width: 100vw;
+	max-height: 100vh;
+	overflow: hidden;
+	user-select: none;
+}
+
+#game-container {
+	background-size: cover; /* Ensures full coverage */
+	background-position: center; /* Centers the image */
+	background-repeat: no-repeat; /* Prevents repetition */
+	z-index: 1;
+}
+
+/* Order modules based on screen orientation */
+.landscape-layout #header { order: 1; height: 10%; display: flex; justify-content: space-between; padding-top: 5px;}
+.landscape-layout #enemy { order: 5; height: 55%; width: min-content; min-width:fit-content; align-content: end;}
+.landscape-layout #dialog { order: 2; height: 35%; display: flex; justify-content:center; align-items: center;}
+.landscape-layout #player { order: 3; height: 55%; width: min-content; min-width:fit-content; align-content: end;}
+.landscape-layout #buttons { order: 4; height: 55%; width: 5rem; max-width: 450px; min-width: min-content;}
+.landscape-layout .btn-stack {width: 100%; max-height: 100%; flex-direction: column; align-self: center;}
+.landscape-layout .btn-stack > * {width: 100%; height: fit-content; margin-bottom:5%; padding-left: 5%; padding-right: 5%; font-size: 1rem; text-overflow: inherit; }
+
+.portrait-layout #header { order: 1; width: 100%; height: 6%; display: flex; justify-content: space-between; padding-top: 5px;}
+.portrait-layout #enemy { order: 2; width: 100%; height: 35%; padding: 10px}
+.portrait-layout #dialog { order: 3; width: 100%; height: 15%; padding: 15px;}
+.portrait-layout #player { order: 4; width: 100%; height: 35%; padding: 10px; padding-bottom: 5px;}
+.portrait-layout #buttons { order: 5; width: 100%; max-height: 9%; display: flex !important; align-items: center; justify-content: space-around;}
+.portrait-layout .btn-stack {width: 100%; height: 100%; max-height: 100%; display: inherit; flex-direction: row; justify-content: space-evenly; padding:5px; }
+.portrait-layout .btn-stack > * {width: 35%; max-width: 13rem; height: 100%; padding-left: 20px; padding-right: 20px; padding-top: 5px; padding-bottom: 5px; font-size: 1rem; line-height: 1; margin: 0;}
+
+#enemy-display {
+	justify-self: end;
+}
+
+#player-display {
+	justify-self: start;
+}
+
+#enemy-display > * {
+	position: absolute;
+	max-width: 100%;
+}
+
+#player-display > * {
+	position: absolute;
+	max-width: 100%;
+}
+
+#dialog-box {
+	font-size: 1rem;
+	color: var(--pq-font-color);
+	background-color: var(--background-color-primary);
+	border: var(--pq-border);
+	padding: .5rem;
+	overflow-y: auto;
+	overflow-x: hidden;
+	justify-self: center;
+}
+
+#menu-btn {
+	padding-left: 5%;
+	padding-right: 5%;
+	font-size: 1rem;
+	line-height: 1;
+}
+
+.landscape-layout #dialog-box {
+	width: 50rem;
+	height: 8rem;
+	max-width: 100%;
+	max-height: 100%;
+}
+
+.portrait-layout #dialog-box {
+	width: 100%;
+	height: 100%;
+}
+
+.name-text {
+	font-size: 1.2rem;
+	color: var(--pq-font-color);
+	padding-left: 5px;
+	padding-bottom: 6px;
+	line-height: 1;
+	display: flex;
+	align-items: flex-end;
+	justify-content: left;
+	overflow-x: hidden;
+	overflow-y: auto;
+}
+
+.character-display {
+	aspect-ratio: 1;
+	width: auto;
+	height: 100%;
+	max-height: 100%;
+	max-width: 100%;
+	opacity: 0;
+}
+
 html, body {
 	display: grid;
-	height: 100%;
-	width: 100%;
+	height: 100vh;
+	width: 100vw;
 	background-color: var(--background-color-primary);
 	margin: 0;
+	/*	padding: 0;*/
 	font-size: 16pt;
 }
 
 body {
-	/*padding: 1.5vmin;*/ /* Adds some padding around the whole screen */
+/*	padding: 1.5vmin;  Adds some padding around the whole screen */
 }
 
 /*---- Custom layout ------------------------------------------------------------------*/
@@ -42,7 +169,7 @@ body {
 	}
 
 #overlay {
-	/*display: none;*/ /* Initially hidden */
+	visibility: hidden;
 	position: fixed;
 	top: 0;
 	left: 0;
@@ -54,33 +181,19 @@ body {
 }
 
 #menu {
-	/*display: none;*/ /* Initially hidden */
-	position: absolute;
-	top: 25%;
-	left: 37.5%;
-	width: 25%;
-	height: 50%;
-	border: 3px solid white;
-	border-radius: 50px;
-	background-color: var(--background-color-primary); /* Menu color */
-	z-index: 1000; /* Ensures it's above everything. Nothing should ever be in front of the menu */
-}
-
-#active-popup {
-	position: absolute;
-	top: 100%;
+	visibility: hidden;
+	position: fixed;
+	top: 50%;
 	left: 50%;
-	width: 60%;
-	height: 200%;
-	border: 3px solid white;
-	border-radius: 50px;
-	background-color: var(--background-color-primary); /* notmal color */
-	z-index: 9000; /* Ensures it's above everythingexcept the menu */
-		padding: 10px;
-	background-color: var(--background-color-primary);
-	font-size: var(--pq-font-normal);
-	color: var(--pq-font-color);
-	border: var(--pq-border);
+	width: 75%;
+	max-width: 30rem;
+	height: fit-content;
+	align-content: center;
+	padding: 3rem;
+	border: 2px solid white;
+	border-radius: 1rem;
+	background-color: var(--background-color-primary); /*Menu color */
+	z-index: 1000; /*Ensures it's above everything. Nothing should ever be in front of the menu */
 }
 
 /* Style for map container */
@@ -91,24 +204,129 @@ body {
 	gap: 10px;
 }
 
+#bg-image {
+	visibility: visible;
+	position: absolute;
+	display: none;
+	visibility: visible;
+	position: absolute;
+	width: auto;
+	z-index: 1; /*Make sure it is behind everything but the background image*/
+	transform: translate(-50%, -10%);
+}
+
+.landscape-layout #bg-image {
+	bottom: 0;
+	left: 50%;
+	height: 60%;
+}
+
+.portrait-layout #bg-image {
+	top: 5%;
+	left: 50%;
+	height: 40%;
+}
+
+#floor-btn {
+	height: 3rem;
+	width: 4rem;
+	color: darkred;
+	background: none;
+	border: none;
+	padding: 0;
+	margin: 0;
+	box-shadow: none;
+	cursor: pointer;
+	animation: flash 1.2s infinite;
+}
+
+	#floor-btn img {
+		width: 100%;
+		height: 100%;
+	}
+
+	@keyframes flash {
+    0% { opacity: 1; }
+    50% { opacity: 0.3; }
+    100% { opacity: 1; }
+}
+
+#floor-btn:disabled {
+	cursor: not-allowed;
+	animation: none;
+}
+
+
 #map {
+	visibility: hidden;
 	z-index: 900; /* Ensures it's above the overlay */
+	display: flex;
+	justify-content: center;
+	position: fixed;
+	top: 5%;
+	left: 5%;
+	width: 90%;
+	height: 90%;
+	border: 3px solid black;
+	flex-direction: column;
+	padding: 1rem;
+	background-image: url('/images/BackgroundMap.png'); /* Path to image */
+	background-size: cover; /* Ensures full coverage */
+	background-position: center; /* Centers the image */
+	background-repeat: no-repeat; /* Prevents repetition */
+}
+
+	#map > div {
+		display: flex;
+		width: 100%;
+		height: fit-content;
+		user-select: none;
+	}
+
+#close-map-btn {
+	height: 50px;
+	width: 50px;
+	background: none;
+	border: none;
+	padding: 0;
+}
+
+	#close-map-btn img {
+		max-height: 100%;
+	}
+
+#map-container {
+	display: flex;
+	position: relative;
+	width: 100%;
+	height: auto;
+	flex-grow: 1;
+}
+
+#floor-tracker {
+	height: 100%;
+	width: fit-content;
+	color: black;
+	font-size: 3rem;
+	font-family: 'texture', sans-serif;
 }
 
 /* Style for map nodes */
 .map-node {
-	width: 80px;
-	height: 50px;
-	border: 4px dashed black;
+	width: 3rem;
+	min-width: 40px;
+	height: 2rem;
+	min-height: 20px;
+	border: .25rem dashed black;
 	border-radius: 50%;
 	background-color: transparent;
 	cursor: pointer;
 }
 
 @keyframes colorFlash {
-  0% { border-color: #FFBF00; } /* Amber */
-  50% { border-color: #FF8C00; } /* Darker Orange */
-  100% { border-color: #FFBF00; } /* Amber */
+	0% { border-color: #FFBF00; } /* Amber */
+	50% { border-color: #FF8C00; } /* Darker Orange */
+	100% { border-color: #FFBF00; } /* Amber */
 }
 
 .map-node-disabled {
@@ -120,11 +338,11 @@ body {
 }
 
 .map-node-completed {
-	border: 4px dashed darkgreen;
+	border: .25rem dashed darkgreen;
 }
 
 .map-node-current {
-	border: 4px dashed #EAAB11;
+	border: .25rem dashed #EAAB11;
 }
 
 /* Absolute positioning for map images */
@@ -136,7 +354,7 @@ body {
 	bottom: 50%;
 	left: 50%;
 	transform: translateX(-50%);
-	z-index: 998;
+	z-index: 998 !important;
 }
 
 /* Absolute positioning for player icon */
@@ -156,9 +374,10 @@ body {
 	position: absolute;
 	width: 50px;
 	height: 2px;
-	border-bottom: 4px dashed #000; /* Creates a true dashed line */
+	border-bottom: .25rem dashed #000; /* Creates a true dashed line */
 	background: none;
 	transform-origin: left center; /* Ensures rotation happens around the left edge */
+	z-index: 901 !important;
 }
 
 /* We have to have this here instead of in the view because it breaks the bracket coloring in the text editor for some reason. */
@@ -176,60 +395,7 @@ body {
 	transform: translateY(-50%); /* Shifts it by half its width to achieve true vertical centering */
 }
 
-/* Custom Modal window */
-.pq-modal-fullscreen {
-	position: fixed;
-	top: 0; /* Default position */
-	left: 0;
-	height: 100%;
-	width: 100%; /* Defaults to Fullscreen */
-	background-color: var(--background-color-primary);
-	z-index: 1050; /* Ensure it's above other elements */
-	padding: 2vmin;
-}
-
-.pq-tab-window {
-	position: absolute;
-	background-color: var(--background-color-primary);
-	padding: 2vmin;
-}
-
-/* A flex display that will automatically stack inventory slots based on screen size */
-.pq-inventory-display {
-	display: flex; /* Use flexbox for layout */
-	flex-wrap: wrap; /* Allow items to wrap to the next line */
-	justify-content: center; /* Center items horizontally */
-	overflow-y: visible; /* Enable vertical scrolling if content overflows */
-	overflow-x: hidden; /* Hide horizontal scrolling (optional) */
-	gap: 10px; /* Space between squares */
-}
-
-/* Inventory slots */
-.pq-inventory-slot {
-	width: 12vmin; /* Fixed width */
-	height: 12vmin; /* Fixed height */
-	border: var(--pq-border);
-	border-radius: 10px;
-	/* Flexbox for centering */
-	display: flex;
-	justify-content: center; /* Centers horizontally */
-	align-items: center; /* Centers vertically */
-}
-
-	/* Inventory slots */
-	.pq-inventory-slot > img {
-		max-width: 100%; /* Prevents the image from overflowing */
-		max-height: 100%; /* Keeps the image within the slot */
-		object-fit: contain; /* Ensures the image maintains aspect ratio */
-		border-radius: 10px;
-	}
-
 /*---- Reusable Player Displays ------------------------------------------------------------------*/
-
-.player-name {
-	font-size: var(--pq-font-large);
-	color: var(--pq-font-color);
-}
 
 .player-image {
 	border: var(--pq-border);
@@ -261,11 +427,6 @@ body {
 
 /*----------- Reusable Enemy Displays ---------------------------------------------------------------------------------  */
 
-.enemy-name {
-	font-size: var(--pq-font-large);
-	color: var(--pq-font-color);
-}
-
 .enemy-image {
 	border: var(--pq-border);
 }
@@ -290,12 +451,13 @@ body {
 .login-display img {
 	border-radius: 50%;
 	height: 100%;
+	max-height: 100%;
 }
 
 .login-display a {
 	display: inline-block;
-	font-size: var(--pq-font-normal);
-	margin-left: .5vmin;
+	font-size: 1.2rem;
+	margin-left: .5rem;
 }
 
 /*--------- Other Displays -------------------------------------------------------------------------------------*/
@@ -305,16 +467,6 @@ body {
 	width: 100%;
 	font-size: var(--pq-font-large);
 	margin-bottom: 2vmin;
-}
-
-/* Displays the the results of the user's action on the screen. */
-.dialog-box {
-	/* Styling */
-	font-size: var(--pq-font-normal);
-	background-color: var(--background-color-primary);
-	color: var(--pq-font-color);
-	border: var(--pq-border);
-	padding: 1vmin;
 }
 
 /* Applies styling to the button inside of the menu button display.*/
@@ -342,6 +494,9 @@ button:disabled {
 	/*For when the butotn is applied to an anchor tag*/
 	text-decoration: none;
 	cursor: pointer;
+	white-space: normal; /* Allow text wrapping */
+	word-wrap: break-word; /* Ensure long words break */
+	text-align: center; /* Keep it visually balanced */
 }
 
 	.pq-button:hover {
@@ -466,6 +621,24 @@ button:disabled {
 	font-style: normal;
 }
 
+.pq-font-large {
+	font-size: 1.5rem;
+	color: white;
+	font-style: normal;
+}
+
+.pq-font-normal {
+	font-size: 1rem;
+	color: white;
+	font-style: normal;
+}
+
+.pq-font-small {
+	font-size: .8rem;
+	color: white;
+	font-style: normal;
+}
+
 .pq-scrollbar {
 	overflow-y: auto; /* Only adds scrollbar if needed. */
 	padding-right: 2rem;
@@ -484,3 +657,40 @@ button:disabled {
 		.pq-scrollbar::-webkit-scrollbar-thumb:hover {
 			background-color: black !important; /* Changes on hover */
 		}
+#player-health-bar-container,
+#enemy-health-bar-container {
+	cursor: pointer;
+	transition: opacity 0.2s ease;
+}
+
+	#player-health-bar-container:hover,
+	#enemy-health-bar-container:hover {
+		opacity: 0.8;
+	}
+
+/* Custom popover styling */
+.popover {
+	--bs-popover-max-width: 300px; /* Increased width for more content */
+	--bs-popover-border-color: #666;
+	--bs-popover-header-bg: #333;
+	--bs-popover-header-color: #fff;
+	--bs-popover-body-padding-x: 1rem;
+	--bs-popover-body-padding-y: 0.5rem;
+}
+
+	/* Dark theme for popovers to match your game UI */
+	.popover.bs-popover-right .popover-arrow::before,
+	.popover.bs-popover-auto[data-popper-placement^="right"] .popover-arrow::before {
+		border-right-color: #666;
+	}
+
+	.popover.bs-popover-top .popover-arrow::before,
+	.popover.bs-popover-auto[data-popper-placement^="top"] .popover-arrow::before {
+		border-top-color: #666;
+	}
+
+.popover-body {
+	background-color: var(--background-color-primary) !important;
+	color: var(--pq-font-color) !important;
+	border: var(--pq-border);
+}

@@ -15,7 +15,7 @@ let floorBtn;
 //Client side state tracking variables
 let isMapOpen = false; //Keep track of whether or not the map is open so we don't refresh it constantly.
 let isInventoryOpen = false; //Keep track of whether or not the inventory is open so we don't refresh it constantly.
-let selectedItemIndex = -1; //No item selected on load.
+let selectedItemIndex = 0; //No item selected on load.
 //Cached map object that is defined server side so we grab it on load and then it never needs to be updated.
 let mapDef;
 let legendVisible = true;
@@ -30,7 +30,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 	equippedChestSlot = document.getElementById("equipped-chest");
 	equippedLegsSlot = document.getElementById("equipped-legs");
 	equippedBootsSlot = document.getElementById("equipped-boots");
-	itemDetails = document.getElementById("item-details");
+	itemDetails = document.getElementById("item-details-container");
 	//Grab all the buttons that need to be cached from the DOM on load.
 	equipBtn = document.getElementById("equip-btn");
 	floorBtn = document.getElementById("floor-btn");
@@ -39,7 +39,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 	document.getElementById("continue-btn").addEventListener("click", () => { overlay.syncVisibility(false); menu.syncVisibility(false); }); //Hide overlay and menu.
 	document.getElementById("quit-btn").addEventListener("click", () => {window.location.replace("/Home"); }); // Redirect to /Home and clear history
 	document.getElementById("open-inventory-btn").addEventListener("click", () => { overlay.syncVisibility(true); inventory.syncVisibility(true); isInventoryOpen = true; refreshInventory(); }); 
-	document.getElementById("close-inventory-btn").addEventListener("click", () => { overlay.syncVisibility(false); inventory.syncVisibility(false); isInventoryOpen = false; });//Force menu to hide on click.
+	document.getElementById("close-inventory-btn").addEventListener("click", () => { overlay.syncVisibility(false); inventory.syncVisibility(false); itemDetails.syncVisibility(false); isInventoryOpen = false; });//Force menu to hide on click.
 	document.getElementById("open-map-btn").addEventListener("click", () => { overlay.syncVisibility(true); map.syncVisibility(true); isMapOpen = true;  refreshMap(); });//Set tab and refresh menu
 	document.getElementById("close-map-btn").addEventListener("click", () => { overlay.syncVisibility(false); map.syncVisibility(false); isMapOpen = false; });//Set tab and refresh menu
 	document.getElementById("legend").addEventListener("click", () => { showHideLegend(); });//toggle the legend display
@@ -48,7 +48,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 	floorBtn.addEventListener("click", async () => {
 		await executePlayerAction('move', 1);
 		let data = await sendGetRequest(`/Game/GetBackground?floor=${gameState.floor}`);
-		document.getElementById("main-background-image").src = data;
+		document.getElementById("game-container").style.backgroundImage = `url("${data}")`;
 	});
 	// Fetch map from the server
 	mapDef = await sendGetRequest("/Game/GetMap");
@@ -83,6 +83,7 @@ function refreshInventory() {
 			selectItem(items[i], i);
 		});
 		if (i == selectedItemIndex) {
+			selectItem(items[i], i);
 			updateEquipButton(items[i]);
 		}
 	}
@@ -110,19 +111,34 @@ async function refreshMap() {
 	floorBtn.syncButtonState(gameState.playerLocation == 18 && gameState.isLocationComplete);
 	// Store node elements for edge calculations
 	let nodeElements = [];
+	//Check if we are in landscape mode or portrait mode
+	let isPortraitMode = document.querySelectorAll('.portrait-layout').length > 0;
+	//Get max node height so we can scale the map properly.
+	let maxNodeHeight = Math.max(...mapDef.listMapNodes.map(mapNode => mapNode.nodeHeight)) + 1;
+	//Get max node distance so we can scale the map properly.
+	let maxNodeDistance = Math.max(...mapDef.listMapNodes.map(mapNode => mapNode.nodeDistance));
+	//Create some units based on the max values.
+	let heightUnit = 100 / maxNodeHeight;
+	let distanceUnit = 100 / maxNodeDistance;
 	// Draw map nodes
 	mapDef.listMapNodes.forEach((node, index) => {
 		const nodeElement = document.createElement("button");
 		nodeElement.className = "map-node";
 		nodeElement.setAttribute("data-node-id", node.mapNodeId);
+		nodeElement.style.position = "absolute";
 
 		// Set position dynamically
-		if (node.nodeHeight) {
-			nodeElement.style.position = "absolute";
-			nodeElement.style.top = `${(node.nodeHeight - 2) * 30}%`;
+		let y = (node.nodeHeight) * heightUnit;
+		let x = (node.nodeDistance-1) * distanceUnit;
+		if (isPortraitMode) {
+			//We're in portrait mode so x is top and y is left
+			nodeElement.style.bottom = x + '%';
+			nodeElement.style.left = y + '%';
 		}
-		if (node.nodeDistance) {
-			nodeElement.style.left = `${node.nodeDistance * 9}%`;
+		else {
+			//We're in landscape mode so y is top and x is left
+			nodeElement.style.top = y + '%';
+			nodeElement.style.left = x + '%';
 		}
 		// Append node and store it for edge calculations
 		mapContainer.appendChild(nodeElement);

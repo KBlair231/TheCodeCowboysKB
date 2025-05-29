@@ -9,13 +9,13 @@
 <!-- Linking the CSS file for better maintainability -->
 <link rel="stylesheet" href="~/css/CreateCharacter.css">
 
-<div class="container-fluid">
+<div class="container-fluid" style="overflow-x: hidden; overflow-y: auto;">
 
 	<!-- Top Row -->
-	<div class="row">
-		<div class="login-display p-2">
+	<div class="row" style="height: 10%;">
+		<div class="login-display p-2" style="height: 100%">
 			@if(isUserLoggedIn) {
-				<img src="@userProfileImage" alt="User Profile" class="profile-image" />
+				<img src="@userProfileImage" alt="User Profile" class="profile-image" style=" max-height: 100%; width: auto;" />
 				<a class="pq-link" href="/Account/SignOutFromGoogleLogin">Logout</a>
 			}
 			else {
@@ -59,7 +59,7 @@
 					<option value="Archer">Archer</option>
 				</select>
 				<span asp-validation-for="Class" class="text-danger" style="font-size: 1rem;"></span>
-
+				<div class="text-light mt-1" id="active-description" style="font-size: 1rem;"></div>
 				<select asp-for="Passive" id="passive-select" class="pq-form-control mt-3">
 					<option value="1">Heavy Smash</option>
 					<option value="2">Spiked Bulwark</option>
@@ -69,7 +69,6 @@
 					<option value="6">Poison Weapons</option>
 				</select>
 				<span asp-validation-for="Passive" class="text-danger"></span>
-				<div class="text-light mt-1" id="active-description" style="font-size: 1rem;"></div>
 				<div class="text-light mt-1" id="passive-description" style="font-size: 1rem;"></div>
 
 				<button type="submit" id="create-character-btn" class="btn text-light pq-border my-3" style="background-color: darkgreen;">Start Adventure</button>

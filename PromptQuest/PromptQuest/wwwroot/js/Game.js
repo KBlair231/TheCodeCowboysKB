@@ -14,6 +14,8 @@ let bleedingIndicator;
 let burningIndicator;
 let playerHealthBar;
 let enemyHealthBar;
+let playerHealthPopover;
+let enemyHealthPopover;
 //Player action buttons
 let attackBtn;
 let healBtn;
@@ -87,12 +89,12 @@ function refreshDisplay() {
 	openTreasureBtn.syncButtonState(gameState.inTreasure && !gameState.isLocationComplete);
 	skipTreasureBtn.syncButtonState(gameState.inTreasure && !gameState.isLocationComplete);
 	//Sync UI visibility (visible/hidden).
-	actionButtonDisplay.syncVisibility(gameState.inCombat);
-	backgroundImage.syncVisibility(gameState.inCampsite && !gameState.isLocationComplete);
-	campsiteButtonDisplay.syncVisibility(gameState.inCampsite);
-	eventButtonDisplay.syncVisibility(gameState.inEvent);
-	treasureButtonDisplay.syncVisibility(gameState.inTreasure);
-	shopButtonDisplay.syncVisibility(gameState.inShop);
+	actionButtonDisplay.syncVisibility(gameState.inCombat, true);
+	backgroundImage.syncVisibility(gameState.inCampsite && !gameState.isLocationComplete, true);
+	campsiteButtonDisplay.syncVisibility(gameState.inCampsite, true);
+	eventButtonDisplay.syncVisibility(gameState.inEvent, true);
+	treasureButtonDisplay.syncVisibility(gameState.inTreasure, true);
+	shopButtonDisplay.syncVisibility(gameState.inShop, true);
 	// Check for status effects and update their visibility from the enum
 	bleedingIndicator.syncVisibility(gameState.enemy.statusEffects > 0 && (gameState.enemy.statusEffects == 1 || gameState.enemy.statusEffects == 3));
 	burningIndicator.syncVisibility(gameState.enemy.statusEffects > 0 && (gameState.enemy.statusEffects == 2 || gameState.enemy.statusEffects == 3));
@@ -117,6 +119,7 @@ function refreshPlayerDisplay() {
 	document.getElementById("player-active").textContent = "Active: " + getActiveDescription(gameState.player.class);
 	abilityCooldownIcon.src = "/images/" + gameState.player.abilityCooldown + "_6_Clock.png";
 	playerHealthBar.style.height = ((gameState.player.currentHealth / gameState.player.maxHealth) * 100) + "%";
+	updateHealthPopovers();
 	let healthDifference = gameState.player.currentHealth - previousPlayerHealth;
 	if (healthDifference != 0) {
 		showDamageIndicator("player-damage-indicator", healthDifference);
@@ -148,6 +151,7 @@ function refreshEnemyDisplay() {
 	document.getElementById("enemy-defense").textContent = gameState.enemy.defense;
 	//document.getElementById("enemy-hp").textContent = gameState.enemy.currentHealth + "/" + gameState.enemy.maxHealth + " HP";
 	enemyHealthBar.style.height = ((gameState.enemy.currentHealth / gameState.enemy.maxHealth) * 100) + "%";
+	updateHealthPopovers();
 	let healthDifference = gameState.enemy.currentHealth - previousEnemyHealth;
 	if (healthDifference < 0) { //Only check for damage on enemy because they can't heal.
 		showDamageIndicator("enemy-damage-indicator", healthDifference);
@@ -169,7 +173,74 @@ function refreshDialogBox() {
 	//Scroll to bottom to show new messages
 	dialogBox.scrollTop = dialogBox.scrollHeight;
 }
+function initializeHealthPopovers() {
+	const playerHealthContainer = document.getElementById("player-health-bar-container");
+	const enemyHealthContainer = document.getElementById("enemy-health-bar-container");
 
+	// Player health popover
+	if (playerHealthContainer) {
+		playerHealthPopover = new bootstrap.Popover(playerHealthContainer, {
+			trigger: 'hover focus',
+			placement: 'left',
+			offset: [0, 14],
+			html: true,
+			content: function () {
+				return `<strong>Health:</strong><br>${gameState.player.currentHealth} / ${gameState.player.maxHealth} HP`;
+			}
+		});
+	}
+	// Enemy health popover
+	if (enemyHealthContainer) {
+		enemyHealthPopover = new bootstrap.Popover(enemyHealthContainer, {
+			trigger: 'hover focus',
+			placement: 'right',
+			offset: [0, 14],
+			html: true,
+			content: function () {
+				if (gameState.enemy && gameState.enemy.name) {
+					return `<strong>Health:</strong><br>${gameState.enemy.currentHealth} / ${gameState.enemy.maxHealth} HP`;
+				}
+				return 'No enemy present';
+			}
+		});
+	}
+}
+function updateHealthPopovers() {
+	// Dispose existing popovers
+	if (playerHealthPopover) {
+		playerHealthPopover.dispose();
+		playerHealthPopover = null;
+	}
+	if (enemyHealthPopover) {
+		enemyHealthPopover.dispose();
+		enemyHealthPopover = null;
+	}
+
+	// Recreate popovers with updated content
+	const playerHealthContainer = document.getElementById("player-health-bar-container");
+	const enemyHealthContainer = document.getElementById("enemy-health-bar-container");
+
+	// Player health popover
+	if (playerHealthContainer) {
+		playerHealthPopover = new bootstrap.Popover(playerHealthContainer, {
+			trigger: 'hover focus',
+			placement: 'left',
+			offset: [0, 14],
+			html: true,
+			content: `<strong>Health:</strong><br>${gameState.player.currentHealth} / ${gameState.player.maxHealth} HP`
+		});
+	}
+	// Enemy health popover
+	if (enemyHealthContainer && gameState.enemy && gameState.enemy.name) {
+		enemyHealthPopover = new bootstrap.Popover(enemyHealthContainer, {
+			trigger: 'hover focus',
+			placement: 'right',
+			offset: [0, 14],
+			html: true,
+			content: `<strong>Health:</strong><br>${gameState.enemy.currentHealth} / ${gameState.enemy.maxHealth} HP`
+		});
+	}
+}
 // Function to dynamically add shop purchase buttons
 function refreshShop() {
 	// Items currently in shop
@@ -186,7 +257,7 @@ function refreshShop() {
 		const btn = document.createElement("button");
 		btn.textContent = "Buy " + item.name + " for " + item.price + " gold?";
 		btn.className = "pq-button";
-		btn.style = "margin-bottom:2vmin; width: 100%;";
+		btn.style = "width: 100%;";
 		// Attach the player action "purchase" with the item id as the value
 		btn.attachPlayerAction("purchase", () => item.id);
 		shopButtonDisplay.appendChild(btn);
@@ -276,15 +347,23 @@ function hideRespawnModal() {
 
 //------------------------ EXTENSION METHODS --------------------------------------------------------------------------------------------------------------
 
+
 //Shows/Hides an html element according to the given condition. If the condition is true, the element is shown, if not, it is hidden. Only updates if necessary to avoid UI flicker.
-HTMLElement.prototype.syncVisibility = function (condition) {
-	if (condition && this.style.display === "none") {
+HTMLElement.prototype.syncVisibility = function (condition, removeFromLayout=false) {
+	if (condition && this.style.visibility !== "visible") {
 		//Element should be visible but is currently hidden. Show it.
-		this.style.display = "block";
+		this.style.visibility = "visible";
 	}
-	if (!condition && this.style.display !== "none") {
+	if (!condition && this.style.visibility !== "hidden") {
 		//Element should be hidden but is currently visible. Hide it.
-		this.style.display = "none";
+		this.style.visibility = "hidden";
+	}
+	//Some elements specifically need to be removed from the layout completely.
+	if (condition && removeFromLayout) {
+		this.style.display = "inherit";
+	}
+	if (!condition && removeFromLayout) {
+			this.style.display = "none";
 	}
 };
 

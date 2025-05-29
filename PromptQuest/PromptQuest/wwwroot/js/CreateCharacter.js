@@ -74,5 +74,5 @@ function loadPassiveDescription() {
 function loadActiveDescription() {
 	let classSelect = document.getElementById("class-select");
 	let selectedClass = classSelect.options[classSelect.selectedIndex].value;
-	activeDescription.innerHTML = selectedClass + " active ability: " + getActiveDescription(selectedClass);
+	activeDescription.innerHTML = "Active Ability: " + getActiveDescription(selectedClass);
 }
