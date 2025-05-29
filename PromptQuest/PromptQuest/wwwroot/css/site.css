@@ -47,7 +47,6 @@
 }
 
 #game-container {
-	background-image: url("/images/BackgroundGloomyDarkForest.png");
 	background-size: cover; /* Ensures full coverage */
 	background-position: center; /* Centers the image */
 	background-repeat: no-repeat; /* Prevents repetition */

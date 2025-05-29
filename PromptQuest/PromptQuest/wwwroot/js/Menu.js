@@ -48,7 +48,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 	floorBtn.addEventListener("click", async () => {
 		await executePlayerAction('move', 1);
 		let data = await sendGetRequest(`/Game/GetBackground?floor=${gameState.floor}`);
-		document.getElementById("game-container").style.backgroundImage = data;
+		document.getElementById("game-container").style.backgroundImage = `url("${data}")`;
 	});
 	// Fetch map from the server
 	mapDef = await sendGetRequest("/Game/GetMap");
