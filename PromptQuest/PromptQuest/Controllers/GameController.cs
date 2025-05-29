@@ -41,7 +41,7 @@ namespace PromptQuest.Controllers {
 			player.HealthPotions = 2;
 			player.BaseAttack = 3;
 			player.BaseDefense = 0;
-			player.Image=_dallEApiService.GetImageDataFromSession();//Grab the Player's generated image data. Returns "" if there is none.
+			player.Image = _dallEApiService.GetImageDataFromSession();//Grab the Player's generated image data. Returns "" if there is none.
 			if(ModelState.IsValid) { // Character created succesfully
 				GameState gameState = await _gameStateService.StartNewGame(player); // Start a new game. If the user already has one it will be overwritten.
 				_combatService.StartCombat(gameState); // Start combat right away, for now.
@@ -61,19 +61,19 @@ namespace PromptQuest.Controllers {
 
 		/// <summary> Serves up the player's image as a file instead of a base64 string. Set isPreview to true, if you want to fetch the preview image from the session instead of Player.Image the db </summary>
 		public IActionResult GetCharacterImage(bool isPreview = false) {
-			string imageData="";
+			string imageData = "";
 			if(isPreview) {
 				imageData = _dallEApiService.GetImageDataFromSession();//Grab the Player's generated image data.
 				if(!string.IsNullOrEmpty(imageData)) {
 					byte[] imageBytes = Convert.FromBase64String(imageData);
-					return File(imageBytes,"image/png");
+					return File(imageBytes, "image/png");
 				}
 			}
 			else {
 				imageData = _gameStateService.GetGameState().Player.Image;//Grab the Player's generated image data.
 				if(!string.IsNullOrEmpty(imageData)) {
 					byte[] imageBytes = Convert.FromBase64String(imageData);
-					return File(imageBytes,"image/png");
+					return File(imageBytes, "image/png");
 				}
 			}
 			// Serve default image if imageData is empty or null
@@ -105,7 +105,7 @@ namespace PromptQuest.Controllers {
 
 		[HttpPost]
 		public async Task<JsonResult> PlayerAction(string playerAction, int actionValue = -1) {
-			Func<GameState, Task> action = new Func<GameState, Task>(async (gameState) => { 
+			Func<GameState, Task> action = new Func<GameState, Task>(async (gameState) => {
 				switch(playerAction.ToLower()) {
 					case "attack":
 						_combatService.PlayerAttack(gameState);
@@ -150,7 +150,7 @@ namespace PromptQuest.Controllers {
 						_combatService.PlayerPurchaseItem(gameState, actionValue); // Currently in _combatService, may change later
 						break;
 					case "move":
-						if (actionValue < 0) {
+						if(actionValue < 0) {
 							break;
 						}
 						_mapService.MovePlayer(gameState, actionValue);
