@@ -1,0 +1,373 @@
+﻿/* Inventory Layout Styles */
+#inventory.landscape-layout {
+	display: flex;
+	flex-direction: row;
+	justify-content: space-between;
+}
+
+#inventory.portrait-layout {
+	display: flex;
+	flex-direction: column;
+	justify-content: flex-start;
+}
+
+/* Header (Close Button) */
+.landscape-layout #inventory-header {
+	order: 1;
+	width: 100%;
+	height: 10%;
+	display: flex;
+	justify-content: flex-end;
+	align-items: center;
+	padding-bottom: 5px;
+	padding-top: 5px;
+}
+
+.portrait-layout #inventory-header {
+	order: 1;
+	width: 100%;
+	height: 7%;
+	display: flex;
+	justify-content: flex-end;
+	align-items: center;
+	padding-bottom: 5px;
+	padding-top: 5px;
+}
+
+/* Player Info and Stats Section */
+.landscape-layout #inventory-player-section {
+	order: 2;
+	width: 25%;
+	max-width: 25%;
+	max-height: 90%;
+	padding-right: 0;
+	display: flex;
+	flex-direction: column;
+	gap: .5rem;
+}
+
+.portrait-layout #inventory-player-section {
+	order: 2;
+	width: 100%;
+	max-height: 20%;
+	display: flex;
+	flex-direction: row;
+	gap: 2%;
+}
+
+.landscape-layout #inventory-player-info {
+	max-height: 60%;
+	width: 100%;
+	overflow: hidden;
+}
+
+.landscape-layout #inventory-stats {
+	flex: 1;
+	max-width: 100%;
+	flex-direction: column;
+	overflow: hidden;
+}
+
+.portrait-layout #inventory-player-info {
+	height: 100%;
+	width: auto;
+	overflow: hidden;
+}
+
+.portrait-layout #inventory-stats {
+	height: 100%;
+	flex: 1;
+/*	max-width: 60%;*/
+	flex-direction: row;
+}
+
+/* Main Inventory */
+.landscape-layout #inventory-main {
+	order: 4;
+	max-width: 85%;
+	height: 90%;
+	flex-direction: column;
+}
+
+.portrait-layout #inventory-main {
+	order: 3;
+	width: 100%;
+	max-width: 100%;
+	height: 70%;
+	max-height: 74%;
+	padding: 1rem;
+}
+
+#inventory-container {
+	height: 100%;
+	width: 100%;
+	display: flex;
+	flex-direction: inherit;
+	flex-wrap: wrap;
+	justify-content: space-evenly;
+/*	gap: 1vmin;*/
+	align-content: space-evenly;
+	overflow: auto;
+}
+
+/* Equipment Grid Container - Modified for flexbox */
+.landscape-layout #equipment-grid-container {
+	padding: 1rem;
+	align-content: center;
+	order: 1;
+	width: 35%;
+	max-width: 14rem;
+	height: 100%;
+	max-height: 100%;
+	overflow-y: auto;
+	overflow-x: hidden !important;
+	display: grid;
+	grid-template-columns: 50% 50%;
+	grid-auto-rows: min-content;
+	/*grid-auto-flow: column;*/ /* Forces items to flow column-wise */
+	gap: 1.5%;
+	/*grid-column-gap: 5%;*/
+	grid-template-areas:
+		". helm"
+		"weapon chest"
+		"equip-btn legs"
+		". boots";
+}
+
+.portrait-layout #equipment-grid-container {
+	padding: 2rem;
+	order: 3;
+	width: 45%;
+	max-width: 14rem;
+	height: fit-content;
+	max-height: 65%;
+	overflow-y: auto;
+	overflow-x: hidden !important;
+	display: grid;
+	grid-template-columns: 50% 50%;
+	grid-template-rows: repeat(4, 1fr);
+	grid-template-areas:
+		". helm"
+		"weapon chest"
+		"equip-btn legs"
+		". boots";
+}
+
+/* Make all grid items perfect squares */
+.landscape-layout #equipment-grid-container > * {
+	aspect-ratio: 1;
+	width: 100%;
+	max-width: 100%;
+	height: auto;
+	max-height: 100%;
+	/* Center the content if needed */
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	font-size: .9rem;
+}
+
+.portrait-layout #equipment-grid-container > * {
+	aspect-ratio: 1;
+	width: 100%;
+	max-width: 100%;
+	height: auto;
+	max-height: 100%;
+	/* Center the content if needed */
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	font-size: .8rem;
+}
+
+/* Equipment Slots - Grid Layout */
+.landscape-layout #equipped-weapon,
+.portrait-layout #equipped-weapon {
+	grid-area: weapon;
+}
+
+#equipped-helm {
+	grid-area: helm;
+}
+
+#equipped-chest {
+	grid-area: chest;
+}
+
+#equipped-legs {
+	grid-area: legs;
+}
+
+#equipped-boots {
+	grid-area: boots;
+}
+
+#equip-btn {
+	grid-area: equip-btn;
+}
+
+/* Item Details Container - Modified for flexbox */
+.landscape-layout #item-details-container {
+	order: 2;
+	width: 65%;
+/*	min-width: 20rem;*/
+	height: 55%;
+	overflow-y: auto;
+	overflow-x: hidden;
+}
+
+.portrait-layout #item-details-container {
+	order: 1;
+	width: 100%; /* Forces wrap to new row */
+	height: 35%;
+	overflow-x: hidden;
+	overflow-y: auto;
+}
+
+/* Inventory Grid - Modified for flexbox */
+.landscape-layout #inventory-grid {
+	order: 3;
+	width: 65%;
+	height: 43%;
+	overflow-y: auto;
+	overflow-x: hidden;
+}
+
+.portrait-layout #inventory-grid {
+	order: 2;
+	flex: 1;
+	height: 65%;
+	overflow-y: auto;
+	overflow-x: hidden;
+}
+
+/* Portrait layout specific adjustments */
+.portrait-layout #inventory-player-info,
+.portrait-layout #inventory-stats {
+	display: inline-block;
+	vertical-align: top;
+}
+
+/* Main flexbox layout */
+#item-details {
+	height: 100%;
+	width: 100%;
+	display: flex;
+	gap: 2%;
+	padding: 2%;
+	box-sizing: border-box;
+	display: flex !important;
+	flex-direction: row;
+	justify-content: start;
+}
+
+/* Left side - Image container */
+.image-container {
+	width: fit-content;
+	display: flex;
+	align-items: start;
+	justify-content: center;
+}
+
+#item-image {
+	width: 100%;
+	height: auto;
+	max-height: 100%;
+	border: 1px solid white;
+	border-radius: 10px;
+	object-fit: contain;
+}
+
+/* Right side - Text and stats container */
+.content-container {
+	display: inherit;
+	width: 58%;
+	display: flex;
+	flex-direction: column;
+	justify-content: space-between;
+}
+
+/* Top section with title and text */
+.text-section {
+	flex: 1;
+	display: flex;
+	flex-direction: column;
+	gap: 1%;
+}
+
+#item-name {
+	font-weight: bold;
+	margin-bottom: 2px;
+	line-height: 1;
+}
+
+#item-type {
+	opacity: 0.8;
+	margin-bottom: 2px;
+}
+
+#item-passive {
+	margin-bottom: 2px;
+}
+
+#item-status-effects {
+/*	font-size: 1.8vmin;*/
+	flex: 1;
+}
+
+/* Bottom section with stats */
+.stats-section {
+	display: flex;
+	align-items: center;
+	justify-content: flex-start;
+	gap: 15px;
+	margin-top: auto;
+	padding-top: 2%;
+}
+
+.stat-item {
+	display: flex;
+	align-items: center;
+	gap: 2px;
+}
+
+.stat-icon {
+	height: 3rem;
+	width: auto;
+}
+
+.stat-value {
+	font-size: 2rem;
+	min-width: 30px;
+}
+
+/* A flex display that will automatically stack inventory slots based on screen size */
+.pq-inventory-display {
+	display: flex; /* Use flexbox for layout */
+	flex-wrap: wrap; /* Allow items to wrap to the next line */
+	justify-content: center; /* Center items horizontally */
+	overflow-y: visible; /* Enable vertical scrolling if content overflows */
+	overflow-x: hidden; /* Hide horizontal scrolling (optional) */
+	gap: 1rem; /* Space between squares */
+	padding: 1rem;
+}
+
+/* Inventory slots */
+.pq-inventory-slot {
+	width: 5rem; /* Fixed width */
+	height: 5rem; /* Fixed height */
+	border: 1px solid white;
+	border-radius: 10px;
+	/* Flexbox for centering */
+	display: flex;
+	justify-content: center; /* Centers horizontally */
+	align-items: center; /* Centers vertically */
+}
+
+	/* Inventory slots */
+	.pq-inventory-slot > img {
+		max-width: 100%; /* Prevents the image from overflowing */
+		max-height: 100%; /* Keeps the image within the slot */
+		object-fit: contain; /* Ensures the image maintains aspect ratio */
+		border-radius: 10px;
+	}

@@ -9,13 +9,13 @@
 <!-- Linking the CSS file for better maintainability -->
 <link rel="stylesheet" href="~/css/CreateCharacter.css">
 
-<div class="container-fluid">
+<div class="container-fluid" style="overflow-x: hidden; overflow-y: auto;">
 
 	<!-- Top Row -->
-	<div class="row">
-		<div class="login-display p-2">
+	<div class="row" style="height: 10%;">
+		<div class="login-display p-2" style="height: 100%">
 			@if(isUserLoggedIn) {
-				<img src="@userProfileImage" alt="User Profile" class="profile-image" />
+				<img src="@userProfileImage" alt="User Profile" class="profile-image" style=" max-height: 100%; width: auto;" />
 				<a class="pq-link" href="/Account/SignOutFromGoogleLogin">Logout</a>
 			}
 			else {

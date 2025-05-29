@@ -24,7 +24,7 @@ async function loadGame() {
 	refreshDisplay();
 	initializeHealthPopovers();
 	let data = await sendGetRequest(`/Game/GetBackground?floor=${gameState.floor}`);
-	document.getElementById("main-background-image").src = data;
+	document.getElementById("game-container").style.backgroundImage = data;
 }
 
 // ----------------------------------- SERVER INTERACTION METHODS ----------------------------------------------------------------------

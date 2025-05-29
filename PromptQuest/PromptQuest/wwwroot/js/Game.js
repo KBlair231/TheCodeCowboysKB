@@ -89,12 +89,12 @@ function refreshDisplay() {
 	openTreasureBtn.syncButtonState(gameState.inTreasure && !gameState.isLocationComplete);
 	skipTreasureBtn.syncButtonState(gameState.inTreasure && !gameState.isLocationComplete);
 	//Sync UI visibility (visible/hidden).
-	actionButtonDisplay.syncVisibility(gameState.inCombat);
-	backgroundImage.syncVisibility(gameState.inCampsite && !gameState.isLocationComplete);
-	campsiteButtonDisplay.syncVisibility(gameState.inCampsite);
-	eventButtonDisplay.syncVisibility(gameState.inEvent);
-	treasureButtonDisplay.syncVisibility(gameState.inTreasure);
-	shopButtonDisplay.syncVisibility(gameState.inShop);
+	actionButtonDisplay.syncVisibility(gameState.inCombat, true);
+	backgroundImage.syncVisibility(gameState.inCampsite && !gameState.isLocationComplete, true);
+	campsiteButtonDisplay.syncVisibility(gameState.inCampsite, true);
+	eventButtonDisplay.syncVisibility(gameState.inEvent, true);
+	treasureButtonDisplay.syncVisibility(gameState.inTreasure, true);
+	shopButtonDisplay.syncVisibility(gameState.inShop, true);
 	// Check for status effects and update their visibility from the enum
 	bleedingIndicator.syncVisibility(gameState.enemy.statusEffects > 0 && (gameState.enemy.statusEffects == 1 || gameState.enemy.statusEffects == 3));
 	burningIndicator.syncVisibility(gameState.enemy.statusEffects > 0 && (gameState.enemy.statusEffects == 2 || gameState.enemy.statusEffects == 3));
@@ -257,7 +257,7 @@ function refreshShop() {
 		const btn = document.createElement("button");
 		btn.textContent = "Buy " + item.name + " for " + item.price + " gold?";
 		btn.className = "pq-button";
-		btn.style = "margin-bottom:2vmin; width: 100%;";
+		btn.style = "width: 100%;";
 		// Attach the player action "purchase" with the item id as the value
 		btn.attachPlayerAction("purchase", () => item.id);
 		shopButtonDisplay.appendChild(btn);
@@ -347,15 +347,23 @@ function hideRespawnModal() {
 
 //------------------------ EXTENSION METHODS --------------------------------------------------------------------------------------------------------------
 
+
 //Shows/Hides an html element according to the given condition. If the condition is true, the element is shown, if not, it is hidden. Only updates if necessary to avoid UI flicker.
-HTMLElement.prototype.syncVisibility = function (condition) {
-	if (condition && this.style.display === "none") {
+HTMLElement.prototype.syncVisibility = function (condition, removeFromLayout=false) {
+	if (condition && this.style.visibility !== "visible") {
 		//Element should be visible but is currently hidden. Show it.
-		this.style.display = "block";
+		this.style.visibility = "visible";
 	}
-	if (!condition && this.style.display !== "none") {
+	if (!condition && this.style.visibility !== "hidden") {
 		//Element should be hidden but is currently visible. Hide it.
-		this.style.display = "none";
+		this.style.visibility = "hidden";
+	}
+	//Some elements specifically need to be removed from the layout completely.
+	if (condition && removeFromLayout) {
+		this.style.display = "inherit";
+	}
+	if (!condition && removeFromLayout) {
+			this.style.display = "none";
 	}
 };
 

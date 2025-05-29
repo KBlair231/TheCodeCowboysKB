@@ -1,4 +1,8 @@
 ﻿/* Extra small (xs) */
+/*html {
+	font-size: 3vmin;
+}*/
+
 html {
 	font-size: 12px;
 }
@@ -32,8 +36,9 @@ html {
 }
 
 /* Super large (xxl: ≥1400px) */
-/*@media (min-width: 1400px) {
+@media (min-width: 1400px) {
 	html {
 		font-size: 22px;
 	}
-}*/
+}
+
