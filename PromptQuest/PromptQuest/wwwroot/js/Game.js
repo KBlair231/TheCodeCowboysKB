@@ -14,6 +14,8 @@ let bleedingIndicator;
 let burningIndicator;
 let playerHealthBar;
 let enemyHealthBar;
+let playerHealthPopover;
+let enemyHealthPopover;
 //Player action buttons
 let attackBtn;
 let healBtn;
@@ -117,6 +119,7 @@ function refreshPlayerDisplay() {
 	document.getElementById("player-active").textContent = "Active: " + getActiveDescription(gameState.player.class);
 	abilityCooldownIcon.src = "/images/" + gameState.player.abilityCooldown + "_6_Clock.png";
 	playerHealthBar.style.height = ((gameState.player.currentHealth / gameState.player.maxHealth) * 100) + "%";
+	updateHealthPopovers();
 	let healthDifference = gameState.player.currentHealth - previousPlayerHealth;
 	if (healthDifference != 0) {
 		showDamageIndicator("player-damage-indicator", healthDifference);
@@ -148,6 +151,7 @@ function refreshEnemyDisplay() {
 	document.getElementById("enemy-defense").textContent = gameState.enemy.defense;
 	//document.getElementById("enemy-hp").textContent = gameState.enemy.currentHealth + "/" + gameState.enemy.maxHealth + " HP";
 	enemyHealthBar.style.height = ((gameState.enemy.currentHealth / gameState.enemy.maxHealth) * 100) + "%";
+	updateHealthPopovers();
 	let healthDifference = gameState.enemy.currentHealth - previousEnemyHealth;
 	if (healthDifference < 0) { //Only check for damage on enemy because they can't heal.
 		showDamageIndicator("enemy-damage-indicator", healthDifference);
@@ -169,7 +173,74 @@ function refreshDialogBox() {
 	//Scroll to bottom to show new messages
 	dialogBox.scrollTop = dialogBox.scrollHeight;
 }
+function initializeHealthPopovers() {
+	const playerHealthContainer = document.getElementById("player-health-bar-container");
+	const enemyHealthContainer = document.getElementById("enemy-health-bar-container");
 
+	// Player health popover
+	if (playerHealthContainer) {
+		playerHealthPopover = new bootstrap.Popover(playerHealthContainer, {
+			trigger: 'hover focus',
+			placement: 'left',
+			offset: [0, 14],
+			html: true,
+			content: function () {
+				return `<strong>Health:</strong><br>${gameState.player.currentHealth} / ${gameState.player.maxHealth} HP`;
+			}
+		});
+	}
+	// Enemy health popover
+	if (enemyHealthContainer) {
+		enemyHealthPopover = new bootstrap.Popover(enemyHealthContainer, {
+			trigger: 'hover focus',
+			placement: 'right',
+			offset: [0, 14],
+			html: true,
+			content: function () {
+				if (gameState.enemy && gameState.enemy.name) {
+					return `<strong>Health:</strong><br>${gameState.enemy.currentHealth} / ${gameState.enemy.maxHealth} HP`;
+				}
+				return 'No enemy present';
+			}
+		});
+	}
+}
+function updateHealthPopovers() {
+	// Dispose existing popovers
+	if (playerHealthPopover) {
+		playerHealthPopover.dispose();
+		playerHealthPopover = null;
+	}
+	if (enemyHealthPopover) {
+		enemyHealthPopover.dispose();
+		enemyHealthPopover = null;
+	}
+
+	// Recreate popovers with updated content
+	const playerHealthContainer = document.getElementById("player-health-bar-container");
+	const enemyHealthContainer = document.getElementById("enemy-health-bar-container");
+
+	// Player health popover
+	if (playerHealthContainer) {
+		playerHealthPopover = new bootstrap.Popover(playerHealthContainer, {
+			trigger: 'hover focus',
+			placement: 'left',
+			offset: [0, 14],
+			html: true,
+			content: `<strong>Health:</strong><br>${gameState.player.currentHealth} / ${gameState.player.maxHealth} HP`
+		});
+	}
+	// Enemy health popover
+	if (enemyHealthContainer && gameState.enemy && gameState.enemy.name) {
+		enemyHealthPopover = new bootstrap.Popover(enemyHealthContainer, {
+			trigger: 'hover focus',
+			placement: 'right',
+			offset: [0, 14],
+			html: true,
+			content: `<strong>Health:</strong><br>${gameState.enemy.currentHealth} / ${gameState.enemy.maxHealth} HP`
+		});
+	}
+}
 // Function to dynamically add shop purchase buttons
 function refreshShop() {
 	// Items currently in shop
